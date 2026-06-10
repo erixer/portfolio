@@ -42,54 +42,7 @@ export default function Hero() {
 
       <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left Column: Intro Text */}
-        <div className="lg:col-span-7 flex flex-col gap-6 text-left">
-          {/* Status badge */}
-          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-4 py-1.5 rounded-full w-fit">
-            <span className="w-2.5 h-2.5 rounded-full bg-brandAccent animate-pulse" />
-            <span className="text-xs font-semibold tracking-wider text-zinc-300 uppercase">Tersedia untuk Freelance & Full-Time</span>
-          </div>
-
-          {/* Heading */}
-          <h1 className="font-syne font-extrabold text-4xl sm:text-6xl md:text-7xl leading-none text-white">
-            Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-brandCreative via-sky-400 to-brandAccent">digital experiences</span> that inspire.
-          </h1>
-
-          {/* Intro paragraph */}
-          <p className="text-zinc-400 text-lg md:text-xl font-light leading-relaxed max-w-xl">
-            Halo! Saya <strong className="text-white font-semibold">Achmad Khoiri</strong>, seorang Software Engineer & UI/UX Designer. Saya merancang antarmuka pixel-perfect, berkinerja tinggi, dan mudah diakses untuk mendorong pertumbuhan bisnis digital Anda.
-          </p>
-
-          {/* Key tags */}
-          <div className="flex flex-wrap gap-2 mt-2">
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Web Development</span>
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">UI/UX Design</span>
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Branding</span>
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Interactive Animations</span>
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-5 mt-4">
-            <a href="#projects" className="group px-6 py-3.5 rounded-full bg-gradient-to-r from-brandCreative to-brandAccent text-white font-bold tracking-wide hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-brandAccent/10 flex items-center gap-2">
-              Lihat Karya Terpilih
-              <i className="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" />
-            </a>
-            <a href="#about" className="px-6 py-3.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 font-semibold tracking-wide active:scale-95 transition-all">
-              Pengalaman / Riwayat
-            </a>
-          </div>
-
-          {/* Quick socials */}
-          <div className="flex items-center gap-4 mt-4 text-zinc-400">
-            <span className="text-xs uppercase tracking-widest font-bold text-zinc-600">Hubungi:</span>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-linkedin" /></a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandCreative transition-colors text-lg"><i className="fab fa-github" /></a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-instagram" /></a>
-            <a href="mailto:achmadkhoiri@gmail.com" className="hover:text-brandAccent transition-colors text-lg"><i className="far fa-envelope" /></a>
-          </div>
-        </div>
-
-        {/* Right Column: Interactive Profile Card */}
-        <div className="lg:col-span-5 flex justify-center lg:justify-end">
+        <div className="lg:col-span-5 flex justify-center lg:justify-start">
           <div
             ref={cardRef}
             id="profile-card"
@@ -177,6 +130,54 @@ export default function Hero() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Right Column: Interactive Profile Card */}
+
+        <div className="lg:col-span-7 flex flex-col gap-6 text-left">
+          {/* Status badge */}
+          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-4 py-1.5 rounded-full w-fit">
+            <span className="w-2.5 h-2.5 rounded-full bg-brandAccent animate-pulse" />
+            <span className="text-xs font-semibold tracking-wider text-zinc-300 uppercase">Tersedia untuk Freelance & Full-Time</span>
+          </div>
+
+          {/* Heading */}
+          <h1 className="font-syne font-extrabold text-4xl sm:text-6xl md:text-7xl leading-none text-white">
+            Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-brandCreative via-sky-400 to-brandAccent">digital experiences</span> that inspire.
+          </h1>
+
+          {/* Intro paragraph */}
+          <p className="text-zinc-400 text-lg md:text-xl font-light leading-relaxed max-w-xl">
+            Halo! Saya <strong className="text-white font-semibold">Achmad Khoiri</strong>, seorang Software Engineer & UI/UX Designer. Saya merancang antarmuka pixel-perfect, berkinerja tinggi, dan mudah diakses untuk mendorong pertumbuhan bisnis digital Anda.
+          </p>
+
+          {/* Key tags */}
+          <div className="flex flex-wrap gap-2 mt-2">
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Web Development</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">UI/UX Design</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Branding</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Interactive Animations</span>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-wrap items-center gap-5 mt-4">
+            <a href="#projects" className="group px-6 py-3.5 rounded-full bg-gradient-to-r from-brandCreative to-brandAccent text-white font-bold tracking-wide hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-brandAccent/10 flex items-center gap-2">
+              Lihat Karya Terpilih
+              <i className="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" />
+            </a>
+            <a href="#about" className="px-6 py-3.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 font-semibold tracking-wide active:scale-95 transition-all">
+              Pengalaman / Riwayat
+            </a>
+          </div>
+
+          {/* Quick socials */}
+          <div className="flex items-center gap-4 mt-4 text-zinc-400">
+            <span className="text-xs uppercase tracking-widest font-bold text-zinc-600">Hubungi:</span>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-linkedin" /></a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandCreative transition-colors text-lg"><i className="fab fa-github" /></a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-instagram" /></a>
+            <a href="mailto:achmadkhoiri@gmail.com" className="hover:text-brandAccent transition-colors text-lg"><i className="far fa-envelope" /></a>
           </div>
         </div>
       </div>

@@ -27,14 +27,12 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Header element */}
       <header
         id="main-nav"
-        className={`z-40 transition-all duration-500 ease-in-out flex justify-between items-center ${
-          isScrolled
-            ? 'fixed top-4 left-1/2 -translate-x-1/2 max-w-[650px] w-[90%] px-6 py-3.5 rounded-full glass-card shadow-2xl border-white/10'
-            : 'absolute top-0 left-0 w-full px-6 md:px-12 py-6'
-        }`}
+        className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ease-in-out flex justify-between items-center ${isScrolled
+            ? 'top-4 max-w-[650px] w-[90%] px-6 py-3.5 rounded-full glass-card shadow-2xl border-white/10'
+            : 'top-0 w-full px-6 md:px-12 py-6 bg-transparent border-transparent'
+          }`}
       >
         {/* Logo */}
         <a href="#home" className="flex items-center gap-2 group cursor-pointer" onClick={closeMobileMenu}>
@@ -71,14 +69,12 @@ export default function Navbar() {
           aria-label="Toggle Mobile Menu"
         >
           <span
-            className={`w-6 h-0.5 bg-white transition-all duration-300 ${
-              isMobileMenuOpen ? 'rotate-45 translate-y-1' : ''
-            }`}
+            className={`w-6 h-0.5 bg-white transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1' : ''
+              }`}
           />
           <span
-            className={`w-6 h-0.5 bg-white transition-all duration-300 ${
-              isMobileMenuOpen ? '-rotate-45 -translate-y-1' : ''
-            }`}
+            className={`w-6 h-0.5 bg-white transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1' : ''
+              }`}
           />
         </button>
       </header>
@@ -86,9 +82,8 @@ export default function Navbar() {
       {/* Mobile Menu Drawer Overlay */}
       <div
         id="mobile-nav-menu"
-        className={`fixed inset-0 bg-brandDark/95 backdrop-blur-xl z-30 flex flex-col justify-center items-center gap-8 transition-transform duration-500 ease-in-out md:hidden ${
-          isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
-        }`}
+        className={`fixed inset-0 bg-brandDark/95 backdrop-blur-xl z-30 flex flex-col justify-center items-center gap-8 transition-transform duration-500 ease-in-out md:hidden ${isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
+          }`}
       >
         <a href="#home" onClick={closeMobileMenu} className="mobile-nav-link text-3xl font-syne font-bold hover:text-brandAccent transition-colors">
           Home
@@ -102,7 +97,7 @@ export default function Navbar() {
         <a href="#contact" onClick={closeMobileMenu} className="mobile-nav-link text-3xl font-syne font-bold hover:text-brandAccent transition-colors">
           Contact
         </a>
-        
+
         {/* Mobile Social Connections */}
         <div className="flex gap-6 mt-8">
           <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-xl hover:bg-brandAccent hover:text-black transition-all">
