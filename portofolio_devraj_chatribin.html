@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devraj Chatribin — Software Engineer | UI/UX Designer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter & Syne) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        syne: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        brandDark: '#080809',
+                        brandGray: '#121214',
+                        brandAccent: '#10b981', // Emerald Code
+                        brandCreative: '#a855f7', // Purple Design
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #080809;
+            color: #f3f4f6;
+            cursor: none; /* Menyembunyikan kursor asli untuk digantikan kursor kustom */
+            overflow-x: hidden;
+        }
+
+        /* Menyembunyikan kursor kustom pada perangkat mobile / layar sentuh */
+        @media (max-width: 1024px) {
+            body {
+                cursor: auto;
+            }
+            #custom-cursor, #custom-cursor-dot {
+                display: none !important;
+            }
+        }
+
+        /* Animasi Teks Berjalan Tanpa Batas (Infinite Marquee) */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        /* Scrollbar Kustom */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080809;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+
+        /* Efek Animasi Muncul Halus (Scroll Reveal) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Utilitas Glassmorphism */
+        .glass-card {
+            background: rgba(18, 18, 20, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Efek Transisi Tambahan Untuk Profile Card */
+        .profile-card-3d {
+            transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+            transform-style: preserve-3d;
+        }
+        .profile-card-3d:hover {
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.15);
+        }
+        .profile-card-inner {
+            transform: translateZ(30px);
+        }
+
+        /* Animasi Bouncing Dots untuk Loader Chat AI */
+        @keyframes dot-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .bounce-dot {
+            animation: dot-bounce 1s infinite ease-in-out;
+        }
+        .bounce-dot:nth-child(2) { animation-delay: 0.2s; }
+        .bounce-dot:nth-child(3) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body class="selection:bg-emerald-500/30 selection:text-white">
+
+    <!-- Kursor Kustom -->
+    <div id="custom-cursor" class="fixed top-0 left-0 w-8 h-8 rounded-full border border-emerald-400 pointer-events-none z-[100] -translate-x-1/2 -translate-y-1/2 transition-all duration-75 ease-out opacity-0 lg:block hidden"></div>
+    <div id="custom-cursor-dot" class="fixed top-0 left-0 w-2 h-2 rounded-full bg-purple-500 pointer-events-none z-[100] -translate-x-1/2 -translate-y-1/2 lg:block hidden"></div>
+
+    <!-- Header & Navigasi -->
+    <header id="main-nav" class="w-full px-6 md:px-12 py-6 flex justify-between items-center z-40 transition-all duration-500 ease-in-out absolute top-0 left-0">
+        <!-- Logo -->
+        <a href="#home" class="flex items-center gap-2 group cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/20">
+                DC
+            </div>
+            <span class="font-syne font-bold tracking-tight text-xl text-white group-hover:text-emerald-400 transition-colors">Devraj.</span>
+        </a>
+
+        <!-- Menu Navigasi (Desktop) -->
+        <nav class="hidden md:flex items-center gap-1 bg-white/5 border border-white/5 px-2 py-1.5 rounded-full backdrop-blur-md">
+            <a href="#home" class="nav-item px-4 py-2 rounded-full text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/10 transition-all">Home</a>
+            <a href="#about" class="nav-item px-4 py-2 rounded-full text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/10 transition-all">About</a>
+            <a href="#projects" class="nav-item px-4 py-2 rounded-full text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/10 transition-all">Projects</a>
+            <a href="#contact" class="nav-item px-4 py-2 rounded-full text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/10 transition-all">Contact</a>
+        </nav>
+
+        <!-- CTA & Media Sosial -->
+        <div class="hidden md:flex items-center gap-4">
+            <a href="#contact" class="px-5 py-2 rounded-full bg-white text-black font-semibold text-sm hover:bg-emerald-400 hover:text-black transition-all shadow-md active:scale-95">
+                Let's Talk
+            </a>
+        </div>
+
+        <!-- Tombol Menu Mobile -->
+        <button id="mobile-menu-btn" class="md:hidden w-10 h-10 flex flex-col justify-center items-center gap-1.5 focus:outline-none z-50">
+            <span class="w-6 h-0.5 bg-white transition-all duration-300" id="bar1"></span>
+            <span class="w-6 h-0.5 bg-white transition-all duration-300" id="bar2"></span>
+        </button>
+    </header>
+
+    <!-- Overlay Menu Navigasi Mobile -->
+    <div id="mobile-nav-menu" class="fixed inset-0 bg-brandDark/95 backdrop-blur-xl z-30 flex flex-col justify-center items-center gap-8 -translate-y-full transition-transform duration-500 ease-in-out md:hidden">
+        <a href="#home" class="mobile-nav-link text-3xl font-syne font-bold hover:text-emerald-400 transition-colors">Home</a>
+        <a href="#about" class="mobile-nav-link text-3xl font-syne font-bold hover:text-emerald-400 transition-colors">About</a>
+        <a href="#projects" class="mobile-nav-link text-3xl font-syne font-bold hover:text-emerald-400 transition-colors">Projects</a>
+        <a href="#contact" class="mobile-nav-link text-3xl font-syne font-bold hover:text-emerald-400 transition-colors">Contact</a>
+        <div class="flex gap-6 mt-8">
+            <a href="https://linkedin.com" target="_blank" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-xl hover:bg-emerald-500 hover:text-black transition-all"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com" target="_blank" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-xl hover:bg-emerald-500 hover:text-black transition-all"><i class="fab fa-github"></i></a>
+            <a href="mailto:devrajchatribin9978@gmail.com" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-xl hover:bg-emerald-500 hover:text-black transition-all"><i class="far fa-envelope"></i></a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen pt-32 pb-20 flex flex-col justify-center relative overflow-hidden px-6 md:px-12">
+        <!-- Latar belakang mesh gradien abstrak -->
+        <div class="absolute top-1/4 left-10 w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-10 w-[350px] h-[350px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Kolom Kiri: Konten Teks Hero -->
+            <div class="lg:col-span-7 flex flex-col gap-6 text-left">
+                <!-- Tag status ketersediaan -->
+                <div class="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-4 py-1.5 rounded-full w-fit">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-semibold tracking-wider text-zinc-300 uppercase">Tersedia untuk Freelance & Full-Time</span>
+                </div>
+
+                <!-- Judul Utama -->
+                <h1 class="font-syne font-extrabold text-4xl sm:text-6xl md:text-7xl leading-none text-white">
+                    Crafting <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-emerald-400">digital experiences</span> that inspire.
+                </h1>
+
+                <!-- Paragraf Pengantar -->
+                <p class="text-zinc-400 text-lg md:text-xl font-light leading-relaxed max-w-xl">
+                    Halo! Saya <strong class="text-white font-semibold">Devraj Chatribin</strong>, seorang Software Engineer & UI/UX Designer. Saya merancang antarmuka pixel-perfect, berkinerja tinggi, dan mudah diakses untuk mendorong pertumbuhan bisnis digital Anda.
+                </p>
+
+                <!-- Pil Tag Kunci -->
+                <div class="flex flex-wrap gap-2 mt-2">
+                    <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Web Development</span>
+                    <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">UI/UX Design</span>
+                    <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Branding</span>
+                    <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Interactive Animations</span>
+                </div>
+
+                <!-- Tombol CTA -->
+                <div class="flex flex-wrap items-center gap-5 mt-4">
+                    <a href="#projects" class="group px-6 py-3.5 rounded-full bg-gradient-to-r from-purple-600 to-emerald-500 text-white font-bold tracking-wide hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/10 flex items-center gap-2">
+                        Lihat Karya Terpilih
+                        <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="#about" class="px-6 py-3.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 font-semibold tracking-wide active:scale-95 transition-all">
+                        Pengalaman / Riwayat
+                    </a>
+                </div>
+
+                <!-- Koneksi Media Sosial Cepat -->
+                <div class="flex items-center gap-4 mt-4 text-zinc-400">
+                    <span class="text-xs uppercase tracking-widest font-bold text-zinc-600">Hubungi:</span>
+                    <a href="https://linkedin.com" target="_blank" class="hover:text-emerald-400 transition-colors text-lg"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com" target="_blank" class="hover:text-purple-400 transition-colors text-lg"><i class="fab fa-github"></i></a>
+                    <a href="https://instagram.com" target="_blank" class="hover:text-pink-400 transition-colors text-lg"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:devrajchatribin9978@gmail.com" class="hover:text-teal-400 transition-colors text-lg"><i class="far fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Profile Card Interaktif ala ReactBits -->
+            <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                <div id="profile-card" class="w-full max-w-sm glass-card rounded-[2.5rem] p-8 relative overflow-hidden group border border-white/10 profile-card-3d shadow-2xl">
+                    <!-- Efek cahaya bersinar mengikuti mouse (Interactive Hover Spotlight) -->
+                    <div id="card-glow" class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style="background: radial-gradient(300px circle at var(--x, 0px) var(--y, 0px), rgba(16, 185, 129, 0.12), transparent 80%);"></div>
+                    
+                    <!-- Latar belakang lingkaran gradasi abstrak -->
+                    <div class="absolute -right-20 -top-20 w-44 h-44 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -left-20 -bottom-20 w-44 h-44 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="profile-card-inner flex flex-col items-center text-center relative z-10">
+                        <!-- Foto Kontainer dengan Neon Glowing Ring -->
+                        <div class="relative w-36 h-36 rounded-full p-[3px] bg-gradient-to-tr from-purple-500 via-pink-500 to-emerald-400 shadow-xl group-hover:scale-105 transition-transform duration-500">
+                            <!-- Dot status aktif di ujung luar foto -->
+                            <span class="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-emerald-500 border-2 border-brandDark z-20 animate-pulse"></span>
+                            <!-- Foto Profil -->
+                            <div class="w-full h-full rounded-full overflow-hidden bg-zinc-950 border border-black/50 flex items-center justify-center">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400&h=400" 
+                                     alt="Devraj Chatribin" 
+                                     class="w-full h-full object-cover"
+                                     onerror="this.style.display='none'; document.getElementById('avatar-fallback').classList.remove('hidden');">
+                                <!-- Fallback jika gambar Unsplash gagal dimuat -->
+                                <div id="avatar-fallback" class="hidden w-full h-full bg-gradient-to-br from-purple-900 to-zinc-900 flex items-center justify-center">
+                                    <i class="fas fa-user-tie text-4xl text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Informasi Identitas -->
+                        <h2 class="font-syne font-extrabold text-2xl text-white mt-6 group-hover:text-emerald-400 transition-colors">Devraj Chatribin</h2>
+                        <p class="text-zinc-400 text-sm font-medium font-mono mt-1">@devraj_chatribin</p>
+                        
+                        <!-- Badge Penjelasan Bidang -->
+                        <div class="mt-3 flex gap-1.5 flex-wrap justify-center">
+                            <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase font-bold tracking-wider text-purple-300">Software Engineer</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase font-bold tracking-wider text-emerald-300">UI/UX Specialist</span>
+                        </div>
+
+                        <p class="text-zinc-400 text-xs mt-4 leading-relaxed max-w-xs font-light">
+                            "Membangun interaksi web kelas dunia dengan harmoni yang presisi antara visual yang memukau dan fungsionalitas murni."
+                        </p>
+
+                        <!-- Kisi Statistik Kinerja Portofolio -->
+                        <div class="grid grid-cols-3 gap-2 w-full mt-6 py-4 border-y border-white/10 text-center bg-zinc-950/40 rounded-2xl">
+                            <div>
+                                <span class="block font-syne font-extrabold text-lg text-emerald-400">4+</span>
+                                <span class="text-[9px] uppercase tracking-wider font-bold text-zinc-500">Tahun Exp</span>
+                            </div>
+                            <div>
+                                <span class="block font-syne font-extrabold text-lg text-purple-400">50+</span>
+                                <span class="text-[9px] uppercase tracking-wider font-bold text-zinc-500">Proyek</span>
+                            </div>
+                            <div>
+                                <span class="block font-syne font-extrabold text-lg text-pink-400">99%</span>
+                                <span class="text-[9px] uppercase tracking-wider font-bold text-zinc-500">Kepuasan</span>
+                            </div>
+                        </div>
+
+                        <!-- Tombol Hubungi di Card & Ikon Media Sosial -->
+                        <div class="w-full flex items-center justify-between mt-6 gap-4">
+                            <a href="#contact" class="flex-1 py-3 px-4 rounded-full bg-white hover:bg-emerald-400 text-black font-extrabold text-xs uppercase tracking-wider transition-all text-center active:scale-95 shadow-md">
+                                Hire Me <i class="fas fa-paper-plane ml-1.5"></i>
+                            </a>
+                            <div class="flex gap-2">
+                                <a href="https://linkedin.com" target="_blank" class="w-10 h-10 rounded-full bg-zinc-900 hover:bg-emerald-500/20 hover:text-emerald-400 text-zinc-400 border border-white/5 flex items-center justify-center transition-colors text-sm">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="https://github.com" target="_blank" class="w-10 h-10 rounded-full bg-zinc-900 hover:bg-purple-500/20 hover:text-purple-400 text-zinc-400 border border-white/5 flex items-center justify-center transition-colors text-sm">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Marquee Keahlian Berjalan -->
+    <div class="py-10 bg-brandGray border-y border-white/5 overflow-hidden flex items-center relative z-10">
+        <div class="flex whitespace-nowrap animate-marquee">
+            <!-- Paket Marquee 1 -->
+            <div class="flex items-center gap-12 text-lg sm:text-2xl font-syne font-extrabold uppercase tracking-widest text-zinc-500 mr-12">
+                <span>HTML & CSS</span> <span class="text-emerald-500">•</span>
+                <span>JavaScript</span> <span class="text-purple-500">•</span>
+                <span>TypeScript</span> <span class="text-emerald-500">•</span>
+                <span>React.js</span> <span class="text-purple-500">•</span>
+                <span>Next.js</span> <span class="text-emerald-500">•</span>
+                <span>Angular</span> <span class="text-purple-500">•</span>
+                <span>Redux</span> <span class="text-emerald-500">•</span>
+                <span>GSAP</span> <span class="text-purple-500">•</span>
+                <span>Figma</span> <span class="text-emerald-500">•</span>
+                <span>Tailwind CSS</span> <span class="text-purple-500">•</span>
+                <span>Docker</span> <span class="text-emerald-500">•</span>
+                <span>Firebase</span>
+            </div>
+            <!-- Paket Marquee 2 (Duplikasi untuk loop) -->
+            <div class="flex items-center gap-12 text-lg sm:text-2xl font-syne font-extrabold uppercase tracking-widest text-zinc-500 mr-12">
+                <span>HTML & CSS</span> <span class="text-emerald-500">•</span>
+                <span>JavaScript</span> <span class="text-purple-500">•</span>
+                <span>TypeScript</span> <span class="text-emerald-500">•</span>
+                <span>React.js</span> <span class="text-purple-500">•</span>
+                <span>Next.js</span> <span class="text-emerald-500">•</span>
+                <span>Angular</span> <span class="text-purple-500">•</span>
+                <span>Redux</span> <span class="text-emerald-500">•</span>
+                <span>GSAP</span> <span class="text-purple-500">•</span>
+                <span>Figma</span> <span class="text-emerald-500">•</span>
+                <span>Tailwind CSS</span> <span class="text-purple-500">•</span>
+                <span>Docker</span> <span class="text-emerald-500">•</span>
+                <span>Firebase</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bagian Proyek -->
+    <section id="projects" class="py-24 px-6 md:px-12 max-w-6xl mx-auto w-full">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 reveal">
+            <div>
+                <span class="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Proyek Terpilih</span>
+                <h2 class="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">Karya Kreatif Saya.</h2>
+                <p class="text-zinc-400 mt-2 font-light max-w-md">Berikut adalah beberapa proyek unggulan yang menunjukkan keahlian pengembangan dan solusi UI/UX yang saya bangun.</p>
+            </div>
+            <!-- Filter Proyek -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="filterProjects('all')" id="filter-all" class="filter-btn active px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-white text-black border border-white transition-all">
+                    Semua
+                </button>
+                <button onclick="filterProjects('development')" id="filter-development" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-white transition-all">
+                    Development
+                </button>
+                <button onclick="filterProjects('design')" id="filter-design" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-white transition-all">
+                    Design
+                </button>
+            </div>
+        </div>
+
+        <!-- Kisi Grid Proyek -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-container">
+            
+            <!-- Proyek 1: Code Screenshot -->
+            <div class="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-emerald-500/50 transition-all duration-500" data-category="development" onclick="openProjectModal('codescreenshot')">
+                <div class="aspect-video w-full bg-gradient-to-tr from-purple-900/40 to-black overflow-hidden relative flex items-center justify-center p-6">
+                    <div class="absolute top-4 left-4 z-10 flex gap-2">
+                        <span class="bg-black/70 backdrop-blur text-emerald-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">Development</span>
+                        <span class="bg-black/70 backdrop-blur text-purple-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">Design</span>
+                    </div>
+                    <div class="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-3 group-hover:scale-105 transition-transform duration-500 relative flex flex-col justify-between">
+                        <div class="flex gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-400"></span><span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span><span class="w-2.5 h-2.5 rounded-full bg-green-400"></span></div>
+                        <div class="bg-white/5 rounded p-2 text-[9px] font-mono text-zinc-400 space-y-1">
+                            <p class="text-indigo-400">const snippet = () => {</p>
+                            <p class="pl-2">return &lt;ShareScreenshot /&gt;</p>
+                            <p class="text-indigo-400">}</p>
+                        </div>
+                        <div class="text-[10px] text-zinc-500 font-semibold flex justify-between"><span>Gradient Theme Picker</span><span>2024</span></div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-syne font-bold text-xl group-hover:text-emerald-400 transition-colors">Code Screenshot</h3>
+                        <span class="text-zinc-500 text-sm">2024</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm font-light mt-2">Alat interaktif yang dirancang untuk merancang, menyesuaikan, dan mengekspor cuplikan kode dengan gaya gradien kustom.</p>
+                </div>
+            </div>
+
+            <!-- Proyek 2: Snapalyzer -->
+            <div class="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-emerald-500/50 transition-all duration-500" data-category="development" onclick="openProjectModal('snapalyzer')">
+                <div class="aspect-video w-full bg-gradient-to-tr from-emerald-900/40 to-black overflow-hidden relative flex items-center justify-center p-6">
+                    <div class="absolute top-4 left-4 z-10 flex gap-2">
+                        <span class="bg-black/70 backdrop-blur text-emerald-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">Development</span>
+                        <span class="bg-black/70 backdrop-blur text-cyan-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">AI API</span>
+                    </div>
+                    <div class="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-4 group-hover:scale-105 transition-transform duration-500 flex flex-col items-center justify-center gap-2">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg border border-emerald-500/30">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <span class="text-xs font-mono text-zinc-300">Gemini AI Image Analyzer</span>
+                        <span class="text-[10px] text-zinc-500 uppercase tracking-widest">Aura Detection</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-syne font-bold text-xl group-hover:text-emerald-400 transition-colors">Snapalyzer AI</h3>
+                        <span class="text-zinc-500 text-sm">2024</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm font-light mt-2">Sistem analitik berbasis AI memanfaatkan Google Gemini API untuk menganalisis, mengulas, dan mengidentifikasi konteks visual gambar secara real-time.</p>
+                </div>
+            </div>
+
+            <!-- Proyek 3: Collabxweb -->
+            <div class="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-emerald-500/50 transition-all duration-500" data-category="development" onclick="openProjectModal('collabxweb')">
+                <div class="aspect-video w-full bg-gradient-to-tr from-indigo-900/40 to-black overflow-hidden relative flex items-center justify-center p-6">
+                    <div class="absolute top-4 left-4 z-10 flex gap-2">
+                        <span class="bg-black/70 backdrop-blur text-emerald-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">Development</span>
+                        <span class="bg-black/70 backdrop-blur text-purple-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">Design</span>
+                    </div>
+                    <div class="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-4 group-hover:scale-105 transition-transform duration-500 flex flex-col justify-between">
+                        <div class="flex justify-between items-center">
+                            <div class="flex gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-400"></span><span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span><span class="w-2.5 h-2.5 rounded-full bg-green-400"></span></div>
+                            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded">Live Room</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-4 py-2">
+                            <span class="text-xs font-semibold text-zinc-300">Collab Editor</span>
+                            <div class="flex -space-x-2">
+                                <span class="w-6 h-6 rounded-full bg-purple-500 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-white">U1</span>
+                                <span class="w-6 h-6 rounded-full bg-emerald-500 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-black">U2</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] text-zinc-500 text-center">Firebase Realtime Sync</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-syne font-bold text-xl group-hover:text-emerald-400 transition-colors">Collabxweb</h3>
+                        <span class="text-zinc-500 text-sm">2022</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm font-light mt-2">Ruang kolaborasi penulisan kode real-time yang memungkinkan tim pengembang menyusun, memeriksa, dan mensinkronisasikan web langsung.</p>
+                </div>
+            </div>
+
+            <!-- Proyek 4: IndiCov -->
+            <div class="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-emerald-500/50 transition-all duration-500" data-category="design" onclick="openProjectModal('indicov')">
+                <div class="aspect-video w-full bg-gradient-to-tr from-pink-900/40 to-black overflow-hidden relative flex items-center justify-center p-6">
+                    <div class="absolute top-4 left-4 z-10 flex gap-2">
+                        <span class="bg-black/70 backdrop-blur text-purple-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">Design</span>
+                        <span class="bg-black/70 backdrop-blur text-rose-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded">Winner</span>
+                    </div>
+                    <div class="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-4 group-hover:scale-105 transition-transform duration-500 flex flex-col justify-between">
+                        <span class="text-xs font-mono text-rose-400 font-bold">IndiCov Portal</span>
+                        <div class="h-10 w-full flex items-end gap-1">
+                            <div class="w-full bg-rose-500/20 h-1/3 rounded-sm"></div>
+                            <div class="w-full bg-rose-500/40 h-2/3 rounded-sm"></div>
+                            <div class="w-full bg-rose-500/80 h-full rounded-sm"></div>
+                            <div class="w-full bg-rose-500/40 h-1/2 rounded-sm"></div>
+                        </div>
+                        <span class="text-[9px] text-zinc-500">MLH Hack At Home II Winner</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-syne font-bold text-xl group-hover:text-emerald-400 transition-colors">IndiCov Resource</h3>
+                        <span class="text-zinc-500 text-sm">2021</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm font-light mt-2">Dasbor analitik penanganan pandemi untuk mempertemukan pasien secara darurat dengan penyedia kasur medis yang tervalidasi di India.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bagian Tentang Saya -->
+    <section id="about" class="py-24 bg-brandGray border-y border-white/5 px-6 md:px-12 relative">
+        <div class="max-w-6xl mx-auto w-full">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Kolom Kiri: Ringkasan Lengket (Sticky) -->
+                <div class="lg:col-span-5 lg:sticky lg:top-24 flex flex-col gap-6">
+                    <span class="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Tentang Saya</span>
+                    <h2 class="font-syne font-extrabold text-4xl sm:text-5xl text-white leading-tight">Creative Dev & Designer.</h2>
+                    <p class="text-zinc-400 text-base leading-relaxed font-light">
+                        Saya spesialis dalam membangun jembatan antara desainer dan developer. Dengan menyatukan tata letak struktural yang kokoh bersama grafis gerak yang halus dan dinamis, saya menciptakan produk digital yang tidak hanya terlihat menakjubkan tetapi juga berjalan optimal.
+                    </p>
+                    <div class="p-5 rounded-2xl glass-card flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-university text-emerald-400 w-5"></i>
+                            <span class="text-sm text-zinc-300">Lulusan Teknik yang berlokasi di Goa, India</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-users text-purple-400 w-5"></i>
+                            <span class="text-sm text-zinc-300">Pendiri Komunitas "Design & Code"</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-medal text-yellow-400 w-5"></i>
+                            <span class="text-sm text-zinc-300">Pemenang Penghargaan Spesialis Hackathon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Garis Waktu Kerja & Metodologi -->
+                <div class="lg:col-span-7 flex flex-col gap-12">
+                    
+                    <!-- Sub-bagian: Alur Metodologi Kerja -->
+                    <div>
+                        <h3 class="font-syne font-bold text-2xl text-white mb-6">Bagaimana Saya Bekerja</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-5 rounded-xl glass-card border border-white/5 hover:border-purple-500/30 transition-colors">
+                                <span class="font-syne font-extrabold text-3xl text-purple-500">01</span>
+                                <h4 class="font-semibold text-lg text-white mt-2">Strategi & Riset</h4>
+                                <p class="text-zinc-400 text-xs mt-1 leading-relaxed">Mengumpulkan spesifikasi kebutuhan proyek, memetakan model bisnis, dan merancang perjalanan pengguna.</p>
+                            </div>
+                            <div class="p-5 rounded-xl glass-card border border-white/5 hover:border-emerald-500/30 transition-colors">
+                                <span class="font-syne font-extrabold text-3xl text-emerald-500">02</span>
+                                <h4 class="font-semibold text-lg text-white mt-2">Prototipe & Desain</h4>
+                                <p class="text-zinc-400 text-xs mt-1 leading-relaxed">Merumuskan wireframe, mendesain mockup berkualitas tinggi di Figma, dan memastikan kekonsistenan visual.</p>
+                            </div>
+                            <div class="p-5 rounded-xl glass-card border border-white/5 hover:border-emerald-500/30 transition-colors">
+                                <span class="font-syne font-extrabold text-3xl text-emerald-500">03</span>
+                                <h4 class="font-semibold text-lg text-white mt-2">Pengembangan</h4>
+                                <p class="text-zinc-400 text-xs mt-1 leading-relaxed">Menyusun kode tata letak yang bersih, mengintegrasikan manajemen status, serta menerapkan animasi halus.</p>
+                            </div>
+                            <div class="p-5 rounded-xl glass-card border border-white/5 hover:border-purple-500/30 transition-colors">
+                                <span class="font-syne font-extrabold text-3xl text-purple-500">04</span>
+                                <h4 class="font-semibold text-lg text-white mt-2">Optimasi & Rilis</h4>
+                                <p class="text-zinc-400 text-xs mt-1 leading-relaxed">Menguji responsivitas lintas perangkat, mempercepat kecepatan pemuatan halaman, dan merilis web dengan standar aksesibilitas tinggi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-bagian: Riwayat Kerja -->
+                    <div>
+                        <h3 class="font-syne font-bold text-2xl text-white mb-6">Riwayat Kerja</h3>
+                        <div class="border-l border-zinc-800 ml-3 space-y-8">
+                            
+                            <!-- Peran 1 -->
+                            <div class="relative pl-8 group">
+                                <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 group-hover:scale-125 transition-transform"></div>
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                                    <h4 class="font-semibold text-lg text-white">Software Engineer</h4>
+                                    <span class="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">Agustus 2022 — Sekarang</span>
+                                </div>
+                                <p class="text-sm text-emerald-400 font-medium">@OneShield Software</p>
+                                <p class="text-zinc-400 text-xs mt-2 leading-relaxed">Memimpin arsitektur sistem frontend internal perusahaan skala besar. Memanfaatkan Angular, TypeScript, dan manajemen state modern untuk memotong waktu pemuatan sistem sebesar 30%.</p>
+                            </div>
+
+                            <!-- Peran 2 -->
+                            <div class="relative pl-8 group">
+                                <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-purple-500 group-hover:scale-125 transition-transform"></div>
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                                    <h4 class="font-semibold text-lg text-white">Pendiri & Direktur Teknologi</h4>
+                                    <span class="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">Januari 2021 — Sekarang</span>
+                                </div>
+                                <p class="text-sm text-purple-400 font-medium">@Design and Code Community</p>
+                                <p class="text-zinc-400 text-xs mt-2 leading-relaxed">Menyelenggarakan lokakarya UI, review portofolio, dan kompetisi hackathon secara terstruktur. Membangun aset-aset pendidikan untuk membimbing lebih dari 1000 anggota memulai karir digital.</p>
+                            </div>
+
+                            <!-- Peran 3 -->
+                            <div class="relative pl-8 group">
+                                <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-zinc-700 group-hover:scale-125 transition-transform"></div>
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                                    <h4 class="font-semibold text-lg text-white">Design Engineer</h4>
+                                    <span class="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">Februari 2025 — Maret 2025</span>
+                                </div>
+                                <p class="text-sm text-zinc-400 font-medium">@BlackboxAI</p>
+                                <p class="text-zinc-400 text-xs mt-2 leading-relaxed">Merancang kerangka aset Figma yang kompleks dan mengimplementasikan prototipe interaktif fungsional menggunakan Framer Motion, GSAP, dan Tailwind CSS.</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Sub-bagian: Penghargaan -->
+                    <div>
+                        <h3 class="font-syne font-bold text-2xl text-white mb-6">Penghargaan</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500"><i class="fas fa-trophy"></i></div>
+                                <div><h4 class="font-semibold text-sm text-white">Star Performer</h4><p class="text-zinc-500 text-xs">OneShield — 2024</p></div>
+                            </div>
+                            <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500"><i class="fas fa-code"></i></div>
+                                <div><h4 class="font-semibold text-sm text-white">Pemenang Hackathon Utama</h4><p class="text-zinc-500 text-xs">MLH Hack — 2021</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Slide Testimoni -->
+    <section class="py-24 px-6 md:px-12 max-w-6xl mx-auto w-full relative">
+        <div class="text-center mb-16 reveal">
+            <span class="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Testimoni</span>
+            <h2 class="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">Apa Kata Mereka.</h2>
+            <p class="text-zinc-400 mt-2 font-light max-w-md mx-auto">Tanggapan dari para profesional dan klien yang pernah bekerja sama dengan saya.</p>
+        </div>
+
+        <!-- Kerangka Carousel -->
+        <div class="relative max-w-3xl mx-auto">
+            <div id="testimonial-container" class="relative overflow-hidden min-h-[250px] flex items-center justify-center">
+                
+                <!-- Slide 1 -->
+                <div class="testimonial-slide flex flex-col justify-center items-center text-center px-4 transition-all duration-500 ease-in-out" id="slide-0">
+                    <p class="text-lg md:text-xl font-light italic text-zinc-300 leading-relaxed mb-6">
+                        "Saya sangat merekomendasikan Devraj Chatribin kepada siapa pun yang mencari insinyur perangkat lunak berbakat dengan keahlian yang kuat di Angular. Pemahaman mendalamnya tentang pengembangan UI secara konsisten meningkatkan kualitas proyek kami. Cepat tanggap, kolaboratif, dan selalu memberikan solusi terbaik."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-black font-extrabold">VN</div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-sm text-white">Vritika Naik</h4>
+                            <p class="text-zinc-500 text-xs">Regional Head @GirlScript</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="testimonial-slide flex flex-col justify-center items-center text-center px-4 transition-all duration-500 ease-in-out hidden" id="slide-1">
+                    <p class="text-lg md:text-xl font-light italic text-zinc-300 leading-relaxed mb-6">
+                        "Ia adalah Desainer UI/UX yang sangat inovatif sekaligus pengembang yang mumpuni. Saya sangat menikmati pendekatan kreatifnya, dan ide-ide desainnya selalu brilian di luar dugaan."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-extrabold">TN</div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-sm text-white">Trusha Neogi</h4>
+                            <p class="text-zinc-500 text-xs">UI/UX Design Intern @Hexcoderz</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="testimonial-slide flex flex-col justify-center items-center text-center px-4 transition-all duration-500 ease-in-out hidden" id="slide-2">
+                    <p class="text-lg md:text-xl font-light italic text-zinc-300 leading-relaxed mb-6">
+                        "Devraj tidak hanya desainer yang luar biasa, tetapi juga insinyur yang sangat terampil. Kepemimpinannya dalam mengelola komunitas sangat inspiratif dan membantu ratusan talenta belajar desain digital."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-extrabold">VS</div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-sm text-white">Vipula Sail</h4>
+                            <p class="text-zinc-500 text-xs">Google DSC Lead | Mentor @Microsoft</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Navigasi Slider -->
+            <div class="flex justify-center gap-3 mt-8">
+                <button onclick="prevTestimonial()" class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-emerald-500 transition-all flex items-center justify-center active:scale-95">
+                    <i class="fas fa-chevron-left text-xs"></i>
+                </button>
+                <button onclick="nextTestimonial()" class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-emerald-500 transition-all flex items-center justify-center active:scale-95">
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hubungi & Tanya Jawab -->
+    <section id="contact" class="py-24 bg-brandGray border-t border-white/5 px-6 md:px-12">
+        <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            
+            <!-- Kolom Kiri: Tanya Jawab (FAQ) -->
+            <div class="lg:col-span-6 flex flex-col gap-6">
+                <div>
+                    <span class="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Ada Pertanyaan?</span>
+                    <h2 class="font-syne font-extrabold text-3xl md:text-4xl mt-2 text-white">Sering Ditanyakan.</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- FAQ 1 -->
+                    <div class="faq-item bg-zinc-900/60 border border-zinc-800 rounded-xl overflow-hidden">
+                        <button onclick="toggleFAQ(0)" class="w-full p-5 flex justify-between items-center text-left hover:bg-zinc-800/40 transition-colors">
+                            <span class="font-semibold text-white">Apa peran kerja Anda saat ini?</span>
+                            <i class="fas fa-plus text-xs text-zinc-500 transition-transform" id="faq-icon-0"></i>
+                        </button>
+                        <div class="faq-content hidden p-5 pt-0 border-t border-white/5 text-sm text-zinc-400 leading-relaxed" id="faq-content-0">
+                            Saat ini saya bekerja sebagai Associate Software Engineer di OneShield Software, berfokus pada pengembangan arsitektur frontend web responsif. Saya juga mengelola komunitas Design & Code.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="faq-item bg-zinc-900/60 border border-zinc-800 rounded-xl overflow-hidden">
+                        <button onclick="toggleFAQ(1)" class="w-full p-5 flex justify-between items-center text-left hover:bg-zinc-800/40 transition-colors">
+                            <span class="font-semibold text-white">Apakah Anda bersedia bekerja penuh waktu?</span>
+                            <i class="fas fa-plus text-xs text-zinc-500 transition-transform" id="faq-icon-1"></i>
+                        </button>
+                        <div class="faq-content hidden p-5 pt-0 border-t border-white/5 text-sm text-zinc-400 leading-relaxed" id="faq-content-1">
+                            Ya! Saya sangat terbuka untuk mendiskusikan peluang kerja penuh waktu secara jarak jauh (remote) maupun relokasi dengan tim rekayasa perangkat lunak global.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="faq-item bg-zinc-900/60 border border-zinc-800 rounded-xl overflow-hidden">
+                        <button onclick="toggleFAQ(2)" class="w-full p-5 flex justify-between items-center text-left hover:bg-zinc-800/40 transition-colors">
+                            <span class="font-semibold text-white">Teknologi apa yang paling Anda sukai?</span>
+                            <i class="fas fa-plus text-xs text-zinc-500 transition-transform" id="faq-icon-2"></i>
+                        </button>
+                        <div class="faq-content hidden p-5 pt-0 border-t border-white/5 text-sm text-zinc-400 leading-relaxed" id="faq-content-2">
+                            Teknologi harian saya adalah React, TypeScript, Next.js, dan Tailwind CSS. Untuk kontrol animasi performa tinggi, saya menggunakan GSAP dan Framer Motion.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Rencana: Formulir Kontak -->
+            <div class="lg:col-span-6 glass-card p-8 rounded-2xl border border-white/10 flex flex-col gap-6">
+                <div>
+                    <h3 class="font-syne font-bold text-2xl text-white">Ayo Berkolaborasi.</h3>
+                    <p class="text-zinc-400 text-sm font-light mt-1">Kirim pesan langsung melalui formulir di bawah ini atau email ke <a href="mailto:devrajchatribin9978@gmail.com" class="text-emerald-400 hover:underline">devrajchatribin9978@gmail.com</a></p>
+                </div>
+
+                <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">Nama Lengkap</label>
+                        <input type="text" required class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors" placeholder="misal: Jane Doe">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">Alamat Email</label>
+                        <input type="email" required class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors" placeholder="misal: jane@company.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">Isi Pesan Anda</label>
+                        <textarea required rows="4" class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors resize-none" placeholder="Tuliskan detail ide atau tawaran proyek Anda..."></textarea>
+                    </div>
+
+                    <!-- Kontainer Notifikasi -->
+                    <div id="form-feedback" class="hidden p-3.5 rounded-lg text-xs font-semibold text-center"></div>
+
+                    <button type="submit" class="w-full py-4 bg-white text-black hover:bg-emerald-400 hover:text-black font-bold uppercase tracking-wider text-xs rounded-full transition-colors active:scale-95 shadow-lg flex items-center justify-center gap-2">
+                        Kirim Penawaran
+                        <i class="fas fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/5 bg-brandDark px-6 md:px-12 text-center relative z-10">
+        <div class="max-w-6xl mx-auto w-full flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-xs">
+            <div class="flex items-center gap-2">
+                <span class="font-syne font-bold text-white tracking-wider text-base">DEVRAJ CHATRIBIN.</span>
+                <span class="text-zinc-600">|</span>
+                <span>© 2026. Hak cipta dilindungi undang-undang.</span>
+            </div>
+            
+            <div class="flex gap-6">
+                <a href="https://linkedin.com" target="_blank" class="hover:text-white transition-colors">LinkedIn</a>
+                <a href="https://github.com" target="_blank" class="hover:text-white transition-colors">GitHub</a>
+                <a href="https://instagram.com" target="_blank" class="hover:text-white transition-colors">Instagram</a>
+                <a href="mailto:devrajchatribin9978@gmail.com" class="hover:text-white transition-colors">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WIDGET AI CHAT TERINTEGRASI -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Panel Obrolan AI -->
+        <div id="ai-chat-window" class="w-[90vw] sm:w-[380px] h-[500px] rounded-3xl glass-card border border-white/10 flex flex-col shadow-2xl mb-4 overflow-hidden transform scale-95 opacity-0 pointer-events-none transition-all duration-300 origin-bottom-right">
+            <!-- Header Panel -->
+            <div class="p-4 bg-gradient-to-r from-purple-900/60 via-zinc-900/80 to-emerald-900/60 border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-emerald-400 p-[1.5px]">
+                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-brandDark animate-pulse"></span>
+                        <div class="w-full h-full rounded-full overflow-hidden bg-brandDark flex items-center justify-center">
+                            <i class="fas fa-robot text-xs text-emerald-400"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-syne font-bold text-xs text-white">Asisten AI Devraj</h4>
+                        <span class="text-[9px] text-emerald-400 uppercase tracking-widest font-mono">Selalu Online</span>
+                    </div>
+                </div>
+                <!-- Tombol Tutup Chat -->
+                <button onclick="toggleAIChat()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Wadah Riwayat Obrolan -->
+            <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 scrollbar-thin text-xs">
+                <!-- Pesan pembuka akan dimasukkan melalui JavaScript -->
+            </div>
+
+            <!-- Tombol Pintas / Sugesti Interaksi -->
+            <div class="px-3 py-2 border-t border-white/5 bg-zinc-950/30 flex flex-wrap gap-1.5" id="ai-chat-suggestions">
+                <button onclick="sendSuggestedMessage('Apa saja proyek terbaik Devraj?')" class="px-2.5 py-1 bg-white/5 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors">🚀 Proyek Unggulan</button>
+                <button onclick="sendSuggestedMessage('Teknologi apa saja yang ia kuasai?')" class="px-2.5 py-1 bg-white/5 hover:bg-purple-500/10 hover:text-purple-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors">💻 Keahlian Tech</button>
+                <button onclick="sendSuggestedMessage('Bagaimana cara berkolaborasi dengannya?')" class="px-2.5 py-1 bg-white/5 hover:bg-pink-500/10 hover:text-pink-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors">✉️ Kontak</button>
+            </div>
+
+            <!-- Area Formulir Input Pesan -->
+            <form id="ai-chat-form" onsubmit="submitAIChat(event)" class="p-3 bg-zinc-950 border-t border-white/10 flex gap-2">
+                <input id="ai-chat-input" type="text" autocomplete="off" required placeholder="Tanyakan sesuatu tentang Devraj..." class="flex-1 px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-2xl text-xs text-white focus:outline-none transition-colors">
+                <button type="submit" class="w-9 h-9 rounded-2xl bg-white text-black hover:bg-emerald-400 transition-colors flex items-center justify-center active:scale-95 shadow-md">
+                    <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Tombol Pemicu Sticky (Floating Trigger Button) -->
+        <button id="ai-chat-trigger" onclick="toggleAIChat()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-pink-600 to-emerald-400 p-[2px] shadow-2xl transition-all duration-300 active:scale-95 group z-50">
+            <!-- Ping ring efek gelombang bergetar di luar tombol -->
+            <span class="absolute inset-0 rounded-full bg-emerald-500/30 animate-ping -z-10 group-hover:opacity-100 opacity-60"></span>
+            <!-- Bagian dalam tombol -->
+            <div class="w-full h-full rounded-full bg-brandDark flex items-center justify-center group-hover:bg-brandDark/80 transition-colors">
+                <i id="ai-chat-icon" class="fas fa-comment-dots text-lg text-emerald-400 group-hover:scale-110 transition-transform"></i>
+            </div>
+        </button>
+    </div>
+
+    <!-- Modal Detail Proyek (Sistem Dinamis Mandiri) -->
+    <div id="project-modal" class="fixed inset-0 bg-brandDark/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 md:p-6 opacity-0 pointer-events-none transition-all duration-500">
+        <div class="w-full max-w-2xl bg-zinc-900 border border-white/10 rounded-2xl max-h-[85vh] overflow-y-auto relative p-6 md:p-8 shadow-2xl">
+            <!-- Tombol Tutup Modal -->
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 hover:text-white text-zinc-300 flex items-center justify-center transition-all focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Wadah Pengisi Konten Dinamis -->
+            <div id="modal-body-content">
+                <!-- Disuntikkan lewat JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logika Gerakan Kursor Kustom
+        const cursor = document.getElementById('custom-cursor');
+        const cursorDot = document.getElementById('custom-cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursor.style.opacity = '1';
+            cursorDot.style.opacity = '1';
+        });
+
+        // Menambahkan Efek Hover pada elemen interaktif untuk kursor
+        const hoverables = document.querySelectorAll('a, button, .project-card, .faq-item button');
+        hoverables.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                cursor.classList.add('w-12', 'h-12', 'border-purple-400', 'bg-purple-500/10');
+                cursorDot.classList.add('scale-[0.5]');
+            });
+            item.addEventListener('mouseleave', () => {
+                cursor.classList.remove('w-12', 'h-12', 'border-purple-400', 'bg-purple-500/10');
+                cursorDot.classList.remove('scale-[0.5]');
+            });
+        });
+
+        // 3D TILT EFFECT & GLOW UNTUK PROFILE CARD (ALA REACTBITS)
+        const profileCard = document.getElementById('profile-card');
+        const cardGlow = document.getElementById('card-glow');
+
+        if (profileCard && window.innerWidth > 1024) {
+            profileCard.addEventListener('mousemove', (e) => {
+                const rect = profileCard.getBoundingClientRect();
+                const x = e.clientX - rect.left; // Koordinat X di dalam kartu
+                const y = e.clientY - rect.top;  // Koordinat Y di dalam kartu
+
+                // Set posisi titik kilau (glow)
+                cardGlow.style.setProperty('--x', `${x}px`);
+                cardGlow.style.setProperty('--y', `${y}px`);
+
+                // Kalkulasi sudut kemiringan (maksimal 15 derajat)
+                const width = rect.width;
+                const height = rect.height;
+                const rotateX = ((y / height) - 0.5) * -15; // Putaran sumbu X
+                const rotateY = ((x / width) - 0.5) * 15;   // Putaran sumbu Y
+
+                profileCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            profileCard.addEventListener('mouseleave', () => {
+                // Kembalikan ke keadaan semula saat mouse keluar
+                profileCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+        }
+
+        // SISTEM NAVIGASI COLLAPSING PILL
+        const headerNav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                // Mengecilkan navbar menjadi bentuk kapsul mengapung
+                headerNav.classList.remove('absolute', 'top-0', 'left-0', 'w-full', 'px-6', 'md:px-12', 'py-6');
+                headerNav.classList.add('fixed', 'top-4', 'left-1/2', '-translate-x-1/2', 'max-w-[650px]', 'w-[90%]', 'px-6', 'py-3.5', 'rounded-full', 'glass-card', 'shadow-2xl', 'border-white/10');
+            } else {
+                // Mengembalikan navbar ke ukuran penuh semula
+                headerNav.classList.add('absolute', 'top-0', 'left-0', 'w-full', 'px-6', 'md:px-12', 'py-6');
+                headerNav.classList.remove('fixed', 'top-4', 'left-1/2', '-translate-x-1/2', 'max-w-[650px]', 'w-[90%]', 'px-6', 'py-3.5', 'rounded-full', 'glass-card', 'shadow-2xl', 'border-white/10');
+            }
+        });
+
+        // MENU NAVIGASI MOBILE (TRIGGER HAMBURGER)
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileNavMenu = document.getElementById('mobile-nav-menu');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        let isMobileMenuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                mobileNavMenu.classList.remove('-translate-y-full');
+                bar1.classList.add('rotate-45', 'translate-y-1');
+                bar2.classList.add('-rotate-45', '-translate-y-1');
+            } else {
+                mobileNavMenu.classList.add('-translate-y-full');
+                bar1.classList.remove('rotate-45', 'translate-y-1');
+                bar2.classList.remove('-rotate-45', '-translate-y-1');
+            }
+        });
+
+        // Menutup menu jika salah satu tautan diklik
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNavMenu.classList.add('-translate-y-full');
+                bar1.classList.remove('rotate-45', 'translate-y-1');
+                bar2.classList.remove('-rotate-45', '-translate-y-1');
+                isMobileMenuOpen = false;
+            });
+        });
+
+        // PORTFOLIO FILTER SYSTEM
+        function filterProjects(category) {
+            // Memperbarui gaya tombol aktif
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-black');
+                btn.classList.add('bg-zinc-900', 'text-zinc-400');
+            });
+            const selectedBtn = document.getElementById(`filter-${category}`);
+            selectedBtn.classList.add('bg-white', 'text-black');
+            selectedBtn.classList.remove('bg-zinc-900', 'text-zinc-400');
+
+            // Menyembunyikan/menampilkan kartu proyek
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (category === 'all' || cardCat === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.style.opacity = '1', 50);
+                } else {
+                    card.style.opacity = '0';
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
+        }
+
+        // DATABASE DETAIL PROYEK UNTUK MODAL
+        const projectsData = {
+            codescreenshot: {
+                title: "Code Screenshot",
+                category: "Development • Design • 2024",
+                roles: "Full-stack Developer, Visual Designer",
+                stack: "React, Zustand, TailwindCSS, HTML-to-Image",
+                desc: "Rangkaian utilitas premium untuk mengubah input teks polos menjadi blok mockup kode yang sangat cantik. Menyediakan bayangan kustom, multiplier blur latar belakang, penggeser warna dasar, modifier padding, serta identifikasi otomatis sintaksis kode bahasa pemrograman populer.",
+                features: ["10+ Palet warna preset elegan", "Font monospaced visual populer", "Generator gambar canvas langsung", "Tata letak sepenuhnya responsif"]
+            },
+            snapalyzer: {
+                title: "Snapalyzer AI",
+                category: "Development • 2024",
+                roles: "Lead Full-stack Developer, UI/UX Designer",
+                stack: "NextJS, TypeScript, Tailwind CSS, Google Gemini AI Engine",
+                desc: "Platform analisis gambar cerdas terintegrasi. Ketika pengguna menyeret gambar ke kanvas drop-zone, sistem memanggil Gemini API untuk menghasilkan kesimpulan ringkas, lencana label kustom, indikator semantik, serta menyarankan pertanyaan terkait gambar.",
+                features: ["Sistem drag & drop modern dengan preview langsung", "Ekstraktor tag konten real-time berkinerja tinggi", "Integrasi Gemini API aman dan efisien", "Pencari kata kunci pencarian yang sangat dinamis"]
+            },
+            collabxweb: {
+                title: "Collabxweb",
+                category: "Development • Design • 2022",
+                roles: "Lead Developer, Architect",
+                stack: "NextJS, TypeScript, Firebase Database, Redux State",
+                desc: "Ruang kolaborasi penulisan web bersama jarak jauh berkinerja tinggi. Menyediakan variabel sinkronisasi instan untuk mengoordinasikan gerakan kursor beberapa pengguna tanpa menimbulkan jeda/latensi server.",
+                features: ["Otentikasi aman satu langkah melalui akun Google", "Sinkronisasi status real-time Firebase teroptimasi", "Sistem seret lepas (drag-and-drop) tata letak visual", "Kompolator ekspor berkas langsung"]
+            },
+            indicov: {
+                title: "IndiCov Resource Portal",
+                category: "Design • Winner • 2021",
+                roles: "UI/UX Researcher, Frontend Lead",
+                stack: "ReactJS, ChartJS Data, Material UI framework",
+                desc: "Dikembangkan selama hackathon nasional MLH Hack At Home II. Meraih penghargaan Juara Utama dengan menyajikan visual peta terperinci ketersediaan kasur darurat rumah sakit regional secara dinamis dengan integrasi API kesehatan yang terverifikasi.",
+                features: ["Peta pelacakan sumber daya interaktif tingkat regional", "Grafik statistik visual informatif menggunakan ChartJS", "Memenangkan Penghargaan Karya Pemula Terbaik dari MLH", "Optimasi seluler ringan (mobile-first) super cepat"]
+            }
+        };
+
+        const modal = document.getElementById('project-modal');
+        const modalBody = document.getElementById('modal-body-content');
+
+        function openProjectModal(projectId) {
+            const data = projectsData[projectId];
+            if (!data) return;
+
+            // Membangun konten HTML modal secara dinamis
+            modalBody.innerHTML = `
+                <div class="flex flex-col gap-5 text-left">
+                    <span class="text-xs uppercase tracking-wider text-emerald-400 font-bold font-mono">${data.category}</span>
+                    <h3 class="font-syne font-extrabold text-3xl text-white">${data.title}</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 bg-zinc-950 p-4 rounded-xl border border-white/5 text-xs">
+                        <div>
+                            <span class="text-zinc-500 block uppercase font-bold mb-1">Peran Saya</span>
+                            <span class="text-zinc-200 font-medium">${data.roles}</span>
+                        </div>
+                        <div>
+                            <span class="text-zinc-500 block uppercase font-bold mb-1">Teknologi</span>
+                            <span class="text-zinc-200 font-medium">${data.stack}</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-sm text-white mb-2 uppercase tracking-wide">Ringkasan Proyek</h4>
+                        <p class="text-zinc-400 text-sm font-light leading-relaxed">${data.desc}</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-sm text-white mb-2 uppercase tracking-wide">Fitur Utama</h4>
+                        <ul class="space-y-1.5">
+                            ${data.features.map(feat => `
+                                <li class="text-xs text-zinc-300 flex items-center gap-2">
+                                    <i class="fas fa-check text-emerald-400 text-[10px]"></i>
+                                    <span>${feat}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Membuka modal dengan transisi mulus
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeProjectModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Event listener penutup modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeProjectModal();
+        });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeProjectModal();
+        });
+
+        // SLIDER TESTIMONI
+        let currentSlide = 0;
+        const totalSlides = 3;
+
+        function showSlide(index) {
+            document.querySelectorAll('.testimonial-slide').forEach(slide => {
+                slide.classList.add('hidden');
+            });
+            const activeSlide = document.getElementById(`slide-${index}`);
+            activeSlide.classList.remove('hidden');
+        }
+
+        function nextTestimonial() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function prevTestimonial() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // AKORDEON FAQ
+        function toggleFAQ(index) {
+            const content = document.getElementById(`faq-content-${index}`);
+            const icon = document.getElementById(`faq-icon-${index}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-plus');
+                icon.classList.add('fa-minus');
+                icon.parentElement.parentElement.classList.add('border-emerald-500/40');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.add('fa-plus');
+                icon.classList.remove('fa-minus');
+                icon.parentElement.parentElement.classList.remove('border-emerald-500/40');
+            }
+        }
+
+        // EVENT SUBMIT FORMULIR
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const feedback = document.getElementById('form-feedback');
+            
+            feedback.classList.remove('hidden', 'bg-red-500/20', 'text-red-400', 'bg-emerald-500/20', 'text-emerald-400');
+            feedback.classList.add('block', 'bg-emerald-500/20', 'text-emerald-300');
+            feedback.innerText = "✓ Terima kasih! Pesan Anda telah berhasil terkirim. Devraj akan segera menghubungi Anda.";
+
+            // Reset Form input
+            document.getElementById('contact-form').reset();
+            
+            // Sembunyikan notifikasi setelah 6 detik
+            setTimeout(() => {
+                feedback.classList.add('hidden');
+            }, 6000);
+        }
+
+        // INTERSECTION OBSERVER UNTUK ANIMASI SCROLL REVEAL
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        };
+
+        const revealObserver = new IntersectionObserver(revealCallback, {
+            threshold: 0.15
+        });
+
+        document.querySelectorAll('.reveal').forEach(element => {
+            revealObserver.observe(element);
+        });
+
+        // LOGIKA DAN INTEGRASI ASISTEN AI CHAT (GEMINI API)
+        let isChatOpen = false;
+        let isFirstTime = true;
+        let chatHistory = []; // Menyimpan riwayat obrolan dalam format lokal [{sender: 'user'|'bot', text: '...'}]
+
+        const chatWindow = document.getElementById('ai-chat-window');
+        const chatInput = document.getElementById('ai-chat-input');
+        const chatMessages = document.getElementById('ai-chat-messages');
+        const chatIcon = document.getElementById('ai-chat-icon');
+
+        function toggleAIChat() {
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                chatWindow.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
+                chatWindow.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                chatIcon.className = "fas fa-times text-lg text-purple-400";
+                
+                // Kirim pesan salam pertama kali asisten dibuka
+                if (isFirstTime) {
+                    isFirstTime = false;
+                    appendChatMessage('bot', "Halo! Saya adalah Asisten AI Virtual Devraj. Ada yang bisa saya bantu untuk mengenalkannya lebih dekat kepada Anda? Silakan tanya mengenai proyek-proyeknya, keahlian rekayasa webnya, atau cara bekerja sama.");
+                }
+            } else {
+                chatWindow.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+                chatWindow.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+                chatIcon.className = "fas fa-comment-dots text-lg text-emerald-400";
+            }
+        }
+
+        function appendChatMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`;
+
+            const isUser = sender === 'user';
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-[85%] px-3.5 py-2.5 rounded-2xl ${
+                    isUser 
+                        ? 'bg-gradient-to-r from-purple-600 to-emerald-500 text-white rounded-tr-none shadow-md' 
+                        : 'bg-zinc-900 border border-white/5 text-zinc-300 rounded-tl-none leading-relaxed'
+                }">
+                    <p class="whitespace-pre-line text-xs font-light">${text}</p>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Catat ke riwayat
+            chatHistory.push({ sender, text });
+        }
+
+        function showTypingIndicator() {
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.id = "chat-typing-indicator";
+            indicatorDiv.className = "flex justify-start items-center gap-1 bg-zinc-900 border border-white/5 w-16 px-3 py-2.5 rounded-2xl rounded-tl-none";
+            indicatorDiv.innerHTML = `
+                <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full bounce-dot"></span>
+                <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full bounce-dot"></span>
+                <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full bounce-dot"></span>
+            `;
+            chatMessages.appendChild(indicatorDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('chat-typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        async function fetchGeminiResponse(userMessage) {
+            const apiKey = ""; // Canvas akan menyuntikkan kunci API ini saat runtime secara otomatis jika kosong
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            
+            // Konteks kepribadian dan pengetahuan kustom mengenai Devraj Chatribin
+            const systemPrompt = `Anda adalah Asisten AI Virtual resmi untuk Devraj Chatribin, seorang Software Engineer & UI/UX Designer berbakat dari Goa, India.
+Tugas Anda adalah membantu pengunjung portofolionya dengan menjawab pertanyaan tentang dirinya dengan ramah, profesional, ringkas, dan jelas. Gunakan Bahasa Indonesia yang sopan dan lugas.
+
+Gunakan data berikut untuk menjawab pertanyaan:
+- Nama: Devraj Chatribin (@devraj_chatribin)
+- Peran: Software Engineer & UI/UX Specialist dengan pengalaman lebih dari 4 tahun.
+- Lokasi saat ini: Goa, India.
+- Pekerjaan Sekarang: Associate Software Engineer di OneShield Software (sejak Agustus 2022). Fokus pada pengembangan sistem arsitektur frontend web responsif, optimalisasi Angular, TypeScript, dan manajemen state. Berhasil memotong waktu pemuatan sistem sebesar 30%.
+- Pengalaman Lainnya: Pendiri & Direktur Teknologi Komunitas "Design and Code" (sejak Januari 2021) dengan lebih dari 1000 anggota; Design Engineer di BlackboxAI (Feb - Mar 2025).
+- Proyek-proyek Terpilih:
+  1. Code Screenshot: Alat interaktif untuk mendesain, menyesuaikan, dan mengekspor cuplikan kode dengan gaya gradien kustom (React, Zustand, TailwindCSS).
+  2. Snapalyzer AI: Sistem analitik gambar berbasis AI memanfaatkan Google Gemini API untuk analisis visual real-time (NextJS, TypeScript).
+  3. Collabxweb: Ruang kolaborasi penulisan kode real-time menggunakan Firebase Realtime Sync.
+  4. IndiCov Resource: Portal penanganan pandemi darurat di India, memenangkan MLH Hack At Home II (ReactJS, ChartJS).
+- Hubungi: Kirim pesan lewat formulir di bagian bawah website, atau email ke devrajchatribin9978@gmail.com.
+
+Berikan jawaban yang ramah, berfokus pada potensi kolaborasi profesional, dan selalu tawarkan mereka untuk menghubungi atau merekrut Devraj untuk proyek digital mereka.`;
+
+            // Petakan riwayat chat lokal ke format yang diterima API Gemini
+            const contents = chatHistory.map(msg => ({
+                role: msg.sender === 'user' ? 'user' : 'model',
+                parts: [{ text: msg.text }]
+            }));
+            
+            // Tambahkan pesan saat ini
+            contents.push({
+                role: 'user',
+                parts: [{ text: userMessage }]
+            });
+
+            const payload = {
+                contents: contents,
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            // Implementasi pemanggilan API dengan model penundaan eksponensial (exponential backoff) jika diperlukan
+            let attempt = 0;
+            const maxAttempts = 3;
+            let delay = 1000;
+
+            while (attempt < maxAttempts) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak dapat merumuskan jawaban saat ini.";
+                } catch (error) {
+                    attempt++;
+                    if (attempt >= maxAttempts) {
+                        console.error("Gagal menghubungi Gemini setelah beberapa kali percobaan:", error);
+                        return "Sistem asisten AI saya sedang mengalami kepadatan lalu lintas data. Silakan kirimkan penawaran Anda langsung melalui email ke devrajchatribin9978@gmail.com agar Devraj dapat segera merespons Anda!";
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2; // Lipat gandakan waktu tunggu untuk pertahanan throttling
+                }
+            }
+        }
+
+        async function submitAIChat(event) {
+            if (event) event.preventDefault();
+            
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            chatInput.value = "";
+            appendChatMessage('user', text);
+            showTypingIndicator();
+
+            try {
+                const responseText = await fetchGeminiResponse(text);
+                removeTypingIndicator();
+                appendChatMessage('bot', responseText);
+            } catch (err) {
+                removeTypingIndicator();
+                appendChatMessage('bot', "Mohon maaf, koneksi asisten AI terputus sementara. Anda bisa bertanya kembali atau langsung mengirim pesan lewat formulir kontak di sebelah kiri!");
+            }
+        }
+
+        function sendSuggestedMessage(text) {
+            chatInput.value = text;
+            submitAIChat();
+        }
+    </script>
+</body>
+</html>

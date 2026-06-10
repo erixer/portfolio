@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #050814;
+    color: #f3f4f6;
+    cursor: none; /* Hide default cursor to use custom cursor */
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 1024px) {
+    body {
+      cursor: auto;
+    }
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050814;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Infinite Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Scroll Reveal Effects */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Glassmorphism Utilities */
+.glass-card {
+  background: rgba(18, 18, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 3D Tilt Card Effects */
+.profile-card-3d {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  transform-style: preserve-3d;
+}
+
+.profile-card-3d:hover {
+  box-shadow: 0 25px 50px -12px rgba(56, 189, 248, 0.15);
+}
+
+.profile-card-inner {
+  transform: translateZ(30px);
+}
+
+/* Bouncing Dots Animation for Chat Loader */
+@keyframes dot-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.bounce-dot {
+  animation: dot-bounce 1s infinite ease-in-out;
+}
+
+.bounce-dot:nth-child(2) { animation-delay: 0.2s; }
+.bounce-dot:nth-child(3) { animation-delay: 0.4s; }

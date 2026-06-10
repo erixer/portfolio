@@ -1,0 +1,161 @@
+import { useState } from 'react';
+
+const faqsData = [
+  {
+    question: 'Apa peran kerja Anda saat ini?',
+    answer: 'Saat ini saya bekerja sebagai Associate Software Engineer di OneShield Software, berfokus pada pengembangan arsitektur frontend web responsif. Saya juga mengelola komunitas Design & Code.'
+  },
+  {
+    question: 'Apakah Anda bersedia bekerja penuh waktu?',
+    answer: 'Ya! Saya sangat terbuka untuk mendiskusikan peluang kerja penuh waktu secara jarak jauh (remote) maupun relokasi dengan tim rekayasa perangkat lunak global.'
+  },
+  {
+    question: 'Teknologi apa yang paling Anda sukai?',
+    answer: 'Teknologi harian saya adalah React, TypeScript, Next.js, dan Tailwind CSS. Untuk kontrol animasi performa tinggi, saya menggunakan GSAP dan Framer Motion.'
+  }
+];
+
+export default function ContactFAQ() {
+  const [activeFAQ, setActiveFAQ] = useState(null);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [feedback, setFeedback] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setActiveFAQ(activeFAQ === index ? null : index);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setFeedback({
+      type: 'success',
+      text: '✓ Terima kasih! Pesan Anda telah berhasil terkirim. Achmad akan segera menghubungi Anda.'
+    });
+
+    // Reset inputs
+    setFormData({ name: '', email: '', message: '' });
+
+    // Hide notice after 6 seconds
+    setTimeout(() => {
+      setFeedback(null);
+    }, 6000);
+  };
+
+  return (
+    <section id="contact" className="py-24 bg-brandGray border-t border-white/5 px-6 md:px-12">
+      <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        {/* Left Column: FAQ Accordion */}
+        <div className="lg:col-span-6 flex flex-col gap-6">
+          <div>
+            <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Ada Pertanyaan?</span>
+            <h2 className="font-syne font-extrabold text-3xl md:text-4xl mt-2 text-white">Sering Ditanyakan.</h2>
+          </div>
+
+          <div className="space-y-4">
+            {faqsData.map((faq, index) => {
+              const isOpen = activeFAQ === index;
+              return (
+                <div
+                  key={index}
+                  className={`faq-item bg-zinc-900/60 border rounded-xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-emerald-500/40' : 'border-zinc-800'
+                    }`}
+                >
+                  <button
+                    onClick={() => toggleFAQ(index)}
+                    className="w-full p-5 flex justify-between items-center text-left hover:bg-zinc-800/40 transition-colors"
+                  >
+                    <span className="font-semibold text-white">{faq.question}</span>
+                    <i className={`fas text-xs text-zinc-500 transition-transform ${isOpen ? 'fa-minus' : 'fa-plus'}`} />
+                  </button>
+                  <div
+                    className={`faq-content p-5 pt-0 border-t border-white/5 text-sm text-zinc-400 leading-relaxed transition-all duration-300 ${isOpen ? 'block' : 'hidden'
+                      }`}
+                  >
+                    {faq.answer}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right Column: Contact Form */}
+        <div className="lg:col-span-6 glass-card p-8 rounded-2xl border border-white/10 flex flex-col gap-6">
+          <div>
+            <h3 className="font-syne font-bold text-2xl text-white">Ayo Berkolaborasi.</h3>
+            <p className="text-zinc-400 text-sm font-light mt-1">
+              Kirim pesan langsung melalui formulir di bawah ini atau email ke{' '}
+              <a href="mailto:akhoiri052@gmail.com" className="text-emerald-400 hover:underline">
+                akhoiri052@gmail.com
+              </a>
+            </p>
+          </div>
+
+          <form onSubmit={handleFormSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">
+                Nama Lengkap
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
+                placeholder="misal: Jane Doe"
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">
+                Alamat Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
+                placeholder="misal: jane@company.com"
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">
+                Isi Pesan Anda
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+                rows="4"
+                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors resize-none"
+                placeholder="Tuliskan detail ide atau tawaran proyek Anda..."
+              />
+            </div>
+
+            {/* Notification alert banner */}
+            {feedback && (
+              <div className="p-3.5 rounded-lg text-xs font-semibold text-center bg-emerald-500/20 text-emerald-300">
+                {feedback.text}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-4 bg-white text-black hover:bg-emerald-400 hover:text-black font-bold uppercase tracking-wider text-xs rounded-full transition-colors active:scale-95 shadow-lg flex items-center justify-center gap-2"
+            >
+              Kirim Penawaran
+              <i className="fas fa-paper-plane text-xs" />
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}
