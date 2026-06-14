@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect, useRef } from 'react';
 
-const systemPrompt = `Anda adalah Asisten AI Virtual resmi untuk Achmad Khoiri, seorang Software Engineer & UI/UX Designer berbakat.
+const systemPromptId = `Anda adalah Asisten AI Virtual resmi untuk Achmad Khoiri, seorang Software Engineer & UI/UX Designer berbakat.
 Tugas Anda adalah membantu pengunjung portofolionya dengan menjawab pertanyaan tentang dirinya dengan ramah, profesional, ringkas, dan jelas. Gunakan Bahasa Indonesia yang sopan dan lugas.
 
 Gunakan data berikut untuk menjawab pertanyaan:
@@ -18,6 +19,26 @@ Gunakan data berikut untuk menjawab pertanyaan:
 
 Berikan jawaban yang ramah, berfokus pada potensi kolaborasi profesional, dan selalu tawarkan mereka untuk menghubungi atau merekrut Achmad untuk proyek digital mereka.`;
 
+const systemPromptEn = `You are the official Virtual AI Assistant for Achmad Khoiri, a talented Software Engineer & UI/UX Designer.
+Your job is to help visitors of his portfolio by answering questions about him in a friendly, professional, concise, and clear manner. Use polite and straightforward English.
+
+Use the following data to answer questions:
+- Name: Achmad Khoiri (@achmad_khoiri)
+- Role: Software Engineer & UI/UX Specialist with over 4 years of experience.
+- Current Location: Indonesia.
+- Current Job: Associate Software Engineer at OneShield Software (since August 2022). Focuses on developing responsive web frontend architectures, optimizing Angular, TypeScript, and state management. Successfully reduced system load times by 30%.
+- Other Experience: Founder & Tech Director of "Design and Code" Community (since January 2021) with over 1000 members; Design Engineer at BlackboxAI (Feb - Mar 2025).
+- Selected Projects:
+  1. Code Screenshot: An interactive tool to design, customize, and export code snippets with custom gradient styles (React, Zustand, TailwindCSS).
+  2. Snapalyzer AI: An AI-powered image analytics system utilizing Google Gemini API for real-time visual analysis (NextJS, TypeScript).
+  3. Collabxweb: A real-time collaborative code-writing workspace using Firebase Realtime Sync.
+  4. IndiCov Resource: An emergency pandemic management portal in India, winning MLH Hack At Home II (ReactJS, ChartJS).
+- Contact: Send a message via the form at the bottom of the website, or email akhoiri052@gmail.com.
+
+Provide friendly answers, focus on professional collaboration potential, and always invite them to contact or hire Achmad for their digital projects.`;
+
+import { useLanguage } from '../context/LanguageContext.jsx';
+
 export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -26,6 +47,7 @@ export default function AIChatbot() {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const { lang, t } = useLanguage();
 
   const messagesEndRef = useRef(null);
 
@@ -42,11 +64,11 @@ export default function AIChatbot() {
       setMessages([
         {
           sender: 'bot',
-          text: 'Halo! Saya adalah Asisten AI Virtual Achmad. Ada yang bisa saya bantu untuk mengenalkannya lebih dekat kepada Anda? Silakan tanya mengenai proyek-proyeknya, keahlian rekayasa webnya, atau cara bekerja sama.'
+          text: t('botWelcome')
         }
       ]);
     }
-  }, [isOpen, messages]);
+  }, [isOpen, messages, t]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -85,12 +107,12 @@ export default function AIChatbot() {
     // Check if we are running in localhost dev mode
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-    let apiUrl = '';
+    let apiUrl;
     const headers = { 'Content-Type': 'application/json' };
 
     if (isLocalhost) {
       // Use the Vite development server proxy to hide the key from Network inspector
-      apiUrl = '/api-gemini/v1beta/models/gemini-2.5-flash:generateContent';
+      apiUrl = '/api-gemini/v1beta/models/gemini-2.0-flash:generateContent';
 
       // If the user has entered a custom key in the settings panel, pass it in a header.
       // Otherwise, the proxy will fallback to the key in the server's `.env` automatically.
@@ -105,7 +127,7 @@ export default function AIChatbot() {
         return 'API Key Google Gemini belum dikonfigurasi! Silakan klik tombol ⚙️ (Pengaturan) di kanan atas jendela chat ini untuk memasukkan API Key Anda agar saya dapat membalas.';
       }
 
-      apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+      apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
       // Pass key in a header instead of a URL query parameter to avoid exposing it in the URL when inspected
       headers['x-goog-api-key'] = prodKey.trim().replace(/^['"]|['"]$/g, '');
     }
@@ -124,7 +146,7 @@ export default function AIChatbot() {
     const payload = {
       contents: contents,
       systemInstruction: {
-        parts: [{ text: systemPrompt }]
+        parts: [{ text: lang === 'id' ? systemPromptId : systemPromptEn }]
       }
     };
 
@@ -142,18 +164,27 @@ export default function AIChatbot() {
 
         if (!response.ok) {
           if (response.status === 400 || response.status === 403 || response.status === 401) {
-            throw new Error('API Key Google Gemini tidak valid atau belum diatur. Silakan periksa file .env Anda atau masukkan kunci yang benar melalui tombol ⚙️ di kanan atas.');
+            throw new Error(t('botErrorApiKey'));
+          }
+          if (response.status === 429) {
+            const limitErr = new Error(t('botError429'));
+            limitErr.status = 429;
+            throw limitErr;
           }
           throw new Error(`API Error: ${response.status}`);
         }
 
         const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak dapat merumuskan jawaban saat ini.';
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || t('botErrorFallback');
       } catch (error) {
+        if (error.status === 429) {
+          console.error('Gemini API Rate Limit:', error);
+          return error.message;
+        }
         attempt++;
         if (attempt >= maxAttempts) {
           console.error('Gemini API call failed:', error);
-          return error.message || 'Sistem asisten AI saya sedang mengalami gangguan koneksi. Silakan kirimkan penawaran Anda langsung melalui email ke achmadkhoiri@gmail.com agar Achmad dapat segera merespons Anda!';
+          return error.message || t('botErrorGeneral');
         }
         await new Promise((resolve) => setTimeout(resolve, delay));
         delay *= 2;
@@ -177,9 +208,9 @@ export default function AIChatbot() {
       const response = await fetchGeminiResponse(text, historySnapshot);
       setIsTyping(false);
       appendMessage('bot', response);
-    } catch (err) {
+    } catch {
       setIsTyping(false);
-      appendMessage('bot', 'Mohon maaf, koneksi asisten AI terputus sementara. Anda bisa bertanya kembali atau langsung mengirim pesan lewat formulir kontak!');
+      appendMessage('bot', t('botErrorFallback'));
     }
   };
 
@@ -210,20 +241,20 @@ export default function AIChatbot() {
               </div>
             </div>
             <div>
-              <h4 className="font-syne font-bold text-xs text-white">Asisten AI Achmad</h4>
-              <span className="text-[9px] text-emerald-400 uppercase tracking-widest font-mono">Selalu Online</span>
+              <h4 className="font-syne font-bold text-xs text-white">{t('botHeaderTitle')}</h4>
+              <span className="text-[9px] text-emerald-400 uppercase tracking-widest font-mono">{t('botHeaderSub')}</span>
             </div>
           </div>
 
           {/* Header Action Buttons */}
           <div className="flex items-center gap-1.5">
-            {/* <button
+            <button
               onClick={showSettings ? () => setShowSettings(false) : handleOpenSettings}
               className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
               title="API Key Configuration"
             >
               <i className="fas fa-cog text-xs" />
-            </button> */}
+            </button>
 
             <button
               onClick={toggleChat}
@@ -239,9 +270,9 @@ export default function AIChatbot() {
           <form onSubmit={handleSaveApiKey} className="flex-1 p-5 flex flex-col justify-between bg-zinc-950/90 text-xs">
             <div className="space-y-4">
               <div>
-                <h4 className="font-syne font-bold text-sm text-white mb-1">Pengaturan API Key</h4>
+                <h4 className="font-syne font-bold text-sm text-white mb-1">{t('botSettingsTitle')}</h4>
                 <p className="text-zinc-500 font-light leading-relaxed">
-                  Asisten ini menggunakan model Google Gemini API. Masukkan API Key Anda di sini untuk mengaktifkan chatbot. Kunci ini disimpan secara aman hanya di browser Anda (local storage).
+                  {t('botSettingsDesc')}
                 </p>
               </div>
 
@@ -275,13 +306,13 @@ export default function AIChatbot() {
                 onClick={handleClearApiKey}
                 className="flex-1 py-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-red-900/20 hover:text-red-400 text-zinc-400 font-bold transition-all text-[11px]"
               >
-                Hapus Kunci
+                {t('botClearKey')}
               </button>
               <button
                 type="submit"
                 className="flex-1 py-2 rounded-lg bg-white text-black hover:bg-emerald-400 font-bold transition-all text-[11px]"
               >
-                Simpan Kunci
+                {t('botSaveKey')}
               </button>
             </div>
           </form>
@@ -320,21 +351,21 @@ export default function AIChatbot() {
             {/* Quick Suggestions Banner */}
             <div className="px-3 py-2 border-t border-white/5 bg-zinc-950/30 flex flex-wrap gap-1.5">
               <button
-                onClick={() => handleSuggestedClick('Apa saja proyek terbaik Achmad?')}
+                onClick={() => handleSuggestedClick(t('botSugg1Text'))}
                 className="px-2.5 py-1 bg-white/5 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors"
               >
-                🚀 Proyek Unggulan
+                {t('botSugg1')}
               </button>
               <button
-                onClick={() => handleSuggestedClick('Teknologi apa saja yang ia kuasai?')}
+                onClick={() => handleSuggestedClick(t('botSugg2Text'))}
                 className="px-2.5 py-1 bg-white/5 hover:bg-purple-500/10 hover:text-purple-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors"
               >
-                💻 Keahlian Tech
+                {t('botSugg2')}
               </button>
               <button
-                onClick={() => handleSuggestedClick('Bagaimana cara berkolaborasi dengannya?')}
+                onClick={() => handleSuggestedClick(t('botSugg3Text'))}
                 className="px-2.5 py-1 bg-white/5 hover:bg-pink-500/10 hover:text-pink-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors">
-                ✉️ Kontak
+                {t('botSugg3')}
               </button>
             </div>
 
@@ -346,7 +377,7 @@ export default function AIChatbot() {
                 onChange={(e) => setInputText(e.target.value)}
                 autoComplete="off"
                 required
-                placeholder="Tanyakan sesuatu tentang Achmad..."
+                placeholder={t('botPlaceholder')}
                 className="flex-1 px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-2xl text-xs text-white focus:outline-none transition-colors"
               />
               <button

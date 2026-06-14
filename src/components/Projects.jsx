@@ -1,4 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext.jsx';
 
 export const projectsData = [
   {
@@ -9,7 +11,10 @@ export const projectsData = [
     gradientClass: 'from-purple-900/40 to-black',
     tagColors: ['text-emerald-400', 'text-purple-400'],
     year: 2024,
-    description: 'Alat interaktif yang dirancang untuk merancang, menyesuaikan, dan mengekspor cuplikan kode dengan gaya gradien kustom.',
+    description: {
+      id: 'Alat interaktif yang dirancang untuk merancang, menyesuaikan, dan mengekspor cuplikan kode dengan gaya gradien kustom.',
+      en: 'Interactive tool designed to design, customize, and export code snippets with custom gradient styles.'
+    },
     renderVisual: () => (
       <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-3 group-hover:scale-105 transition-transform duration-500 relative flex flex-col justify-between">
         <div className="flex gap-1.5">
@@ -29,11 +34,23 @@ export const projectsData = [
       </div>
     ),
     details: {
-      category: "Development • Design • 2024",
-      roles: "Full-stack Developer, Visual Designer",
+      category: {
+        id: "Development • Design • 2024",
+        en: "Development • Design • 2024"
+      },
+      roles: {
+        id: "Full-stack Developer, Visual Designer",
+        en: "Full-stack Developer, Visual Designer"
+      },
       stack: "React, Zustand, TailwindCSS, HTML-to-Image",
-      desc: "Rangkaian utilitas premium untuk mengubah input teks polos menjadi blok mockup kode yang sangat cantik. Menyediakan bayangan kustom, multiplier blur latar belakang, penggeser warna dasar, modifier padding, serta identifikasi otomatis sintaksis kode bahasa pemrograman populer.",
-      features: ["10+ Palet warna preset elegan", "Font monospaced visual populer", "Generator gambar canvas langsung", "Tata letak sepenuhnya responsif"]
+      desc: {
+        id: "Rangkaian utilitas premium untuk mengubah input teks polos menjadi blok mockup kode yang sangat cantik. Menyediakan bayangan kustom, multiplier blur latar belakang, penggeser warna dasar, modifier padding, serta identifikasi otomatis sintaksis kode bahasa pemrograman populer.",
+        en: "A premium suite of utilities to transform plain text input into gorgeous code mockup blocks. Features custom drop shadows, background blur multipliers, base color sliders, padding modifiers, and syntax highlighting for popular programming languages."
+      },
+      features: {
+        id: ["10+ Palet warna preset elegan", "Font monospaced visual populer", "Generator gambar canvas langsung", "Tata letak sepenuhnya responsif"],
+        en: ["10+ Elegant preset color palettes", "Popular visual monospaced fonts", "Live canvas image generator", "Fully responsive layout"]
+      }
     }
   },
   {
@@ -44,7 +61,10 @@ export const projectsData = [
     gradientClass: 'from-emerald-900/40 to-black',
     tagColors: ['text-emerald-400', 'text-cyan-400'],
     year: 2024,
-    description: 'Sistem analitik berbasis AI memanfaatkan Google Gemini API untuk menganalisis, mengulas, dan mengidentifikasi konteks visual gambar secara real-time.',
+    description: {
+      id: 'Sistem analitik berbasis AI memanfaatkan Google Gemini API untuk menganalisis, mengulas, dan mengidentifikasi konteks visual gambar secara real-time.',
+      en: 'AI-powered image analytics system utilizing Google Gemini API to analyze, review, and identify visual context of images in real-time.'
+    },
     renderVisual: () => (
       <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-4 group-hover:scale-105 transition-transform duration-500 flex flex-col items-center justify-center gap-2">
         <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg border border-emerald-500/30">
@@ -55,11 +75,23 @@ export const projectsData = [
       </div>
     ),
     details: {
-      category: "Development • 2024",
-      roles: "Lead Full-stack Developer, UI/UX Designer",
+      category: {
+        id: "Development • 2024",
+        en: "Development • 2024"
+      },
+      roles: {
+        id: "Lead Full-stack Developer, UI/UX Designer",
+        en: "Lead Full-stack Developer, UI/UX Designer"
+      },
       stack: "NextJS, TypeScript, Tailwind CSS, Google Gemini AI Engine",
-      desc: "Platform analisis gambar cerdas terintegrasi. Ketika pengguna menyeret gambar ke kanvas drop-zone, sistem memanggil Gemini API untuk menghasilkan kesimpulan ringkas, lencana label kustom, indikator semantik, serta menyarankan pertanyaan terkait gambar.",
-      features: ["Sistem drag & drop modern dengan preview langsung", "Ekstraktor tag konten real-time berkinerja tinggi", "Integrasi Gemini API aman dan efisien", "Pencari kata kunci pencarian yang sangat dinamis"]
+      desc: {
+        id: "Platform analisis gambar cerdas terintegrasi. Ketika pengguna menyeret gambar ke kanvas drop-zone, sistem memanggil Gemini API untuk menghasilkan kesimpulan ringkas, lencana label kustom, indikator semantik, serta menyarankan pertanyaan terkait gambar.",
+        en: "An integrated smart image analysis platform. When users drag an image onto the canvas drop-zone, the system calls the Gemini API to generate concise summaries, custom labels, semantic indicators, and suggests related questions."
+      },
+      features: {
+        id: ["Sistem drag & drop modern dengan preview langsung", "Ekstraktor tag konten real-time berkinerja tinggi", "Integrasi Gemini API aman dan efisien", "Pencari kata kunci pencarian yang sangat dinamis"],
+        en: ["Modern drag-and-drop system with live preview", "High-performance real-time content tag extractor", "Secure and efficient Gemini API integration", "Highly dynamic keyword search finder"]
+      }
     }
   },
   {
@@ -70,7 +102,10 @@ export const projectsData = [
     gradientClass: 'from-indigo-900/40 to-black',
     tagColors: ['text-emerald-400', 'text-purple-400'],
     year: 2022,
-    description: 'Ruang kolaborasi penulisan kode real-time yang memungkinkan tim pengembang menyusun, memeriksa, dan mensinkronisasikan web langsung.',
+    description: {
+      id: 'Ruang kolaborasi penulisan kode real-time yang memungkinkan tim pengembang menyusun, memeriksa, dan mensinkronisasikan web langsung.',
+      en: 'Real-time collaborative code-writing workspace allowing development teams to draft, inspect, and synchronize web pages live.'
+    },
     renderVisual: () => (
       <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-4 group-hover:scale-105 transition-transform duration-500 flex flex-col justify-between">
         <div className="flex justify-between items-center">
@@ -92,11 +127,23 @@ export const projectsData = [
       </div>
     ),
     details: {
-      category: "Development • Design • 2022",
-      roles: "Lead Developer, Architect",
+      category: {
+        id: "Development • Design • 2022",
+        en: "Development • Design • 2022"
+      },
+      roles: {
+        id: "Lead Developer, Architect",
+        en: "Lead Developer, Architect"
+      },
       stack: "NextJS, TypeScript, Firebase Database, Redux State",
-      desc: "Ruang kolaborasi penulisan web bersama jarak jauh berkinerja tinggi. Menyediakan variabel sinkronisasi instan untuk mengoordinasikan gerakan kursor beberapa pengguna tanpa menimbulkan jeda/latensi server.",
-      features: ["Otentikasi aman satu langkah melalui akun Google", "Sinkronisasi status real-time Firebase teroptimasi", "Sistem seret lepas (drag-and-drop) tata letak visual", "Kompolator ekspor berkas langsung"]
+      desc: {
+        id: "Ruang kolaborasi penulisan web bersama jarak jauh berkinerja tinggi. Menyediakan variabel sinkronisasi instan untuk mengoordinasikan gerakan kursor beberapa pengguna tanpa menimbulkan jeda/latensi server.",
+        en: "A high-performance remote collaborative web editing workspace. Provides real-time synchronization variables to coordinate cursor movements of multiple users without server latency."
+      },
+      features: {
+        id: ["Otentikasi aman satu langkah melalui akun Google", "Sinkronisasi status real-time Firebase teroptimasi", "Sistem seret lepas (drag-and-drop) tata letak visual", "Kompolator ekspor berkas langsung"],
+        en: ["Secure one-step authentication via Google account", "Optimized Firebase real-time status synchronization", "Visual layout drag-and-drop system", "Direct file export compiler"]
+      }
     }
   },
   {
@@ -107,7 +154,10 @@ export const projectsData = [
     gradientClass: 'from-pink-900/40 to-black',
     tagColors: ['text-purple-400', 'text-rose-400'],
     year: 2021,
-    description: 'Dasbor analitik penanganan pandemi untuk mempertemukan pasien secara darurat dengan penyedia kasur medis yang tervalidasi di India.',
+    description: {
+      id: 'Dasbor analitik penanganan pandemi untuk mempertemukan pasien secara darurat dengan penyedia kasur medis yang tervalidasi di India.',
+      en: 'Pandemic response analytics dashboard connecting emergency patients with validated medical bed providers in India.'
+    },
     renderVisual: () => (
       <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-4 group-hover:scale-105 transition-transform duration-500 flex flex-col justify-between">
         <span className="text-xs font-mono text-rose-400 font-bold">IndiCov Portal</span>
@@ -121,17 +171,30 @@ export const projectsData = [
       </div>
     ),
     details: {
-      category: "Design • Winner • 2021",
-      roles: "UI/UX Researcher, Frontend Lead",
+      category: {
+        id: "Design • Winner • 2021",
+        en: "Design • Winner • 2021"
+      },
+      roles: {
+        id: "UI/UX Researcher, Frontend Lead",
+        en: "UI/UX Researcher, Frontend Lead"
+      },
       stack: "ReactJS, ChartJS Data, Material UI framework",
-      desc: "Dasbor analitik penanganan pandemi untuk mempertemukan pasien secara darurat dengan penyedia kasur medis yang tervalidasi di India.",
-      features: ["Peta pelacakan sumber daya interaktif tingkat regional", "Grafik statistik visual informatif menggunakan ChartJS", "Memenangkan Penghargaan Karya Pemula Terbaik dari MLH", "Optimasi seluler ringan (mobile-first) super cepat"]
+      desc: {
+        id: "Dasbor analitik penanganan pandemi untuk mempertemukan pasien secara darurat dengan penyedia kasur medis yang tervalidasi di India.",
+        en: "Pandemic response analytics dashboard connecting emergency patients with validated medical bed providers in India."
+      },
+      features: {
+        id: ["Peta pelacakan sumber daya interaktif tingkat regional", "Grafik statistik visual informatif menggunakan ChartJS", "Memenangkan Penghargaan Karya Pemula Terbaik dari MLH", "Optimasi seluler ringan (mobile-first) super cepat"],
+        en: ["Interactive regional resource tracking map", "Informative statistical charts using ChartJS", "Won the Best Debutant Project Award from MLH", "Super fast, lightweight mobile-first optimization"]
+      }
     }
   }
 ];
 
 export default function Projects({ onSelectProject }) {
   const [filter, setFilter] = useState('all');
+  const { lang, t } = useLanguage();
 
   const filteredProjects = projectsData.filter((project) => {
     if (filter === 'all') return true;
@@ -142,10 +205,10 @@ export default function Projects({ onSelectProject }) {
     <section id="projects" className="py-24 px-6 md:px-12 max-w-6xl mx-auto w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 reveal">
         <div>
-          <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Proyek Terpilih</span>
-          <h2 className="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">Karya Kreatif Saya.</h2>
+          <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t('projectSub')}</span>
+          <h2 className="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">{t('projectTitle')}</h2>
           <p className="text-zinc-400 mt-2 font-light max-w-md">
-            Berikut adalah beberapa proyek unggulan yang menunjukkan keahlian pengembangan dan solusi UI/UX yang saya bangun.
+            {t('projectDesc')}
           </p>
         </div>
 
@@ -159,7 +222,7 @@ export default function Projects({ onSelectProject }) {
                 : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white'
             }`}
           >
-            Semua
+            {t('projectFilterAll')}
           </button>
           <button
             onClick={() => setFilter('development')}
@@ -169,7 +232,7 @@ export default function Projects({ onSelectProject }) {
                 : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white'
             }`}
           >
-            Development
+            {t('projectFilterDev')}
           </button>
           <button
             onClick={() => setFilter('design')}
@@ -179,7 +242,7 @@ export default function Projects({ onSelectProject }) {
                 : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white'
             }`}
           >
-            Design
+            {t('projectFilterDes')}
           </button>
         </div>
       </div>
@@ -214,7 +277,7 @@ export default function Projects({ onSelectProject }) {
                 </h3>
                 <span className="text-zinc-500 text-sm">{project.year}</span>
               </div>
-              <p className="text-zinc-400 text-sm font-light mt-2">{project.description}</p>
+              <p className="text-zinc-400 text-sm font-light mt-2">{project.description[lang]}</p>
             </div>
           </div>
         ))}

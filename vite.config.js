@@ -1,13 +1,14 @@
+/* global process */
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const apiKey = (env.VITE_GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+  const apiKey = (env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
 
   console.log('--- Gemini Proxy Initializing ---');
-  console.log('VITE_GEMINI_API_KEY status:', apiKey ? `Loaded (ends with ...${apiKey.slice(-5)})` : 'Not found in .env');
+  console.log('Gemini API Key status:', apiKey ? `Loaded (ends with ...${apiKey.slice(-5)})` : 'Not found in .env');
   console.log('---------------------------------');
 
   return {
@@ -21,8 +22,12 @@ export default defineConfig(({ mode }) => {
           configure: (proxy) => {
             proxy.on('proxyReq', (proxyReq, req) => {
               console.log(`[Proxy Request] Path: ${req.url}`);
+              // Reload env dynamically to get the latest key without restarting the Vite server
+              const currentEnv = loadEnv(mode, process.cwd(), '');
+              const currentApiKey = (currentEnv.VITE_GEMINI_API_KEY || currentEnv.GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+
               // Get key from client-sent header or fallback to loaded env key
-              const clientKey = req.headers['x-local-api-key'] || apiKey;
+              const clientKey = req.headers['x-local-api-key'] || currentApiKey;
               if (clientKey) {
                 console.log(`[Proxy Request] Injecting API Key ending in ...${clientKey.slice(-5)}`);
                 proxyReq.setHeader('x-goog-api-key', clientKey);

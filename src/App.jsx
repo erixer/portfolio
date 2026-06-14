@@ -10,9 +10,11 @@ import Testimonials from './components/Testimonials';
 import ContactFAQ from './components/ContactFAQ';
 import AIChatbot from './components/AIChatbot';
 import useIntersectionObserver from './hooks/useIntersectionObserver';
+import { useLanguage } from './context/LanguageContext.jsx';
 
 function App() {
   const [selectedProject, setSelectedProject] = useState(null);
+  const { t } = useLanguage();
 
   // Initialize intersection observer for scroll reveals
   useIntersectionObserver();
@@ -34,7 +36,7 @@ function App() {
           <div className="flex items-center gap-2">
             <span className="font-syne font-bold text-white tracking-wider text-base">ACHMAD KHOIRI.</span>
             <span className="text-zinc-600">|</span>
-            <span>© 2026. Hak cipta dilindungi undang-undang.</span>
+            <span>{t('footerCopyright')}</span>
           </div>
 
           <div className="flex gap-6">

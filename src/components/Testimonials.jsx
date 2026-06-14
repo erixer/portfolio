@@ -1,22 +1,32 @@
 import { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext.jsx';
 
 const testimonialsData = [
   {
-    text: `"Saya sangat merekomendasikan Achmad Khoiri kepada siapa pun yang mencari insinyur perangkat lunak berbakat dengan keahlian yang kuat di Angular. Pemahaman mendalamnya tentang pengembangan UI secara konsisten meningkatkan kualitas proyek kami. Cepat tanggap, kolaboratif, dan selalu memberikan solusi terbaik."`,
+    text: {
+      id: `"Saya sangat merekomendasikan Achmad Khoiri kepada siapa pun yang mencari insinyur perangkat lunak berbakat dengan keahlian yang kuat di Angular. Pemahaman mendalamnya tentang pengembangan UI secara konsisten meningkatkan kualitas proyek kami. Cepat tanggap, kolaboratif, dan selalu memberikan solusi terbaik."`,
+      en: `"I highly recommend Achmad Khoiri to anyone looking for a talented software engineer with strong expertise in Angular. His deep understanding of UI development consistently elevated our project quality. Responsive, collaborative, and always delivers the best solutions."`
+    },
     author: 'Vritika Naik',
     role: 'Regional Head @GirlScript',
     initials: 'VN',
     bgColor: 'bg-emerald-500'
   },
   {
-    text: `"Ia adalah Desainer UI/UX yang sangat inovatif sekaligus pengembang yang mumpuni. Saya sangat menikmati pendekatan kreatifnya, dan ide-ide desainnya selalu brilian di luar dugaan."`,
+    text: {
+      id: `"Ia adalah Desainer UI/UX yang sangat inovatif sekaligus pengembang yang mumpuni. Saya sangat menikmati pendekatan kreatifnya, dan ide-ide desainnya selalu brilian di luar dugaan."`,
+      en: `"He is a highly innovative UI/UX Designer as well as a capable developer. I really enjoyed his creative approach, and his design ideas were always brilliant and beyond expectations."`
+    },
     author: 'Trusha Neogi',
     role: 'UI/UX Design Intern @Hexcoderz',
     initials: 'TN',
     bgColor: 'bg-purple-500'
   },
   {
-    text: `"Achmad tidak hanya desainer yang luar biasa, tetapi juga insinyur yang sangat terampil. Kepemimpinannya dalam mengelola komunitas sangat inspiratif dan membantu ratusan talenta belajar desain digital."`,
+    text: {
+      id: `"Achmad tidak hanya desainer yang luar biasa, tetapi juga insinyur yang sangat terampil. Kepemimpinannya dalam mengelola komunitas sangat inspiratif dan membantu ratusan talenta belajar desain digital."`,
+      en: `"Achmad is not only an outstanding designer, but also a highly skilled engineer. His leadership in managing the community is very inspiring and has helped hundreds of talents learn digital design."`
+    },
     author: 'Vipula Sail',
     role: 'Google DSC Lead | Mentor @Microsoft',
     initials: 'VS',
@@ -26,6 +36,7 @@ const testimonialsData = [
 
 export default function Testimonials() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { lang, t } = useLanguage();
 
   const nextTestimonial = () => {
     setCurrentSlide((prev) => (prev + 1) % testimonialsData.length);
@@ -38,10 +49,10 @@ export default function Testimonials() {
   return (
     <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto w-full relative">
       <div className="text-center mb-16 reveal">
-        <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Testimoni</span>
-        <h2 className="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">Apa Kata Mereka.</h2>
+        <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t('testiSub')}</span>
+        <h2 className="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">{t('testiTitle')}</h2>
         <p className="text-zinc-400 mt-2 font-light max-w-md mx-auto">
-          Tanggapan dari para profesional dan klien yang pernah bekerja sama dengan saya.
+          {t('testiDesc')}
         </p>
       </div>
 
@@ -56,7 +67,7 @@ export default function Testimonials() {
               }`}
             >
               <p className="text-lg md:text-xl font-light italic text-zinc-300 leading-relaxed mb-6">
-                {testimonial.text}
+                {testimonial.text[lang]}
               </p>
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full ${testimonial.bgColor} flex items-center justify-center text-black font-extrabold`}>

@@ -1,17 +1,36 @@
 import { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext.jsx';
 
 const faqsData = [
   {
-    question: 'Apa peran kerja Anda saat ini?',
-    answer: 'Saat ini saya bekerja sebagai Associate Software Engineer di OneShield Software, berfokus pada pengembangan arsitektur frontend web responsif. Saya juga mengelola komunitas Design & Code.'
+    question: {
+      id: 'Apa peran kerja Anda saat ini?',
+      en: 'What is your current job role?'
+    },
+    answer: {
+      id: 'Saat ini saya bekerja sebagai Associate Software Engineer di OneShield Software, berfokus pada pengembangan arsitektur frontend web responsif. Saya juga mengelola komunitas Design & Code.',
+      en: 'Currently, I work as an Associate Software Engineer at OneShield Software, focusing on responsive web frontend architecture development. I also manage the Design & Code community.'
+    }
   },
   {
-    question: 'Apakah Anda bersedia bekerja penuh waktu?',
-    answer: 'Ya! Saya sangat terbuka untuk mendiskusikan peluang kerja penuh waktu secara jarak jauh (remote) maupun relokasi dengan tim rekayasa perangkat lunak global.'
+    question: {
+      id: 'Apakah Anda bersedia bekerja penuh waktu?',
+      en: 'Are you available for full-time positions?'
+    },
+    answer: {
+      id: 'Ya! Saya sangat terbuka untuk mendiskusikan peluang kerja penuh waktu secara jarak jauh (remote) maupun relokasi dengan tim rekayasa perangkat lunak global.',
+      en: 'Yes! I am highly open to discussing remote or relocation full-time opportunities with global software engineering teams.'
+    }
   },
   {
-    question: 'Teknologi apa yang paling Anda sukai?',
-    answer: 'Teknologi harian saya adalah React, TypeScript, Next.js, dan Tailwind CSS. Untuk kontrol animasi performa tinggi, saya menggunakan GSAP dan Framer Motion.'
+    question: {
+      id: 'Teknologi apa yang paling Anda sukai?',
+      en: 'What technologies do you prefer?'
+    },
+    answer: {
+      id: 'Teknologi harian saya adalah React, TypeScript, Next.js, dan Tailwind CSS. Untuk kontrol animasi performa tinggi, saya menggunakan GSAP dan Framer Motion.',
+      en: 'My daily stack includes React, TypeScript, Next.js, and Tailwind CSS. For high-performance animation control, I use GSAP and Framer Motion.'
+    }
   }
 ];
 
@@ -19,6 +38,7 @@ export default function ContactFAQ() {
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [feedback, setFeedback] = useState(null);
+  const { lang, t } = useLanguage();
 
   const toggleFAQ = (index) => {
     setActiveFAQ(activeFAQ === index ? null : index);
@@ -33,7 +53,7 @@ export default function ContactFAQ() {
     e.preventDefault();
     setFeedback({
       type: 'success',
-      text: '✓ Terima kasih! Pesan Anda telah berhasil terkirim. Achmad akan segera menghubungi Anda.'
+      text: t('contactFormSuccess')
     });
 
     // Reset inputs
@@ -51,8 +71,8 @@ export default function ContactFAQ() {
         {/* Left Column: FAQ Accordion */}
         <div className="lg:col-span-6 flex flex-col gap-6">
           <div>
-            <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">Ada Pertanyaan?</span>
-            <h2 className="font-syne font-extrabold text-3xl md:text-4xl mt-2 text-white">Sering Ditanyakan.</h2>
+            <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t('contactSub')}</span>
+            <h2 className="font-syne font-extrabold text-3xl md:text-4xl mt-2 text-white">{t('contactTitle')}</h2>
           </div>
 
           <div className="space-y-4">
@@ -68,14 +88,14 @@ export default function ContactFAQ() {
                     onClick={() => toggleFAQ(index)}
                     className="w-full p-5 flex justify-between items-center text-left hover:bg-zinc-800/40 transition-colors"
                   >
-                    <span className="font-semibold text-white">{faq.question}</span>
+                    <span className="font-semibold text-white">{faq.question[lang]}</span>
                     <i className={`fas text-xs text-zinc-500 transition-transform ${isOpen ? 'fa-minus' : 'fa-plus'}`} />
                   </button>
                   <div
                     className={`faq-content p-5 pt-0 border-t border-white/5 text-sm text-zinc-400 leading-relaxed transition-all duration-300 ${isOpen ? 'block' : 'hidden'
                       }`}
                   >
-                    {faq.answer}
+                    {faq.answer[lang]}
                   </div>
                 </div>
               );
@@ -86,9 +106,9 @@ export default function ContactFAQ() {
         {/* Right Column: Contact Form */}
         <div className="lg:col-span-6 glass-card p-8 rounded-2xl border border-white/10 flex flex-col gap-6">
           <div>
-            <h3 className="font-syne font-bold text-2xl text-white">Ayo Berkolaborasi.</h3>
+            <h3 className="font-syne font-bold text-2xl text-white">{t('contactFAQHeading')}</h3>
             <p className="text-zinc-400 text-sm font-light mt-1">
-              Kirim pesan langsung melalui formulir di bawah ini atau email ke{' '}
+              {t('contactFAQSub')}{' '}
               <a href="mailto:akhoiri052@gmail.com" className="text-emerald-400 hover:underline">
                 akhoiri052@gmail.com
               </a>
@@ -98,7 +118,7 @@ export default function ContactFAQ() {
           <form onSubmit={handleFormSubmit} className="space-y-4">
             <div>
               <label className="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">
-                Nama Lengkap
+                {t('contactFormName')}
               </label>
               <input
                 type="text"
@@ -107,12 +127,12 @@ export default function ContactFAQ() {
                 onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
-                placeholder="misal: Jane Doe"
+                placeholder={t('contactFormNamePl')}
               />
             </div>
             <div>
               <label className="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">
-                Alamat Email
+                {t('contactFormEmail')}
               </label>
               <input
                 type="email"
@@ -121,12 +141,12 @@ export default function ContactFAQ() {
                 onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
-                placeholder="misal: jane@company.com"
+                placeholder={t('contactFormEmailPl')}
               />
             </div>
             <div>
               <label className="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-2">
-                Isi Pesan Anda
+                {t('contactFormMsg')}
               </label>
               <textarea
                 name="message"
@@ -135,7 +155,7 @@ export default function ContactFAQ() {
                 required
                 rows="4"
                 className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors resize-none"
-                placeholder="Tuliskan detail ide atau tawaran proyek Anda..."
+                placeholder={t('contactFormMsgPl')}
               />
             </div>
 
@@ -150,7 +170,7 @@ export default function ContactFAQ() {
               type="submit"
               className="w-full py-4 bg-white text-black hover:bg-emerald-400 hover:text-black font-bold uppercase tracking-wider text-xs rounded-full transition-colors active:scale-95 shadow-lg flex items-center justify-center gap-2"
             >
-              Kirim Penawaran
+              {t('contactFormSubmit')}
               <i className="fas fa-paper-plane text-xs" />
             </button>
           </form>
