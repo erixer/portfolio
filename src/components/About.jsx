@@ -29,7 +29,60 @@ export default function About() {
 
           {/* Right Column: Work Timeline & Methodology */}
           <div className="lg:col-span-7 flex flex-col gap-12">
-            {/* Subsection: How I Work */}
+
+
+            {/* Subsection: Work Experience */}
+            <div>
+              <h3 className="font-syne font-bold text-2xl text-white mb-6">{t('aboutHistory')}</h3>
+              <div className="border-l border-zinc-800 ml-3 space-y-8">
+                {/* Role 1 */}
+                <div className="relative pl-8 group">
+                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 group-hover:scale-125 transition-transform" />
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole1')}</h4>
+                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
+                      {t('aboutHistDate1')}
+                    </span>
+                  </div>
+                  <p className="text-sm text-emerald-400 font-medium">PT R17 Group</p>
+                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
+                    {t('aboutHistRole1Desc')}
+                  </p>
+                </div>
+
+                {/* Role 2 */}
+                <div className="relative pl-8 group">
+                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-purple-500 group-hover:scale-125 transition-transform" />
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole2')}</h4>
+                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
+                      {t('aboutHistDate2')}
+                    </span>
+                  </div>
+                  <p className="text-sm text-purple-400 font-medium">PT Asia Pulp and Paper</p>
+                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
+                    {t('aboutHistRole2Desc')}
+                  </p>
+                </div>
+
+                {/* Role 3 */}
+                <div className="relative pl-8 group">
+                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-zinc-700 group-hover:scale-125 transition-transform" />
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole3')}</h4>
+                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
+                      {t('aboutHistDate3')}
+                    </span>
+                  </div>
+                  <p className="text-sm text-zinc-400 font-medium">PT Bank Negara Indonesia</p>
+                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
+                    {t('aboutHistRole3Desc')}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Subsection: Certificate */}
             <div>
               <h3 className="font-syne font-bold text-2xl text-white mb-6">{t('aboutMethod')}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -59,57 +112,6 @@ export default function About() {
                   <h4 className="font-semibold text-lg text-white mt-2">{t('aboutMethod4Title')}</h4>
                   <p className="text-zinc-400 text-xs mt-1 leading-relaxed">
                     {t('aboutMethod4Desc')}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Subsection: Work Experience */}
-            <div>
-              <h3 className="font-syne font-bold text-2xl text-white mb-6">{t('aboutHistory')}</h3>
-              <div className="border-l border-zinc-800 ml-3 space-y-8">
-                {/* Role 1 */}
-                <div className="relative pl-8 group">
-                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 group-hover:scale-125 transition-transform" />
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole1')}</h4>
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
-                      {t('aboutHistDate1')}
-                    </span>
-                  </div>
-                  <p className="text-sm text-emerald-400 font-medium">@OneShield Software</p>
-                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
-                    {t('aboutHistRole1Desc')}
-                  </p>
-                </div>
-
-                {/* Role 2 */}
-                <div className="relative pl-8 group">
-                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-purple-500 group-hover:scale-125 transition-transform" />
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole2')}</h4>
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
-                      {t('aboutHistDate2')}
-                    </span>
-                  </div>
-                  <p className="text-sm text-purple-400 font-medium">@Design and Code Community</p>
-                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
-                    {t('aboutHistRole2Desc')}
-                  </p>
-                </div>
-
-                {/* Role 3 */}
-                <div className="relative pl-8 group">
-                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-zinc-700 group-hover:scale-125 transition-transform" />
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole3')}</h4>
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
-                      {t('aboutHistDate3')}
-                    </span>
-                  </div>
-                  <p className="text-sm text-zinc-400 font-medium">@BlackboxAI</p>
-                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
-                    {t('aboutHistRole3Desc')}
                   </p>
                 </div>
               </div>
