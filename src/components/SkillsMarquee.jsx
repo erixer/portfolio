@@ -1,7 +1,7 @@
 export default function SkillsMarquee() {
   const skills = [
-    'HTML & CSS', 'JavaScript', 'TypeScript', 'React.js', 'Next.js', 'Angular',
-    'Redux', 'GSAP', 'Figma', 'Tailwind CSS', 'Docker', 'Firebase'
+    'HTML & CSS', 'JavaScript', 'TypeScript', 'ReactJs', 'NextJs', 'Laravel',
+    'Python', 'PHP', 'Figma', 'Tailwind CSS', 'Docker', 'AWS'
   ];
 
   return (
