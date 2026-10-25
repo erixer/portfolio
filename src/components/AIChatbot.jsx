@@ -133,17 +133,8 @@ export default function AIChatbot() {
   };
 
   const fetchGeminiResponse = async (userMessage, currentHistory) => {
-    // Check if we have a manually entered API Key in local storage
-    const localKey = apiKey.trim().replace(/^['"]|['"]$/g, '');
-
-    let apiUrl;
     const headers = { 'Content-Type': 'application/json' };
-
-    // In both localhost and Vercel production, use proxy/serverless route to secure the API key
-    apiUrl = '/api-gemini/v1beta/models/gemini-2.5-flash:generateContent';
-    if (localKey) {
-      headers['x-local-api-key'] = localKey;
-    }
+    const apiUrl = '/api-gemini/v1beta/models/gemini-2.5-flash:generateContent';
 
     // Map history to Gemini API structure
     const contents = currentHistory.map((msg) => ({
@@ -176,8 +167,12 @@ export default function AIChatbot() {
         });
 
         if (!response.ok) {
+          const errData = await response.json().catch(() => null);
+          console.error('[Gemini API Error Detail]:', response.status, errData);
+
           if (response.status === 400 || response.status === 403 || response.status === 401) {
-            throw new Error(t('botErrorApiKey'));
+            const detailMsg = errData?.error?.message || errData?.error || t('botErrorApiKey');
+            throw new Error(detailMsg);
           }
           if (response.status === 429) {
             const limitErr = new Error(t('botError429'));
