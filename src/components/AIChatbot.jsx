@@ -136,32 +136,13 @@ export default function AIChatbot() {
     // Check if we have a manually entered API Key in local storage
     const localKey = apiKey.trim().replace(/^['"]|['"]$/g, '');
 
-    // Check if we are running in localhost dev mode
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
     let apiUrl;
     const headers = { 'Content-Type': 'application/json' };
 
-    if (isLocalhost) {
-      // Use the Vite development server proxy to hide the key from Network inspector
-      apiUrl = '/api-gemini/v1beta/models/gemini-2.5-flash:generateContent';
-
-      // If the user has entered a custom key in the settings panel, pass it in a header.
-      // Otherwise, the proxy will fallback to the key in the server's `.env` automatically.
-      if (localKey) {
-        headers['x-local-api-key'] = localKey;
-      }
-    } else {
-      // In production, make direct calls to Google Gemini
-      const prodKey = localKey || import.meta.env.VITE_GEMINI_API_KEY || '';
-
-      if (!prodKey) {
-        return 'API Key Google Gemini belum dikonfigurasi! Silakan klik tombol ⚙️ (Pengaturan) di kanan atas jendela chat ini untuk memasukkan API Key Anda agar saya dapat membalas.';
-      }
-
-      apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
-      // Pass key in a header instead of a URL query parameter to avoid exposing it in the URL when inspected
-      headers['x-goog-api-key'] = prodKey.trim().replace(/^['"]|['"]$/g, '');
+    // In both localhost and Vercel production, use proxy/serverless route to secure the API key
+    apiUrl = '/api-gemini/v1beta/models/gemini-2.5-flash:generateContent';
+    if (localKey) {
+      headers['x-local-api-key'] = localKey;
     }
 
     // Map history to Gemini API structure
