@@ -62,12 +62,12 @@ export default function CustomCursor() {
       <div
         ref={cursorRef}
         id="custom-cursor"
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-emerald-400 pointer-events-none z-[100] -translate-x-1/2 -translate-y-1/2 transition-all duration-75 ease-out opacity-0 lg:block hidden"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-sky-400 pointer-events-none z-[100] -translate-x-1/2 -translate-y-1/2 transition-all duration-75 ease-out opacity-0 lg:block hidden"
       />
       <div
         ref={dotRef}
         id="custom-cursor-dot"
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-purple-500 pointer-events-none z-[100] -translate-x-1/2 -translate-y-1/2 lg:block hidden"
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-blue-500 pointer-events-none z-[100] -translate-x-1/2 -translate-y-1/2 lg:block hidden"
       />
     </>
   );

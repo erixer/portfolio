@@ -37,7 +37,7 @@ export default function ProjectModal({ project, onClose }) {
 
         {/* Modal content */}
         <div className="flex flex-col gap-5 text-left">
-          <span className="text-xs uppercase tracking-wider text-emerald-400 font-bold font-mono">
+          <span className="text-xs uppercase tracking-wider text-sky-400 font-bold font-mono">
             {details.category[lang]}
           </span>
           <h3 className="font-syne font-extrabold text-3xl text-white">{title}</h3>
@@ -63,7 +63,7 @@ export default function ProjectModal({ project, onClose }) {
             <ul className="space-y-1.5">
               {details.features[lang].map((feat, index) => (
                 <li key={index} className="text-xs text-zinc-300 flex items-center gap-2">
-                  <i className="fas fa-check text-emerald-400 text-[10px]"></i>
+                  <i className="fas fa-check text-sky-400 text-[10px]"></i>
                   <span>{feat}</span>
                 </li>
               ))}

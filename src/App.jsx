@@ -27,7 +27,7 @@ function App() {
       <SkillsMarquee />
       <Projects onSelectProject={setSelectedProject} />
       <About />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <ContactFAQ />
 
       {/* Footer */}
@@ -42,7 +42,6 @@ function App() {
           <div className="flex gap-6">
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
             <a href="mailto:akhoiri052@gmail.com" className="hover:text-white transition-colors">Email</a>
           </div>
         </div>

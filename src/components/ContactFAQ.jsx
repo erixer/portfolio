@@ -71,7 +71,7 @@ export default function ContactFAQ() {
         {/* Left Column: FAQ Accordion */}
         <div className="lg:col-span-6 flex flex-col gap-6">
           <div>
-            <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t('contactSub')}</span>
+            <span className="text-sky-400 font-semibold tracking-wider uppercase text-sm">{t('contactSub')}</span>
             <h2 className="font-syne font-extrabold text-3xl md:text-4xl mt-2 text-white">{t('contactTitle')}</h2>
           </div>
 
@@ -81,7 +81,7 @@ export default function ContactFAQ() {
               return (
                 <div
                   key={index}
-                  className={`faq-item bg-zinc-900/60 border rounded-xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-emerald-500/40' : 'border-zinc-800'
+                  className={`faq-item bg-zinc-900/60 border rounded-xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-sky-500/40' : 'border-zinc-800'
                     }`}
                 >
                   <button
@@ -109,7 +109,7 @@ export default function ContactFAQ() {
             <h3 className="font-syne font-bold text-2xl text-white">{t('contactFAQHeading')}</h3>
             <p className="text-zinc-400 text-sm font-light mt-1">
               {t('contactFAQSub')}{' '}
-              <a href="mailto:akhoiri052@gmail.com" className="text-emerald-400 hover:underline">
+              <a href="mailto:akhoiri052@gmail.com" className="text-sky-400 hover:underline">
                 akhoiri052@gmail.com
               </a>
             </p>
@@ -126,7 +126,7 @@ export default function ContactFAQ() {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
+                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-blue-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
                 placeholder={t('contactFormNamePl')}
               />
             </div>
@@ -140,7 +140,7 @@ export default function ContactFAQ() {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
+                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-blue-500 rounded-lg text-sm text-white focus:outline-none transition-colors"
                 placeholder={t('contactFormEmailPl')}
               />
             </div>
@@ -154,21 +154,21 @@ export default function ContactFAQ() {
                 onChange={handleInputChange}
                 required
                 rows="4"
-                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-sm text-white focus:outline-none transition-colors resize-none"
+                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-blue-500 rounded-lg text-sm text-white focus:outline-none transition-colors resize-none"
                 placeholder={t('contactFormMsgPl')}
               />
             </div>
 
             {/* Notification alert banner */}
             {feedback && (
-              <div className="p-3.5 rounded-lg text-xs font-semibold text-center bg-emerald-500/20 text-emerald-300">
+              <div className="p-3.5 rounded-lg text-xs font-semibold text-center bg-blue-500/20 text-blue-300">
                 {feedback.text}
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full py-4 bg-white text-black hover:bg-emerald-400 hover:text-black font-bold uppercase tracking-wider text-xs rounded-full transition-colors active:scale-95 shadow-lg flex items-center justify-center gap-2"
+              className="w-full py-4 bg-white text-black hover:bg-blue-500 hover:text-white font-bold uppercase tracking-wider text-xs rounded-full transition-colors active:scale-95 shadow-lg flex items-center justify-center gap-2"
             >
               {t('contactFormSubmit')}
               <i className="fas fa-paper-plane text-xs" />

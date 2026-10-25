@@ -27,6 +27,14 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   };
 
+  const handleLanguageChange = (newLang) => {
+    setLang(newLang);
+    // Smooth delay before closing the menu to let the user see the text translate
+    setTimeout(() => {
+      closeMobileMenu();
+    }, 300);
+  };
+
   return (
     <>
       <header
@@ -127,7 +135,7 @@ export default function Navbar() {
         {/* Mobile Language Switcher */}
         <div className="flex bg-white/5 border border-white/10 rounded-full p-1 text-xs mt-4">
           <button
-            onClick={() => { setLang('id'); closeMobileMenu(); }}
+            onClick={() => handleLanguageChange('id')}
             className={`px-4 py-1.5 rounded-full transition-all duration-300 font-semibold ${
               lang === 'id'
                 ? 'bg-gradient-to-tr from-brandCreative to-brandAccent text-white font-bold shadow-md'
@@ -137,7 +145,7 @@ export default function Navbar() {
             Bahasa Indonesia
           </button>
           <button
-            onClick={() => { setLang('en'); closeMobileMenu(); }}
+            onClick={() => handleLanguageChange('en')}
             className={`px-4 py-1.5 rounded-full transition-all duration-300 font-semibold ${
               lang === 'en'
                 ? 'bg-gradient-to-tr from-brandCreative to-brandAccent text-white font-bold shadow-md'

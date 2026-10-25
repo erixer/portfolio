@@ -67,8 +67,8 @@ export default function Hero() {
             />
 
             {/* Glowing background circles */}
-            <div className="absolute -right-20 -top-20 w-44 h-44 bg-purple-600/10 rounded-full blur-3xl pointer-events-none z-0" />
-            <div className="absolute -left-20 -bottom-20 w-44 h-44 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none z-0" />
+            <div className="absolute -right-20 -top-20 w-44 h-44 bg-blue-600/10 rounded-full blur-3xl pointer-events-none z-0" />
+            <div className="absolute -left-20 -bottom-20 w-44 h-44 bg-sky-500/10 rounded-full blur-3xl pointer-events-none z-0" />
 
             {/* Top Identity Section */}
             <div className="profile-card-inner pt-9 px-8 flex flex-col items-center text-center relative z-20 pointer-events-none">

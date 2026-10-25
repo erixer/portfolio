@@ -264,29 +264,30 @@ export default function AIChatbot() {
           }`}
       >
         {/* Panel Header */}
-        <div className="p-4 bg-gradient-to-r from-purple-900/60 via-zinc-900/80 to-emerald-900/60 border-b border-white/10 flex items-center justify-between">
+        <div className="p-4 bg-gradient-to-r from-blue-900/60 via-zinc-900/80 to-sky-900/60 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="relative w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-emerald-400 p-[1.5px]">
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-brandDark animate-pulse" />
+            <div className="relative w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-sky-400 p-[1.5px]">
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-sky-400 border-2 border-brandDark animate-pulse" />
               <div className="w-full h-full rounded-full bg-brandDark flex items-center justify-center">
-                <i className="fas fa-robot text-xs text-emerald-400" />
+                <i className="fas fa-robot text-xs text-sky-400" />
               </div>
             </div>
             <div>
               <h4 className="font-syne font-bold text-xs text-white">{t('botHeaderTitle')}</h4>
-              <span className="text-[9px] text-emerald-400 uppercase tracking-widest font-mono">{t('botHeaderSub')}</span>
+              <span className="text-[9px] text-sky-400 uppercase tracking-widest font-mono">{t('botHeaderSub')}</span>
             </div>
           </div>
 
           {/* Header Action Buttons */}
           <div className="flex items-center gap-1.5">
-            <button
+
+            {/*<button
               onClick={showSettings ? () => setShowSettings(false) : handleOpenSettings}
               className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
               title="API Key Configuration"
             >
               <i className="fas fa-cog text-xs" />
-            </button>
+            </button>*/}
 
             <button
               onClick={toggleChat}
@@ -315,7 +316,7 @@ export default function AIChatbot() {
                   value={inputKey}
                   onChange={(e) => setInputKey(e.target.value)}
                   placeholder={apiKey ? "•••••••••••••••••••••••••••••" : "Masukkan API Key Anda..."}
-                  className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-lg text-white focus:outline-none text-xs transition-colors"
+                  className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-blue-500 rounded-lg text-white focus:outline-none text-xs transition-colors"
                 />
               </div>
 
@@ -325,7 +326,7 @@ export default function AIChatbot() {
                   href="https://aistudio.google.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-emerald-400 hover:underline"
+                  className="text-sky-400 hover:underline"
                 >
                   Google AI Studio <i className="fas fa-external-link-alt text-[8px]" />
                 </a>
@@ -342,7 +343,7 @@ export default function AIChatbot() {
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2 rounded-lg bg-white text-black hover:bg-emerald-400 font-bold transition-all text-[11px]"
+                className="flex-1 py-2 rounded-lg bg-white text-black hover:bg-sky-400 font-bold transition-all text-[11px]"
               >
                 {t('botSaveKey')}
               </button>
@@ -358,7 +359,7 @@ export default function AIChatbot() {
                   <div key={index} className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}>
                     <div
                       className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl ${isUser
-                        ? 'bg-gradient-to-r from-purple-600 to-emerald-500 text-white rounded-tr-none shadow-md'
+                        ? 'bg-gradient-to-r from-blue-600 to-sky-500 text-white rounded-tr-none shadow-md'
                         : 'bg-zinc-900 border border-white/5 text-zinc-300 rounded-tl-none leading-relaxed'
                         }`}
                     >
@@ -384,19 +385,19 @@ export default function AIChatbot() {
             <div className="px-3 py-2 border-t border-white/5 bg-zinc-950/30 flex flex-wrap gap-1.5">
               <button
                 onClick={() => handleSuggestedClick(t('botSugg1Text'))}
-                className="px-2.5 py-1 bg-white/5 hover:bg-emerald-500/10 hover:text-emerald-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors"
+                className="px-2.5 py-1 bg-white/5 hover:bg-blue-500/10 hover:text-sky-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors"
               >
                 {t('botSugg1')}
               </button>
               <button
                 onClick={() => handleSuggestedClick(t('botSugg2Text'))}
-                className="px-2.5 py-1 bg-white/5 hover:bg-purple-500/10 hover:text-purple-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors"
+                className="px-2.5 py-1 bg-white/5 hover:bg-blue-600/10 hover:text-blue-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors"
               >
                 {t('botSugg2')}
               </button>
               <button
                 onClick={() => handleSuggestedClick(t('botSugg3Text'))}
-                className="px-2.5 py-1 bg-white/5 hover:bg-pink-500/10 hover:text-pink-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors">
+                className="px-2.5 py-1 bg-white/5 hover:bg-sky-500/10 hover:text-sky-400 rounded-full text-[10px] text-zinc-400 border border-white/5 transition-colors">
                 {t('botSugg3')}
               </button>
             </div>
@@ -410,11 +411,11 @@ export default function AIChatbot() {
                 autoComplete="off"
                 required
                 placeholder={t('botPlaceholder')}
-                className="flex-1 px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-2xl text-xs text-white focus:outline-none transition-colors"
+                className="flex-1 px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-blue-500 rounded-2xl text-xs text-white focus:outline-none transition-colors"
               />
               <button
                 type="submit"
-                className="w-9 h-9 rounded-2xl bg-white text-black hover:bg-emerald-400 transition-colors flex items-center justify-center active:scale-95 shadow-md"
+                className="w-9 h-9 rounded-2xl bg-white text-black hover:bg-sky-400 transition-colors flex items-center justify-center active:scale-95 shadow-md"
               >
                 <i className="fas fa-paper-plane text-xs" />
               </button>
@@ -426,12 +427,12 @@ export default function AIChatbot() {
       {/* Sticky floating trigger button */}
       <button
         onClick={toggleChat}
-        className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-pink-600 to-emerald-400 p-[2px] shadow-2xl transition-all duration-300 active:scale-95 group z-50"
+        className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-blue-600 via-sky-500 to-sky-400 p-[2px] shadow-2xl transition-all duration-300 active:scale-95 group z-50"
         aria-label="Toggle AI Assistant Chat"
       >
-        <span className="absolute inset-0 rounded-full bg-emerald-500/30 animate-ping -z-10 group-hover:opacity-100 opacity-60" />
+        <span className="absolute inset-0 rounded-full bg-sky-500/30 animate-ping -z-10 group-hover:opacity-100 opacity-60" />
         <div className="w-full h-full rounded-full bg-brandDark flex items-center justify-center group-hover:bg-brandDark/80 transition-colors">
-          <i className={`fas text-lg transition-transform ${isOpen ? 'fa-times text-purple-400' : 'fa-comment-dots text-emerald-400 group-hover:scale-110'
+          <i className={`fas text-lg transition-transform ${isOpen ? 'fa-times text-blue-400' : 'fa-comment-dots text-sky-400 group-hover:scale-110'
             }`} />
         </div>
       </button>

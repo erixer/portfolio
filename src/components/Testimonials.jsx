@@ -10,7 +10,7 @@ const testimonialsData = [
     author: 'Vritika Naik',
     role: 'Regional Head @GirlScript',
     initials: 'VN',
-    bgColor: 'bg-emerald-500'
+    bgColor: 'bg-sky-500'
   },
   {
     text: {
@@ -20,7 +20,7 @@ const testimonialsData = [
     author: 'Trusha Neogi',
     role: 'UI/UX Design Intern @Hexcoderz',
     initials: 'TN',
-    bgColor: 'bg-purple-500'
+    bgColor: 'bg-blue-500'
   },
   {
     text: {
@@ -49,7 +49,7 @@ export default function Testimonials() {
   return (
     <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto w-full relative">
       <div className="text-center mb-16 reveal">
-        <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t('testiSub')}</span>
+        <span className="text-sky-400 font-semibold tracking-wider uppercase text-sm">{t('testiSub')}</span>
         <h2 className="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">{t('testiTitle')}</h2>
         <p className="text-zinc-400 mt-2 font-light max-w-md mx-auto">
           {t('testiDesc')}
@@ -86,14 +86,14 @@ export default function Testimonials() {
         <div className="flex justify-center gap-3 mt-8">
           <button
             onClick={prevTestimonial}
-            className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-emerald-500 transition-all flex items-center justify-center active:scale-95"
+            className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-blue-500 transition-all flex items-center justify-center active:scale-95"
             aria-label="Previous Testimonial"
           >
             <i className="fas fa-chevron-left text-xs"></i>
           </button>
           <button
             onClick={nextTestimonial}
-            className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-emerald-500 transition-all flex items-center justify-center active:scale-95"
+            className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-blue-500 transition-all flex items-center justify-center active:scale-95"
             aria-label="Next Testimonial"
           >
             <i className="fas fa-chevron-right text-xs"></i>

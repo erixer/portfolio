@@ -12,7 +12,7 @@ export default function SkillsMarquee() {
           {skills.map((skill, index) => (
             <span key={`track1-${index}`} className="flex items-center gap-12">
               <span>{skill}</span>
-              <span className={index % 2 === 0 ? 'text-emerald-500' : 'text-purple-500'}>•</span>
+              <span className={index % 2 === 0 ? 'text-sky-500' : 'text-blue-500'}>•</span>
             </span>
           ))}
         </div>
@@ -21,7 +21,7 @@ export default function SkillsMarquee() {
           {skills.map((skill, index) => (
             <span key={`track2-${index}`} className="flex items-center gap-12">
               <span>{skill}</span>
-              <span className={index % 2 === 0 ? 'text-emerald-500' : 'text-purple-500'}>•</span>
+              <span className={index % 2 === 0 ? 'text-sky-500' : 'text-blue-500'}>•</span>
             </span>
           ))}
         </div>

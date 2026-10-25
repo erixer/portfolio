@@ -54,7 +54,7 @@ export default function CertificateModal({ cert, onClose }) {
             <span className="text-[10px] font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
               {cert.year}
             </span>
-            <span className={`text-[10px] ${cert.textColor || 'text-emerald-400'} flex items-center gap-1 font-medium`}>
+            <span className={`text-[10px] ${cert.textColor || 'text-sky-400'} flex items-center gap-1 font-medium`}>
               Verified <i className="fas fa-check-circle"></i>
             </span>
           </div>

@@ -8,8 +8,8 @@ export const projectsData = [
     title: 'Code Screenshot',
     category: 'development',
     subCategories: ['Development', 'Design'],
-    gradientClass: 'from-purple-900/40 to-black',
-    tagColors: ['text-emerald-400', 'text-purple-400'],
+    gradientClass: 'from-blue-900/40 to-black',
+    tagColors: ['text-sky-400', 'text-blue-400'],
     year: 2024,
     description: {
       id: 'Alat interaktif yang dirancang untuk merancang, menyesuaikan, dan mengekspor cuplikan kode dengan gaya gradien kustom.',
@@ -20,7 +20,7 @@ export const projectsData = [
         <div className="flex gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-red-400"></span>
           <span className="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
-          <span className="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
         </div>
         <div className="bg-white/5 rounded p-2 text-[9px] font-mono text-zinc-400 space-y-1">
           <p className="text-indigo-400">const snippet = () =&gt; &#123;</p>
@@ -58,8 +58,8 @@ export const projectsData = [
     title: 'Snapalyzer AI',
     category: 'development',
     subCategories: ['Development', 'AI API'],
-    gradientClass: 'from-emerald-900/40 to-black',
-    tagColors: ['text-emerald-400', 'text-cyan-400'],
+    gradientClass: 'from-sky-900/40 to-black',
+    tagColors: ['text-sky-400', 'text-cyan-400'],
     year: 2024,
     description: {
       id: 'Sistem analitik berbasis AI memanfaatkan Google Gemini API untuk menganalisis, mengulas, dan mengidentifikasi konteks visual gambar secara real-time.',
@@ -67,7 +67,7 @@ export const projectsData = [
     },
     renderVisual: () => (
       <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-lg p-4 group-hover:scale-105 transition-transform duration-500 flex flex-col items-center justify-center gap-2">
-        <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg border border-emerald-500/30">
+        <div className="w-12 h-12 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-400 text-lg border border-sky-500/30">
           <i className="fas fa-brain"></i>
         </div>
         <span className="text-xs font-mono text-zinc-300">Gemini AI Image Analyzer</span>
@@ -100,7 +100,7 @@ export const projectsData = [
     category: 'development',
     subCategories: ['Development', 'Design'],
     gradientClass: 'from-indigo-900/40 to-black',
-    tagColors: ['text-emerald-400', 'text-purple-400'],
+    tagColors: ['text-sky-400', 'text-blue-400'],
     year: 2022,
     description: {
       id: 'Ruang kolaborasi penulisan kode real-time yang memungkinkan tim pengembang menyusun, memeriksa, dan mensinkronisasikan web langsung.',
@@ -112,15 +112,15 @@ export const projectsData = [
           <div className="flex gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-red-400"></span>
             <span className="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
-            <span className="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
           </div>
           <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded">Live Room</span>
         </div>
         <div className="flex items-center justify-center gap-4 py-2">
           <span className="text-xs font-semibold text-zinc-300">Collab Editor</span>
           <div className="flex -space-x-2">
-            <span className="w-6 h-6 rounded-full bg-purple-500 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-white">U1</span>
-            <span className="w-6 h-6 rounded-full bg-emerald-500 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-black">U2</span>
+            <span className="w-6 h-6 rounded-full bg-blue-500 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-white">U1</span>
+            <span className="w-6 h-6 rounded-full bg-sky-500 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-black">U2</span>
           </div>
         </div>
         <span className="text-[10px] text-zinc-500 text-center">Firebase Realtime Sync</span>
@@ -152,7 +152,7 @@ export const projectsData = [
     category: 'design',
     subCategories: ['Design', 'Winner'],
     gradientClass: 'from-pink-900/40 to-black',
-    tagColors: ['text-purple-400', 'text-rose-400'],
+    tagColors: ['text-blue-400', 'text-sky-400'],
     year: 2021,
     description: {
       id: 'Dasbor analitik penanganan pandemi untuk mempertemukan pasien secara darurat dengan penyedia kasur medis yang tervalidasi di India.',
@@ -205,7 +205,7 @@ export default function Projects({ onSelectProject }) {
     <section id="projects" className="py-24 px-6 md:px-12 max-w-6xl mx-auto w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 reveal">
         <div>
-          <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t('projectSub')}</span>
+          <span className="text-sky-400 font-semibold tracking-wider uppercase text-sm">{t('projectSub')}</span>
           <h2 className="font-syne font-extrabold text-3xl md:text-5xl mt-2 text-white">{t('projectTitle')}</h2>
           <p className="text-zinc-400 mt-2 font-light max-w-md">
             {t('projectDesc')}
@@ -253,7 +253,7 @@ export default function Projects({ onSelectProject }) {
           <div
             key={project.id}
             onClick={() => onSelectProject(project)}
-            className="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-emerald-500/50 transition-all duration-500"
+            className="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-blue-500/50 transition-all duration-500"
           >
             <div className={`aspect-video w-full bg-gradient-to-tr ${project.gradientClass} overflow-hidden relative flex items-center justify-center p-6`}>
               <div className="absolute top-4 left-4 z-10 flex gap-2">
@@ -261,7 +261,7 @@ export default function Projects({ onSelectProject }) {
                   <span
                     key={i}
                     className={`bg-black/70 backdrop-blur ${
-                      project.tagColors[i] || 'text-emerald-400'
+                      project.tagColors[i] || 'text-sky-400'
                     } text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded`}
                   >
                     {sub}
@@ -272,7 +272,7 @@ export default function Projects({ onSelectProject }) {
             </div>
             <div className="p-6">
               <div className="flex justify-between items-center">
-                <h3 className="font-syne font-bold text-xl group-hover:text-emerald-400 transition-colors">
+                <h3 className="font-syne font-bold text-xl group-hover:text-sky-400 transition-colors">
                   {project.title}
                 </h3>
                 <span className="text-zinc-500 text-sm">{project.year}</span>

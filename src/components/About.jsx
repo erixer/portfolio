@@ -13,8 +13,8 @@ export default function About() {
       titleKey: "Pentest Analyst",
       issuerKey: "Redlimit",
       yearKey: "2025",
-      hoverBorder: "hover:border-emerald-500/30",
-      textColor: "text-emerald-400"
+      hoverBorder: "hover:border-blue-500/30",
+      textColor: "text-blue-400"
     },
     {
       id: 2,
@@ -22,8 +22,8 @@ export default function About() {
       titleKey: "Data Classification and Summarization Using IBM Granite",
       issuerKey: "IBM",
       yearKey: "2025",
-      hoverBorder: "hover:border-emerald-500/30",
-      textColor: "text-emerald-400"
+      hoverBorder: "hover:border-blue-500/30",
+      textColor: "text-blue-400"
     },
     {
       id: 3,
@@ -31,8 +31,8 @@ export default function About() {
       titleKey: " Python Programming",
       issuerKey: "Dicoding",
       yearKey: "2025",
-      hoverBorder: "hover:border-teal-500/30",
-      textColor: "text-teal-400"
+      hoverBorder: "hover:border-sky-500/30",
+      textColor: "text-sky-400"
     },
     {
       id: 4,
@@ -40,8 +40,8 @@ export default function About() {
       titleKey: "Full-Stack JavaScript Developer Next JS",
       issuerKey: "BuildWithAngga",
       yearKey: "2026",
-      hoverBorder: "hover:border-teal-500/30",
-      textColor: "text-teal-400"
+      hoverBorder: "hover:border-sky-500/30",
+      textColor: "text-sky-400"
     },
     {
       id: 5,
@@ -49,8 +49,8 @@ export default function About() {
       titleKey: "Complete UI Designer : User Flow, Visual Design, Prototype",
       issuerKey: "BuildWithAngga",
       yearKey: "2025",
-      hoverBorder: "hover:border-teal-500/30",
-      textColor: "text-teal-400"
+      hoverBorder: "hover:border-sky-500/30",
+      textColor: "text-sky-400"
     }
   ];
 
@@ -60,18 +60,18 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Sticky Summary */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 flex flex-col gap-6">
-            <span className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t('aboutSub')}</span>
+            <span className="text-sky-400 font-semibold tracking-wider uppercase text-sm">{t('aboutSub')}</span>
             <h2 className="font-syne font-extrabold text-4xl sm:text-5xl text-white leading-tight">{t('aboutTitle')}</h2>
             <p className="text-zinc-400 text-base leading-relaxed font-light">
               {t('aboutDesc')}
             </p>
             <div className="p-5 rounded-2xl glass-card flex flex-col gap-4">
               <div className="flex items-center gap-3">
-                <i className="fas fa-university text-emerald-400 w-5"></i>
+                <i className="fas fa-university text-sky-400 w-5"></i>
                 <span className="text-sm text-zinc-300">{t('aboutEdu')}</span>
               </div>
               <div className="flex items-center gap-3">
-                <i className="fas fa-users text-purple-400 w-5"></i>
+                <i className="fas fa-users text-blue-400 w-5"></i>
                 <span className="text-sm text-zinc-300">{t('aboutComm')}</span>
               </div>
 
@@ -88,14 +88,14 @@ export default function About() {
               <div className="border-l border-zinc-800 ml-3 space-y-8">
                 {/* Role 1 */}
                 <div className="relative pl-8 group">
-                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 group-hover:scale-125 transition-transform" />
+                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 group-hover:scale-125 transition-transform" />
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
                     <h4 className="font-semibold text-lg text-white">{t('aboutHistRole1')}</h4>
                     <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
                       {t('aboutHistDate1')}
                     </span>
                   </div>
-                  <p className="text-sm text-emerald-400 font-medium">PT R17 Group</p>
+                  <p className="text-sm text-blue-400 font-medium">PT R17 Group</p>
                   <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
                     {t('aboutHistRole1Desc')}
                   </p>
@@ -147,7 +147,7 @@ export default function About() {
                       year: t(cert.yearKey),
                       textColor: cert.textColor
                     })}
-                    className={`group rounded-2xl glass-card overflow-hidden border border-white/5 ${cert.hoverBorder} hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(16,185,129,0.05)] cursor-pointer transition-all duration-300 flex flex-col`}
+                    className={`group rounded-2xl glass-card overflow-hidden border border-white/5 ${cert.hoverBorder} hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(56,189,248,0.05)] cursor-pointer transition-all duration-300 flex flex-col`}
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-950/50 border-b border-white/5">
                       <img
@@ -162,7 +162,7 @@ export default function About() {
                     </div>
                     <div className="p-5 flex flex-col flex-grow justify-between gap-4">
                       <div>
-                        <h4 className="font-syne font-bold text-base text-white leading-snug group-hover:text-emerald-400 transition-colors">
+                        <h4 className="font-syne font-bold text-base text-white leading-snug group-hover:text-sky-400 transition-colors">
                           {t(cert.titleKey)}
                         </h4>
                         <p className="text-xs text-zinc-400 font-medium mt-1">
@@ -197,7 +197,7 @@ export default function About() {
                   </div>
                 </div>
                 <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                  <div className="w-10 h-10 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-500">
                     <i className="fas fa-code"></i>
                   </div>
                   <div>
