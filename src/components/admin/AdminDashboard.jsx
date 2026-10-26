@@ -427,7 +427,18 @@ export default function AdminDashboard({ onBackToPortfolio }) {
                 {certificates.map((cert) => (
                   <div key={cert.id} className="rounded-2xl bg-zinc-950/60 border border-white/5 overflow-hidden flex flex-col justify-between">
                     <div className="aspect-[4/3] w-full bg-zinc-900 relative overflow-hidden">
-                      <img src={cert.image} alt={cert.title} className="w-full h-full object-cover" />
+                      <img
+                        src={cert.image}
+                        alt={cert.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const fileName = cert.image?.split('/').pop();
+                          if (fileName && !e.target.dataset.triedFallback) {
+                            e.target.dataset.triedFallback = 'true';
+                            e.target.src = '/' + fileName;
+                          }
+                        }}
+                      />
                       <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black/60 backdrop-blur-md text-white border border-white/10">
                         {cert.year}
                       </span>

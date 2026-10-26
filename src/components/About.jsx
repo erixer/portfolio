@@ -80,6 +80,13 @@ export default function About() {
                         alt={cert.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
+                        onError={(e) => {
+                          const fileName = cert.image?.split('/').pop();
+                          if (fileName && !e.target.dataset.triedFallback) {
+                            e.target.dataset.triedFallback = 'true';
+                            e.target.src = '/' + fileName;
+                          }
+                        }}
                       />
                       <div className={`absolute top-3 right-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 w-8 h-8 rounded-full flex items-center justify-center ${cert.textColor || 'text-sky-400'}`}>
                         <i className="fas fa-certificate text-xs"></i>

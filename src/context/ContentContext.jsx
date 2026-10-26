@@ -1,16 +1,32 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { projectsData as defaultProjectsData } from '../components/Projects.jsx';
+import certPentest from '../assets/certificate_pentest.jpg';
+import certIbm from '../assets/certificate_ibm.jpg';
+import certPython from '../assets/certificate_python.png';
+import certBwa from '../assets/certificate_bwa.png';
+import certBwaUiUx from '../assets/certificate_bwaUiUx.png';
 
 const ContentContext = createContext(null);
 
 const STORAGE_KEY = 'portfolio_cms_data_v1';
 const AUTH_KEY = 'portfolio_cms_auth_v1';
 
+// Map legacy or broken certificate image paths to valid imported assets
+export const mapCertImage = (img) => {
+  if (!img) return certPython;
+  if (img.includes('pentest')) return certPentest;
+  if (img.includes('ibm')) return certIbm;
+  if (img.includes('python')) return certPython;
+  if (img.includes('bwaUiUx')) return certBwaUiUx;
+  if (img.includes('bwa')) return certBwa;
+  return img;
+};
+
 // Default initial certificates
 const defaultCertificates = [
   {
     id: 1,
-    image: "/src/assets/certificate_pentest.jpg",
+    image: certPentest,
     title: "Pentest Analyst",
     issuer: "Redlimit",
     year: "2025",
@@ -19,7 +35,7 @@ const defaultCertificates = [
   },
   {
     id: 2,
-    image: "/src/assets/certificate_ibm.jpg",
+    image: certIbm,
     title: "Data Classification and Summarization Using IBM Granite",
     issuer: "IBM",
     year: "2025",
@@ -28,7 +44,7 @@ const defaultCertificates = [
   },
   {
     id: 3,
-    image: "/src/assets/certificate_python.png",
+    image: certPython,
     title: "Python Programming",
     issuer: "Dicoding",
     year: "2025",
@@ -37,7 +53,7 @@ const defaultCertificates = [
   },
   {
     id: 4,
-    image: "/src/assets/certificate_bwa.png",
+    image: certBwa,
     title: "Full-Stack JavaScript Developer Next JS",
     issuer: "BuildWithAngga",
     year: "2026",
@@ -46,7 +62,7 @@ const defaultCertificates = [
   },
   {
     id: 5,
-    image: "/src/assets/certificate_bwaUiUx.png",
+    image: certBwaUiUx,
     title: "Complete UI Designer : User Flow, Visual Design, Prototype",
     issuer: "BuildWithAngga",
     year: "2025",
@@ -87,9 +103,13 @@ export function ContentProvider({ children }) {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        const loadedCerts = (parsed.certificates?.length ? parsed.certificates : defaultCertificates).map((c) => ({
+          ...c,
+          image: mapCertImage(c.image)
+        }));
         return {
           projects: parsed.projects?.length ? parsed.projects : defaultProjectsData,
-          certificates: parsed.certificates?.length ? parsed.certificates : defaultCertificates,
+          certificates: loadedCerts,
           experiences: parsed.experiences?.length ? parsed.experiences : defaultExperiences,
         };
       }
