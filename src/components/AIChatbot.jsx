@@ -216,16 +216,23 @@ export default function AIChatbot() {
       }
     }
 
-    // Strategy 3: Friendly informative error message with clear action
+    // Strategy 3: Friendly message for visitors (no technical leak)
     return lang === 'id'
-      ? '⚠️ API Key Gemini belum terpasang di Vercel.\n\n👉 Anda dapat mengaktifkannya langsung sekarang dengan mengklik tombol ⚙️ (Pengaturan) di kanan atas jendela chat ini dan memasukkan API Key Gemini Anda.'
-      : '⚠️ Gemini API Key is not configured on Vercel.\n\n👉 You can activate it directly now by clicking the ⚙️ (Settings) button in the top right of this chat window and entering your Gemini API Key.';
+      ? 'Maaf, Asisten AI saat ini sedang tidak dapat terhubung. Silakan hubungi Achmad langsung melalui formulir kontak di bawah atau via email di akhoiri052@gmail.com.'
+      : 'Sorry, the AI Assistant is currently unable to connect. Please contact Achmad directly via the contact form below or via email at akhoiri052@gmail.com.';
   };
 
 
   const handleSendMessage = async (textToSend) => {
     const text = textToSend || inputText.trim();
     if (!text) return;
+
+    // Secret trigger for owner to open settings without visible button
+    if (text === '/admin' || text === '/settings' || text === '/key') {
+      setInputText('');
+      handleOpenSettings();
+      return;
+    }
 
     setInputText('');
     appendMessage('user', text);
@@ -264,7 +271,11 @@ export default function AIChatbot() {
         {/* Panel Header */}
         <div className="p-4 bg-gradient-to-r from-blue-900/60 via-zinc-900/80 to-sky-900/60 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="relative w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-sky-400 p-[1.5px]">
+            <div
+              onDoubleClick={showSettings ? () => setShowSettings(false) : handleOpenSettings}
+              className="relative w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-sky-400 p-[1.5px] select-none"
+              title="Achmad AI"
+            >
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-sky-400 border-2 border-brandDark animate-pulse" />
               <div className="w-full h-full rounded-full bg-brandDark flex items-center justify-center">
                 <i className="fas fa-robot text-xs text-sky-400" />
@@ -276,25 +287,12 @@ export default function AIChatbot() {
             </div>
           </div>
 
-          {/* Header Action Buttons */}
+          {/* Header Action Buttons - Hidden for regular visitors */}
           <div className="flex items-center gap-1.5">
-
-            <button
-              onClick={showSettings ? () => setShowSettings(false) : handleOpenSettings}
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                showSettings
-                  ? 'bg-sky-500/20 text-sky-400'
-                  : 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white'
-              }`}
-              title="Pengaturan API Key"
-              aria-label="Pengaturan API Key"
-            >
-              <i className="fas fa-cog text-xs" />
-            </button>
-
             <button
               onClick={toggleChat}
               className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
+              aria-label="Tutup Chat"
             >
               <i className="fas fa-times text-xs" />
             </button>
