@@ -1,58 +1,15 @@
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
+import { useContent } from '../context/ContentContext.jsx';
 import CertificateModal from './CertificateModal.jsx';
 
 export default function About() {
   const { t } = useLanguage();
+  const { certificates: dynamicCerts, experiences: dynamicExps } = useContent();
   const [selectedCert, setSelectedCert] = useState(null);
 
-  const certificates = [
-    {
-      id: 1,
-      image: "/src/assets/certificate_pentest.jpg",
-      titleKey: "Pentest Analyst",
-      issuerKey: "Redlimit",
-      yearKey: "2025",
-      hoverBorder: "hover:border-blue-500/30",
-      textColor: "text-blue-400"
-    },
-    {
-      id: 2,
-      image: "/src/assets/certificate_ibm.jpg",
-      titleKey: "Data Classification and Summarization Using IBM Granite",
-      issuerKey: "IBM",
-      yearKey: "2025",
-      hoverBorder: "hover:border-blue-500/30",
-      textColor: "text-blue-400"
-    },
-    {
-      id: 3,
-      image: "/src/assets/certificate_python.png",
-      titleKey: " Python Programming",
-      issuerKey: "Dicoding",
-      yearKey: "2025",
-      hoverBorder: "hover:border-sky-500/30",
-      textColor: "text-sky-400"
-    },
-    {
-      id: 4,
-      image: "/src/assets/certificate_bwa.png",
-      titleKey: "Full-Stack JavaScript Developer Next JS",
-      issuerKey: "BuildWithAngga",
-      yearKey: "2026",
-      hoverBorder: "hover:border-sky-500/30",
-      textColor: "text-sky-400"
-    },
-    {
-      id: 5,
-      image: "/src/assets/certificate_bwaUiUx.png",
-      titleKey: "Complete UI Designer : User Flow, Visual Design, Prototype",
-      issuerKey: "BuildWithAngga",
-      yearKey: "2025",
-      hoverBorder: "hover:border-sky-500/30",
-      textColor: "text-sky-400"
-    }
-  ];
+  const certificates = dynamicCerts || [];
+  const experiences = dynamicExps || [];
 
   return (
     <section id="about" className="py-24 bg-brandGray border-y border-white/5 px-6 md:px-12 relative">
@@ -74,62 +31,30 @@ export default function About() {
                 <i className="fas fa-users text-blue-400 w-5"></i>
                 <span className="text-sm text-zinc-300">{t('aboutComm')}</span>
               </div>
-
             </div>
           </div>
 
           {/* Right Column: Work Timeline & Methodology */}
           <div className="lg:col-span-7 flex flex-col gap-12">
-
-
             {/* Subsection: Work Experience */}
             <div>
               <h3 className="font-syne font-bold text-2xl text-white mb-6">{t('aboutHistory')}</h3>
               <div className="border-l border-zinc-800 ml-3 space-y-8">
-                {/* Role 1 */}
-                <div className="relative pl-8 group">
-                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 group-hover:scale-125 transition-transform" />
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole1')}</h4>
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
-                      {t('aboutHistDate1')}
-                    </span>
+                {experiences.map((exp) => (
+                  <div key={exp.id} className="relative pl-8 group">
+                    <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 group-hover:scale-125 transition-transform" />
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                      <h4 className="font-semibold text-lg text-white">{exp.role}</h4>
+                      <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
+                        {exp.date}
+                      </span>
+                    </div>
+                    <p className="text-sm text-blue-400 font-medium">{exp.company}</p>
+                    <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
+                      {exp.description}
+                    </p>
                   </div>
-                  <p className="text-sm text-blue-400 font-medium">PT R17 Group</p>
-                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
-                    {t('aboutHistRole1Desc')}
-                  </p>
-                </div>
-
-                {/* Role 2 */}
-                <div className="relative pl-8 group">
-                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 group-hover:scale-125 transition-transform" />
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole2')}</h4>
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
-                      {t('aboutHistDate2')}
-                    </span>
-                  </div>
-                  <p className="text-sm text-blue-400 font-medium">PT Asia Pulp and Paper</p>
-                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
-                    {t('aboutHistRole2Desc')}
-                  </p>
-                </div>
-
-                {/* Role 3 */}
-                <div className="relative pl-8 group">
-                  <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-700 group-hover:scale-125 transition-transform" />
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                    <h4 className="font-semibold text-lg text-white">{t('aboutHistRole3')}</h4>
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
-                      {t('aboutHistDate3')}
-                    </span>
-                  </div>
-                  <p className="text-sm text-blue-400 font-medium">PT Bank Negara Indonesia</p>
-                  <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
-                    {t('aboutHistRole3Desc')}
-                  </p>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -142,38 +67,38 @@ export default function About() {
                     key={cert.id}
                     onClick={() => setSelectedCert({
                       image: cert.image,
-                      title: t(cert.titleKey),
-                      issuer: t(cert.issuerKey),
-                      year: t(cert.yearKey),
-                      textColor: cert.textColor
+                      title: cert.title,
+                      issuer: cert.issuer,
+                      year: cert.year,
+                      textColor: cert.textColor || 'text-sky-400'
                     })}
-                    className={`group rounded-2xl glass-card overflow-hidden border border-white/5 ${cert.hoverBorder} hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(56,189,248,0.05)] cursor-pointer transition-all duration-300 flex flex-col`}
+                    className={`group rounded-2xl glass-card overflow-hidden border border-white/5 ${cert.hoverBorder || 'hover:border-sky-500/30'} hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(56,189,248,0.05)] cursor-pointer transition-all duration-300 flex flex-col`}
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-950/50 border-b border-white/5">
                       <img
                         src={cert.image}
-                        alt={t(cert.titleKey)}
+                        alt={cert.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                       />
-                      <div className={`absolute top-3 right-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 w-8 h-8 rounded-full flex items-center justify-center ${cert.textColor}`}>
+                      <div className={`absolute top-3 right-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 w-8 h-8 rounded-full flex items-center justify-center ${cert.textColor || 'text-sky-400'}`}>
                         <i className="fas fa-certificate text-xs"></i>
                       </div>
                     </div>
                     <div className="p-5 flex flex-col flex-grow justify-between gap-4">
                       <div>
                         <h4 className="font-syne font-bold text-base text-white leading-snug group-hover:text-sky-400 transition-colors">
-                          {t(cert.titleKey)}
+                          {cert.title}
                         </h4>
                         <p className="text-xs text-zinc-400 font-medium mt-1">
-                          {t(cert.issuerKey)}
+                          {cert.issuer}
                         </p>
                       </div>
                       <div className="flex justify-between items-center pt-3 border-t border-white/5">
                         <span className="text-[10px] font-semibold px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
-                          {t(cert.yearKey)}
+                          {cert.year}
                         </span>
-                        <span className={`text-[10px] ${cert.textColor} flex items-center gap-1 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
+                        <span className={`text-[10px] ${cert.textColor || 'text-sky-400'} flex items-center gap-1 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
                           Verified <i className="fas fa-check-circle"></i>
                         </span>
                       </div>

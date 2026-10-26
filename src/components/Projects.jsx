@@ -192,11 +192,16 @@ export const projectsData = [
   }
 ];
 
+import { useContent } from '../context/ContentContext.jsx';
+
 export default function Projects({ onSelectProject }) {
   const [filter, setFilter] = useState('all');
   const { lang, t } = useLanguage();
+  const { projects } = useContent();
 
-  const filteredProjects = projectsData.filter((project) => {
+  const currentProjects = projects || projectsData;
+
+  const filteredProjects = currentProjects.filter((project) => {
     if (filter === 'all') return true;
     return project.category === filter;
   });
@@ -255,20 +260,30 @@ export default function Projects({ onSelectProject }) {
             onClick={() => onSelectProject(project)}
             className="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-blue-500/50 transition-all duration-500"
           >
-            <div className={`aspect-video w-full bg-gradient-to-tr ${project.gradientClass} overflow-hidden relative flex items-center justify-center p-6`}>
+            <div className={`aspect-video w-full bg-gradient-to-tr ${project.gradientClass || 'from-blue-900/40 to-black'} overflow-hidden relative flex items-center justify-center p-6`}>
               <div className="absolute top-4 left-4 z-10 flex gap-2">
-                {project.subCategories.map((sub, i) => (
+                {(project.subCategories || [project.category || 'Development']).map((sub, i) => (
                   <span
                     key={i}
                     className={`bg-black/70 backdrop-blur ${
-                      project.tagColors[i] || 'text-sky-400'
+                      project.tagColors?.[i] || 'text-sky-400'
                     } text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded`}
                   >
                     {sub}
                   </span>
                 ))}
               </div>
-              {project.renderVisual()}
+              {typeof project.renderVisual === 'function' ? (
+                project.renderVisual()
+              ) : (
+                <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-xl p-4 flex flex-col items-center justify-center gap-2 group-hover:scale-105 transition-transform duration-500">
+                  <div className="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-lg border border-sky-500/30">
+                    <i className={`fas ${project.category === 'design' ? 'fa-palette' : 'fa-code'}`} />
+                  </div>
+                  <span className="text-xs font-mono text-zinc-300 font-semibold">{project.title}</span>
+                  <span className="text-[10px] text-zinc-500 font-mono">{project.year || 2024}</span>
+                </div>
+              )}
             </div>
             <div className="p-6">
               <div className="flex justify-between items-center">
@@ -277,7 +292,11 @@ export default function Projects({ onSelectProject }) {
                 </h3>
                 <span className="text-zinc-500 text-sm">{project.year}</span>
               </div>
-              <p className="text-zinc-400 text-sm font-light mt-2">{project.description[lang]}</p>
+              <p className="text-zinc-400 text-sm font-light mt-2">
+                {typeof project.description === 'object'
+                  ? (project.description[lang] || project.description.id || project.description.en)
+                  : project.description}
+              </p>
             </div>
           </div>
         ))}
