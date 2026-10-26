@@ -1,5 +1,17 @@
 export default async function handler(req, res) {
-  // Allow only POST
+  // Set CORS headers for Vercel
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-local-api-key'
+  );
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -10,9 +22,28 @@ export default async function handler(req, res) {
 
   if (!clientKey) {
     return res.status(401).json({
-      error: 'GEMINI_API_KEY is not configured in Vercel Environment Variables.'
+      error: {
+        message: 'GEMINI_API_KEY belum dikonfigurasi di Vercel. Silakan tambahkan GEMINI_API_KEY di Project Settings > Environment Variables pada dashboard Vercel, lalu lakukan Redeploy.'
+      }
     });
   }
+
+  // Robust body retrieval (handles parsed object, string, or stream chunks)
+  let requestBody = req.body;
+  if (!requestBody) {
+    try {
+      requestBody = await new Promise((resolve, reject) => {
+        let data = '';
+        req.on('data', chunk => { data += chunk; });
+        req.on('end', () => resolve(data));
+        req.on('error', reject);
+      });
+    } catch {
+      requestBody = '{}';
+    }
+  }
+
+  const payloadString = typeof requestBody === 'string' ? requestBody : JSON.stringify(requestBody);
 
   try {
     const response = await fetch(
@@ -23,7 +54,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
           'x-goog-api-key': clientKey
         },
-        body: typeof req.body === 'string' ? req.body : JSON.stringify(req.body)
+        body: payloadString
       }
     );
 
@@ -31,6 +62,6 @@ export default async function handler(req, res) {
     return res.status(response.status).json(data);
   } catch (err) {
     console.error('Gemini API Error:', err);
-    return res.status(500).json({ error: err.message || 'Internal Server Error' });
+    return res.status(500).json({ error: { message: err.message || 'Internal Server Error' } });
   }
 }

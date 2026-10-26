@@ -134,7 +134,7 @@ export default function AIChatbot() {
 
   const fetchGeminiResponse = async (userMessage, currentHistory) => {
     const headers = { 'Content-Type': 'application/json' };
-    const apiUrl = '/api-gemini/v1beta/models/gemini-2.5-flash:generateContent';
+    const apiUrl = '/api/gemini';
 
     // Map history to Gemini API structure
     const contents = currentHistory.map((msg) => ({
@@ -172,7 +172,9 @@ export default function AIChatbot() {
 
           if (response.status === 400 || response.status === 403 || response.status === 401) {
             const detailMsg = errData?.error?.message || errData?.error || t('botErrorApiKey');
-            throw new Error(detailMsg);
+            const authErr = new Error(detailMsg);
+            authErr.isAuthError = true;
+            throw authErr;
           }
           if (response.status === 429) {
             const limitErr = new Error(t('botError429'));
@@ -185,8 +187,7 @@ export default function AIChatbot() {
         const data = await response.json();
         return data.candidates?.[0]?.content?.parts?.[0]?.text || t('botErrorFallback');
       } catch (error) {
-        if (error.status === 429) {
-          console.error('Gemini API Rate Limit:', error);
+        if (error.status === 429 || error.isAuthError) {
           return error.message;
         }
         attempt++;

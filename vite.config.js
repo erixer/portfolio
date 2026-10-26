@@ -15,6 +15,24 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
+        '/api/gemini': {
+          target: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+          changeOrigin: true,
+          rewrite: () => '',
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              const currentEnv = loadEnv(mode, process.cwd(), '');
+              const currentApiKey = (currentEnv.VITE_GEMINI_API_KEY || currentEnv.GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+              const clientKey = req.headers['x-local-api-key'] || currentApiKey;
+              if (clientKey) {
+                proxyReq.setHeader('x-goog-api-key', clientKey);
+              }
+            });
+            proxy.on('error', (err) => {
+              console.error('[Proxy Error]', err);
+            });
+          }
+        },
         '/api-gemini': {
           target: 'https://generativelanguage.googleapis.com',
           changeOrigin: true,
