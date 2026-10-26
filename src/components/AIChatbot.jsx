@@ -133,9 +133,6 @@ export default function AIChatbot() {
   };
 
   const fetchGeminiResponse = async (userMessage, currentHistory) => {
-    const headers = { 'Content-Type': 'application/json' };
-    const apiUrl = '/api/gemini';
-
     // Map history to Gemini API structure
     const contents = currentHistory.map((msg) => ({
       role: msg.sender === 'user' ? 'user' : 'model',
@@ -154,51 +151,67 @@ export default function AIChatbot() {
       }
     };
 
-    let attempt = 0;
-    const maxAttempts = 3;
-    let delay = 1000;
+    // Strategy 1: Call Vercel Serverless Function / local Vite proxy at /api/gemini
+    try {
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-    while (attempt < maxAttempts) {
-      try {
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: headers,
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-          const errData = await response.json().catch(() => null);
-          console.error('[Gemini API Error Detail]:', response.status, errData);
-
-          if (response.status === 400 || response.status === 403 || response.status === 401) {
-            const detailMsg = errData?.error?.message || errData?.error || t('botErrorApiKey');
-            const authErr = new Error(detailMsg);
-            authErr.isAuthError = true;
-            throw authErr;
-          }
-          if (response.status === 429) {
-            const limitErr = new Error(t('botError429'));
-            limitErr.status = 429;
-            throw limitErr;
-          }
-          throw new Error(`API Error: ${response.status}`);
-        }
-
+      if (response.ok) {
         const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || t('botErrorFallback');
-      } catch (error) {
-        if (error.status === 429 || error.isAuthError) {
-          return error.message;
+        const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (botReply) return botReply;
+      } else {
+        const errData = await response.json().catch(() => null);
+        console.warn('Proxy /api/gemini returned status:', response.status, errData);
+
+        // If status 401 with a specific message from api/gemini.js, return it
+        if (response.status === 401 && errData?.error?.message) {
+          return errData.error.message;
         }
-        attempt++;
-        if (attempt >= maxAttempts) {
-          console.error('Gemini API call failed:', error);
-          return error.message || t('botErrorGeneral');
+      }
+    } catch (proxyErr) {
+      console.warn('Backend proxy /api/gemini unreachable, trying fallback:', proxyErr);
+    }
+
+    // Strategy 2: Client-side direct fallback if key was provided at build time
+    const directKey = (import.meta.env.VITE_GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+    if (directKey) {
+      try {
+        const directResp = await fetch(
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-api-key': directKey
+            },
+            body: JSON.stringify(payload)
+          }
+        );
+
+        if (directResp.ok) {
+          const directData = await directResp.json();
+          const botReply = directData.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (botReply) return botReply;
+        } else {
+          const directErr = await directResp.json().catch(() => null);
+          console.error('Direct Gemini API error:', directResp.status, directErr);
+          if (directErr?.error?.message) {
+            return `Gemini Error (${directResp.status}): ${directErr.error.message}`;
+          }
         }
-        await new Promise((resolve) => setTimeout(resolve, delay));
-        delay *= 2;
+      } catch (directCallErr) {
+        console.error('Direct Gemini call failed:', directCallErr);
       }
     }
+
+    // Strategy 3: Friendly informative error message
+    return lang === 'id'
+      ? '⚠️ API Key Gemini belum terkonfigurasi di Vercel. Silakan tambahkan variabel GEMINI_API_KEY pada Dashboard Vercel (Project Settings > Environment Variables), lalu lakukan Redeploy.'
+      : '⚠️ Gemini API Key is not configured on Vercel. Please add GEMINI_API_KEY in Vercel Dashboard (Project Settings > Environment Variables) and redeploy.';
   };
 
 
