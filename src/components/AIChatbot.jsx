@@ -151,11 +151,17 @@ export default function AIChatbot() {
       }
     };
 
+    const localKey = (apiKey || localStorage.getItem('GEMINI_API_KEY') || '').trim().replace(/^['"]|['"]$/g, '');
+    const headers = { 'Content-Type': 'application/json' };
+    if (localKey) {
+      headers['x-local-api-key'] = localKey;
+    }
+
     // Strategy 1: Call Vercel Serverless Function / local Vite proxy at /api/gemini
     try {
       const response = await fetch('/api/gemini', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify(payload)
       });
 
@@ -167,17 +173,19 @@ export default function AIChatbot() {
         const errData = await response.json().catch(() => null);
         console.warn('Proxy /api/gemini returned status:', response.status, errData);
 
-        // If status 401 with a specific message from api/gemini.js, return it
-        if (response.status === 401 && errData?.error?.message) {
-          return errData.error.message;
+        // If local key was invalid, report it clearly
+        if (response.status === 400 && localKey) {
+          return lang === 'id'
+            ? '⚠️ API Key yang Anda masukkan tidak valid. Silakan klik tombol ⚙️ di kanan atas jendela chat untuk memasukkan kunci yang benar.'
+            : '⚠️ The API Key provided is invalid. Please click the ⚙️ button in the top right to update it.';
         }
       }
     } catch (proxyErr) {
       console.warn('Backend proxy /api/gemini unreachable, trying fallback:', proxyErr);
     }
 
-    // Strategy 2: Client-side direct fallback if key was provided at build time
-    const directKey = (import.meta.env.VITE_GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+    // Strategy 2: Client-side direct fallback if key was provided at build time or entered in settings
+    const directKey = localKey || (import.meta.env.VITE_GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
     if (directKey) {
       try {
         const directResp = await fetch(
@@ -208,10 +216,10 @@ export default function AIChatbot() {
       }
     }
 
-    // Strategy 3: Friendly informative error message
+    // Strategy 3: Friendly informative error message with clear action
     return lang === 'id'
-      ? '⚠️ API Key Gemini belum terkonfigurasi di Vercel. Silakan tambahkan variabel GEMINI_API_KEY pada Dashboard Vercel (Project Settings > Environment Variables), lalu lakukan Redeploy.'
-      : '⚠️ Gemini API Key is not configured on Vercel. Please add GEMINI_API_KEY in Vercel Dashboard (Project Settings > Environment Variables) and redeploy.';
+      ? '⚠️ API Key Gemini belum terpasang di Vercel.\n\n👉 Anda dapat mengaktifkannya langsung sekarang dengan mengklik tombol ⚙️ (Pengaturan) di kanan atas jendela chat ini dan memasukkan API Key Gemini Anda.'
+      : '⚠️ Gemini API Key is not configured on Vercel.\n\n👉 You can activate it directly now by clicking the ⚙️ (Settings) button in the top right of this chat window and entering your Gemini API Key.';
   };
 
 
@@ -271,13 +279,18 @@ export default function AIChatbot() {
           {/* Header Action Buttons */}
           <div className="flex items-center gap-1.5">
 
-            {/*<button
+            <button
               onClick={showSettings ? () => setShowSettings(false) : handleOpenSettings}
-              className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
-              title="API Key Configuration"
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                showSettings
+                  ? 'bg-sky-500/20 text-sky-400'
+                  : 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white'
+              }`}
+              title="Pengaturan API Key"
+              aria-label="Pengaturan API Key"
             >
               <i className="fas fa-cog text-xs" />
-            </button>*/}
+            </button>
 
             <button
               onClick={toggleChat}
