@@ -357,51 +357,88 @@ export default function AdminDashboard({ onBackToPortfolio }) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {projects.map((proj) => (
-                  <div key={proj.id} className="p-5 rounded-2xl bg-zinc-950/60 border border-white/5 flex flex-col justify-between gap-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-sky-400 border border-blue-500/20 uppercase">
-                          {proj.category || 'Development'} • {proj.year || 2024}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => setProjectModal({ open: true, isEdit: true, data: proj })}
-                            className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs transition-colors"
-                            title="Edit Project"
-                          >
-                            <i className="fas fa-pen-to-square" />
-                          </button>
-                          <button
-                            onClick={() => {
-                              if (confirm(`Hapus project "${proj.title}"?`)) {
-                                deleteProject(proj.id);
-                                showNotification('Project berhasil dihapus.');
-                              }
-                            }}
-                            className="w-7 h-7 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center text-xs transition-colors"
-                            title="Hapus Project"
-                          >
-                            <i className="fas fa-trash-can" />
-                          </button>
+                {projects.map((proj) => {
+                  const projImages = Array.isArray(proj.images) && proj.images.length > 0
+                    ? proj.images
+                    : (proj.image ? [proj.image] : []);
+                  const coverImg = projImages[0];
+
+                  return (
+                    <div key={proj.id} className="p-5 rounded-2xl bg-zinc-950/60 border border-white/5 flex flex-col justify-between gap-4">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-sky-400 border border-blue-500/20 uppercase">
+                            {proj.category || 'Development'} • {proj.year || 2024}
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            {proj.link && (
+                              <a
+                                href={proj.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-7 h-7 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs transition-colors"
+                                title="Buka Link Akses Project"
+                              >
+                                <i className="fas fa-arrow-up-right-from-square" />
+                              </a>
+                            )}
+                            <button
+                              onClick={() => setProjectModal({ open: true, isEdit: true, data: proj })}
+                              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs transition-colors"
+                              title="Edit Project"
+                            >
+                              <i className="fas fa-pen-to-square" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (confirm(`Hapus project "${proj.title}"?`)) {
+                                  deleteProject(proj.id);
+                                  showNotification('Project berhasil dihapus.');
+                                }
+                              }}
+                              className="w-7 h-7 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center text-xs transition-colors"
+                              title="Hapus Project"
+                            >
+                              <i className="fas fa-trash-can" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Project Thumbnail & Image Count */}
+                        {coverImg && (
+                          <div className="mb-3 aspect-video w-full rounded-xl overflow-hidden bg-zinc-900 border border-white/5 relative">
+                            <img src={coverImg} alt={proj.title} className="w-full h-full object-cover" />
+                            {projImages.length > 1 && (
+                              <span className="absolute bottom-2 right-2 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-mono text-zinc-300 border border-white/10">
+                                <i className="fas fa-images text-sky-400 mr-1" />
+                                {projImages.length} Foto
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        <h4 className="font-syne font-bold text-base text-white">{proj.title}</h4>
+                        <p className="text-xs text-zinc-400 mt-1 line-clamp-2">
+                          {typeof proj.description === 'object' ? proj.description.id : proj.description}
+                        </p>
+
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {proj.details?.stack && (
+                            <span className="text-[10px] font-mono text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded">
+                              {proj.details.stack}
+                            </span>
+                          )}
+                          {proj.link && (
+                            <span className="text-[10px] font-mono text-sky-400/80 bg-sky-500/5 px-2 py-0.5 rounded truncate max-w-[200px]">
+                              <i className="fas fa-link mr-1 text-[9px]" />
+                              {proj.link}
+                            </span>
+                          )}
                         </div>
                       </div>
-
-                      <h4 className="font-syne font-bold text-base text-white">{proj.title}</h4>
-                      <p className="text-xs text-zinc-400 mt-1 line-clamp-2">
-                        {typeof proj.description === 'object' ? proj.description.id : proj.description}
-                      </p>
-
-                      <div className="mt-3 flex flex-wrap gap-1.5">
-                        {proj.details?.stack && (
-                          <span className="text-[10px] font-mono text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded">
-                            {proj.details.stack}
-                          </span>
-                        )}
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -715,6 +752,7 @@ export default function AdminDashboard({ onBackToPortfolio }) {
           isEdit={projectModal.isEdit}
           initialData={projectModal.data}
           onClose={() => setProjectModal({ open: false, isEdit: false, data: null })}
+          onUploadImage={handleImageFile}
           onSave={(data) => {
             if (projectModal.isEdit) {
               updateProject(projectModal.data.id, data);
@@ -773,15 +811,54 @@ export default function AdminDashboard({ onBackToPortfolio }) {
 }
 
 // Subcomponent: Project Edit Modal
-function ProjectEditModal({ isOpen, isEdit, initialData, onClose, onSave }) {
+function ProjectEditModal({ isOpen, isEdit, initialData, onClose, onSave, onUploadImage }) {
   const [title, setTitle] = useState(initialData?.title || '');
   const [category, setCategory] = useState(initialData?.category || 'development');
   const [year, setYear] = useState(initialData?.year || new Date().getFullYear());
   const [stack, setStack] = useState(initialData?.details?.stack || '');
   const [roles, setRoles] = useState(initialData?.details?.roles?.id || initialData?.details?.roles || 'Full-stack Developer');
   const [desc, setDesc] = useState(typeof initialData?.description === 'object' ? initialData.description.id : initialData?.description || '');
+  const [link, setLink] = useState(initialData?.link || '');
+  const [images, setImages] = useState(() => {
+    if (Array.isArray(initialData?.images) && initialData.images.length > 0) {
+      return initialData.images;
+    }
+    if (initialData?.image) return [initialData.image];
+    return [];
+  });
+  const [imageUrlInput, setImageUrlInput] = useState('');
 
   if (!isOpen) return null;
+
+  const handleAddImageUrl = (e) => {
+    e.preventDefault();
+    const cleanUrl = imageUrlInput.trim();
+    if (!cleanUrl) return;
+    setImages((prev) => [...prev, cleanUrl]);
+    setImageUrlInput('');
+  };
+
+  const handleFileUpload = (e) => {
+    if (typeof onUploadImage === 'function') {
+      onUploadImage(e, (base64) => {
+        setImages((prev) => [...prev, base64]);
+      });
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleSetCover = (index) => {
+    if (index === 0) return;
+    setImages((prev) => {
+      const copy = [...prev];
+      const [target] = copy.splice(index, 1);
+      return [target, ...copy];
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -789,6 +866,8 @@ function ProjectEditModal({ isOpen, isEdit, initialData, onClose, onSave }) {
       title,
       category,
       year: parseInt(year, 10) || new Date().getFullYear(),
+      link: link.trim(),
+      images,
       subCategories: [category === 'development' ? 'Development' : 'Design'],
       gradientClass: category === 'development' ? 'from-blue-900/40 to-black' : 'from-indigo-900/40 to-black',
       tagColors: ['text-sky-400', 'text-blue-400'],
@@ -798,7 +877,7 @@ function ProjectEditModal({ isOpen, isEdit, initialData, onClose, onSave }) {
         roles: { id: roles, en: roles },
         stack: stack,
         desc: { id: desc, en: desc },
-        features: {
+        features: initialData?.details?.features || {
           id: ["Fitur unggulan interaktif", "Desain sepenuhnya responsif", "Performa tinggi"],
           en: ["Interactive features", "Fully responsive design", "High performance"]
         }
@@ -808,11 +887,19 @@ function ProjectEditModal({ isOpen, isEdit, initialData, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-lg bg-zinc-950 border border-white/10 rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div className="w-full max-w-xl bg-zinc-950 border border-white/10 rounded-3xl p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
         <div className="flex items-center justify-between pb-4 border-b border-white/5">
-          <h3 className="font-syne font-bold text-base text-white">
-            {isEdit ? 'Edit Project' : 'Tambah Project Baru'}
-          </h3>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+              <i className="fas fa-laptop-code text-xs" />
+            </div>
+            <div>
+              <h3 className="font-syne font-bold text-base text-white">
+                {isEdit ? 'Edit Project' : 'Tambah Project Baru'}
+              </h3>
+              <p className="text-[10px] text-zinc-500">Kelola info, slide gambar, dan link akses demo</p>
+            </div>
+          </div>
           <button onClick={onClose} className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs">
             <i className="fas fa-times" />
           </button>
@@ -829,6 +916,124 @@ function ProjectEditModal({ isOpen, isEdit, initialData, onClose, onSave }) {
               placeholder="Contoh: AI Dashboard Analytics"
               className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-sky-500"
             />
+          </div>
+
+          {/* Link Akses Project */}
+          <div>
+            <label className="block text-zinc-400 font-semibold mb-1 flex items-center justify-between">
+              <span>Link Akses Project (Live URL / Demo / Repo)</span>
+              <span className="text-[10px] text-zinc-500 font-normal">Akan dibuka di tab baru</span>
+            </label>
+            <div className="relative">
+              <input
+                type="url"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                placeholder="https://contoh-aplikasi.vercel.app atau https://github.com/..."
+                className="w-full pl-9 pr-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-sky-500 font-mono text-[11px]"
+              />
+              <i className="fas fa-link absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs" />
+            </div>
+          </div>
+
+          {/* Inputan Gambar Project (Multi-Image / Slides) */}
+          <div className="bg-zinc-900/60 p-4 rounded-2xl border border-white/5 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-zinc-300 font-semibold flex items-center gap-1.5">
+                <i className="fas fa-images text-sky-400" />
+                <span>Slide Gambar Project</span>
+              </label>
+              <span className="text-[10px] text-zinc-400 font-mono bg-zinc-800 px-2 py-0.5 rounded-full">
+                {images.length} Gambar
+              </span>
+            </div>
+
+            {/* Input Options: File Upload & URL */}
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <label className="flex-1 cursor-pointer">
+                  <div className="w-full py-2 px-3 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-sky-500/50 text-zinc-300 hover:text-white flex items-center justify-center gap-2 transition-colors">
+                    <i className="fas fa-upload text-sky-400 text-xs" />
+                    <span className="text-[11px] font-medium">Upload File Gambar</span>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              {/* Or via URL */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={imageUrlInput}
+                  onChange={(e) => setImageUrlInput(e.target.value)}
+                  placeholder="Atau tempel URL gambar (https://...)"
+                  className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none text-[11px]"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddImageUrl}
+                  className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-sky-400 text-[11px] font-semibold border border-white/5 transition-colors shrink-0"
+                >
+                  Tambah URL
+                </button>
+              </div>
+            </div>
+
+            {/* Image Preview Gallery */}
+            {images.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2">
+                {images.map((imgSrc, idx) => (
+                  <div
+                    key={idx}
+                    className="relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-zinc-950 group"
+                  >
+                    <img src={imgSrc} alt={`Slide ${idx + 1}`} className="w-full h-full object-cover" />
+                    
+                    {/* Badge: Cover / Slide */}
+                    <span
+                      className={`absolute top-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold ${
+                        idx === 0
+                          ? 'bg-sky-500 text-black shadow-sm'
+                          : 'bg-black/80 text-zinc-300 border border-white/10'
+                      }`}
+                    >
+                      {idx === 0 ? 'Cover (Slide 1)' : `Slide ${idx + 1}`}
+                    </span>
+
+                    {/* Action overlay */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                      {idx !== 0 && (
+                        <button
+                          type="button"
+                          onClick={() => handleSetCover(idx)}
+                          className="px-2 py-1 rounded bg-sky-500 hover:bg-sky-400 text-black font-semibold text-[9px] shadow"
+                          title="Jadikan Cover Utama"
+                        >
+                          Cover
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(idx)}
+                        className="w-6 h-6 rounded bg-red-500/80 hover:bg-red-500 text-white flex items-center justify-center text-[10px]"
+                        title="Hapus Gambar"
+                      >
+                        <i className="fas fa-trash-can" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[11px] text-zinc-500 italic text-center py-2">
+                Belum ada gambar ditambahkan. Anda dapat mengunggah beberapa gambar untuk dijadikan slide.
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">

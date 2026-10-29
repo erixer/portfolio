@@ -107,8 +107,21 @@ export function ContentProvider({ children }) {
           ...c,
           image: mapCertImage(c.image)
         }));
+        const loadedProjects = (parsed.projects?.length ? parsed.projects : defaultProjectsData).map((p) => {
+          // If default project exists in defaultProjectsData, preserve default images and link if missing in saved
+          const defaultMatch = defaultProjectsData.find((dp) => dp.id === p.id);
+          const images = Array.isArray(p.images) && p.images.length > 0
+            ? p.images
+            : (defaultMatch?.images?.length ? defaultMatch.images : (p.image ? [p.image] : []));
+          const link = p.link || defaultMatch?.link || '';
+          return {
+            ...p,
+            images,
+            link
+          };
+        });
         return {
-          projects: parsed.projects?.length ? parsed.projects : defaultProjectsData,
+          projects: loadedProjects,
           certificates: loadedCerts,
           experiences: parsed.experiences?.length ? parsed.experiences : defaultExperiences,
         };
@@ -188,6 +201,8 @@ export function ContentProvider({ children }) {
       ...project,
       id: project.id || 'project-' + Date.now(),
       year: project.year || new Date().getFullYear(),
+      link: (project.link || '').trim(),
+      images: Array.isArray(project.images) ? project.images : (project.image ? [project.image] : []),
     };
     setContent((prev) => ({
       ...prev,
@@ -198,7 +213,17 @@ export function ContentProvider({ children }) {
   const updateProject = (id, updatedFields) => {
     setContent((prev) => ({
       ...prev,
-      projects: prev.projects.map((p) => (p.id === id ? { ...p, ...updatedFields } : p))
+      projects: prev.projects.map((p) => {
+        if (p.id !== id) return p;
+        const merged = { ...p, ...updatedFields };
+        if (updatedFields.images !== undefined) {
+          merged.images = Array.isArray(updatedFields.images) ? updatedFields.images : (updatedFields.image ? [updatedFields.image] : []);
+        }
+        if (updatedFields.link !== undefined) {
+          merged.link = (updatedFields.link || '').trim();
+        }
+        return merged;
+      })
     }));
   };
 

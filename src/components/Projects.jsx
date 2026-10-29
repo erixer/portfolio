@@ -1,6 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
+import imgCodeScreenshot from '../assets/project_codescreenshot.jpg';
+import imgCodeScreenshotDetail from '../assets/project_codescreenshot_detail.jpg';
+import imgSnapalyzer from '../assets/project_snapalyzer.jpg';
 
 export const projectsData = [
   {
@@ -11,6 +14,8 @@ export const projectsData = [
     gradientClass: 'from-blue-900/40 to-black',
     tagColors: ['text-sky-400', 'text-blue-400'],
     year: 2024,
+    link: 'https://github.com/achmadkhoiri',
+    images: [imgCodeScreenshot, imgCodeScreenshotDetail],
     description: {
       id: 'Alat interaktif yang dirancang untuk merancang, menyesuaikan, dan mengekspor cuplikan kode dengan gaya gradien kustom.',
       en: 'Interactive tool designed to design, customize, and export code snippets with custom gradient styles.'
@@ -61,6 +66,8 @@ export const projectsData = [
     gradientClass: 'from-sky-900/40 to-black',
     tagColors: ['text-sky-400', 'text-cyan-400'],
     year: 2024,
+    link: 'https://github.com/achmadkhoiri',
+    images: [imgSnapalyzer],
     description: {
       id: 'Sistem analitik berbasis AI memanfaatkan Google Gemini API untuk menganalisis, mengulas, dan mengidentifikasi konteks visual gambar secara real-time.',
       en: 'AI-powered image analytics system utilizing Google Gemini API to analyze, review, and identify visual context of images in real-time.'
@@ -102,6 +109,8 @@ export const projectsData = [
     gradientClass: 'from-indigo-900/40 to-black',
     tagColors: ['text-sky-400', 'text-blue-400'],
     year: 2022,
+    link: 'https://github.com/achmadkhoiri',
+    images: [],
     description: {
       id: 'Ruang kolaborasi penulisan kode real-time yang memungkinkan tim pengembang menyusun, memeriksa, dan mensinkronisasikan web langsung.',
       en: 'Real-time collaborative code-writing workspace allowing development teams to draft, inspect, and synchronize web pages live.'
@@ -154,6 +163,8 @@ export const projectsData = [
     gradientClass: 'from-pink-900/40 to-black',
     tagColors: ['text-blue-400', 'text-sky-400'],
     year: 2021,
+    link: 'https://github.com/achmadkhoiri',
+    images: [],
     description: {
       id: 'Dasbor analitik penanganan pandemi untuk mempertemukan pasien secara darurat dengan penyedia kasur medis yang tervalidasi di India.',
       en: 'Pandemic response analytics dashboard connecting emergency patients with validated medical bed providers in India.'
@@ -254,52 +265,127 @@ export default function Projects({ onSelectProject }) {
 
       {/* Projects grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-container">
-        {filteredProjects.map((project) => (
-          <div
-            key={project.id}
-            onClick={() => onSelectProject(project)}
-            className="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-blue-500/50 transition-all duration-500"
-          >
-            <div className={`aspect-video w-full bg-gradient-to-tr ${project.gradientClass || 'from-blue-900/40 to-black'} overflow-hidden relative flex items-center justify-center p-6`}>
-              <div className="absolute top-4 left-4 z-10 flex gap-2">
-                {(project.subCategories || [project.category || 'Development']).map((sub, i) => (
-                  <span
-                    key={i}
-                    className={`bg-black/70 backdrop-blur ${
-                      project.tagColors?.[i] || 'text-sky-400'
-                    } text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded`}
-                  >
-                    {sub}
-                  </span>
-                ))}
-              </div>
-              {typeof project.renderVisual === 'function' ? (
-                project.renderVisual()
-              ) : (
-                <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-xl p-4 flex flex-col items-center justify-center gap-2 group-hover:scale-105 transition-transform duration-500">
-                  <div className="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-lg border border-sky-500/30">
-                    <i className={`fas ${project.category === 'design' ? 'fa-palette' : 'fa-code'}`} />
+        {filteredProjects.map((project) => {
+          const projectImages = Array.isArray(project.images) && project.images.length > 0
+            ? project.images
+            : (project.image ? [project.image] : []);
+          const coverImage = projectImages[0];
+          const hasLink = Boolean(project.link && project.link.trim());
+
+          return (
+            <div
+              key={project.id}
+              onClick={() => onSelectProject(project)}
+              className="project-card reveal glass-card rounded-2xl overflow-hidden group cursor-pointer border border-zinc-800 hover:border-blue-500/50 transition-all duration-500 flex flex-col justify-between"
+            >
+              <div>
+                <div className={`aspect-video w-full bg-gradient-to-tr ${project.gradientClass || 'from-blue-900/40 to-black'} overflow-hidden relative flex items-center justify-center`}>
+                  {/* Category badges */}
+                  <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
+                    {(project.subCategories || [project.category || 'Development']).map((sub, i) => (
+                      <span
+                        key={i}
+                        className={`bg-black/75 backdrop-blur-md ${
+                          project.tagColors?.[i] || 'text-sky-400'
+                        } text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md border border-white/5 shadow-md`}
+                      >
+                        {sub}
+                      </span>
+                    ))}
                   </div>
-                  <span className="text-xs font-mono text-zinc-300 font-semibold">{project.title}</span>
-                  <span className="text-[10px] text-zinc-500 font-mono">{project.year || 2024}</span>
+
+                  {/* Multiple images indicator */}
+                  {projectImages.length > 1 && (
+                    <div className="absolute top-4 right-4 z-10 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-mono text-zinc-300 flex items-center gap-1.5 border border-white/10 shadow-md">
+                      <i className="fas fa-images text-sky-400"></i>
+                      <span>{projectImages.length} {t('projectSlideLabel')}</span>
+                    </div>
+                  )}
+
+                  {/* Visual: Image or RenderVisual Fallback */}
+                  {coverImage ? (
+                    <div className="w-full h-full relative overflow-hidden bg-zinc-950">
+                      <img
+                        src={coverImage}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-300 pointer-events-none" />
+                    </div>
+                  ) : typeof project.renderVisual === 'function' ? (
+                    <div className="w-full h-full p-6 flex items-center justify-center">
+                      {project.renderVisual()}
+                    </div>
+                  ) : (
+                    <div className="w-4/5 h-4/5 bg-zinc-900/90 border border-zinc-700/50 rounded-xl p-4 flex flex-col items-center justify-center gap-2 group-hover:scale-105 transition-transform duration-500">
+                      <div className="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-lg border border-sky-500/30">
+                        <i className={`fas ${project.category === 'design' ? 'fa-palette' : 'fa-code'}`} />
+                      </div>
+                      <span className="text-xs font-mono text-zinc-300 font-semibold">{project.title}</span>
+                      <span className="text-[10px] text-zinc-500 font-mono">{project.year || 2024}</span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            <div className="p-6">
-              <div className="flex justify-between items-center">
-                <h3 className="font-syne font-bold text-xl group-hover:text-sky-400 transition-colors">
-                  {project.title}
-                </h3>
-                <span className="text-zinc-500 text-sm">{project.year}</span>
+
+                <div className="p-6">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-syne font-bold text-xl text-white group-hover:text-sky-400 transition-colors">
+                      {project.title}
+                    </h3>
+                    <span className="text-zinc-500 text-sm font-mono">{project.year}</span>
+                  </div>
+                  <p className="text-zinc-400 text-sm font-light mt-2 line-clamp-2">
+                    {typeof project.description === 'object'
+                      ? (project.description[lang] || project.description.id || project.description.en)
+                      : project.description}
+                  </p>
+
+                  {/* Tech stack badge list */}
+                  {project.details?.stack && (
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {project.details.stack.split(',').slice(0, 3).map((stk, i) => (
+                        <span key={i} className="text-[10px] font-mono text-zinc-400 bg-white/5 border border-white/5 px-2 py-0.5 rounded-md">
+                          {stk.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <p className="text-zinc-400 text-sm font-light mt-2">
-                {typeof project.description === 'object'
-                  ? (project.description[lang] || project.description.id || project.description.en)
-                  : project.description}
-              </p>
+
+              {/* Action buttons: Detail Modal + Preview Project (Direct Link Open New Tab) */}
+              <div className="px-6 pb-6 pt-2 border-t border-white/5 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => onSelectProject(project)}
+                  className="text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 py-2 px-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all"
+                >
+                  <i className="fas fa-circle-info text-sky-400 text-xs"></i>
+                  <span>{t('projectDetailBtn')}</span>
+                </button>
+
+                {hasLink ? (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs font-semibold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white shadow-lg shadow-sky-500/20 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 group/btn"
+                    title={project.link}
+                  >
+                    <span>{t('projectPreviewBtn')}</span>
+                    <i className="fas fa-arrow-up-right-from-square text-[10px] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform"></i>
+                  </a>
+                ) : (
+                  <span className="text-[11px] font-mono text-zinc-500 py-1.5 px-3 rounded-lg bg-zinc-900 border border-zinc-800">
+                    {t('projectNoLink')}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
