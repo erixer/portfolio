@@ -1,8 +1,36 @@
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+
+// Helper to get environment variables dynamically from process.env or .env file
+function getEnvVar(key) {
+  if (process.env[key]) return process.env[key];
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf8');
+      const lines = content.split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eqIdx = trimmed.indexOf('=');
+        if (eqIdx !== -1) {
+          const k = trimmed.slice(0, eqIdx).trim();
+          if (k === key) {
+            return trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('[ResetPassword] Error reading .env dynamically:', err.message);
+  }
+  return '';
+}
 
 // Secret key for HMAC token signing (falls back to secure runtime random or env)
-const RESET_SECRET = process.env.RESET_PASSWORD_SECRET || 'portfolio-admin-reset-salt-key-2026';
+const RESET_SECRET = getEnvVar('RESET_PASSWORD_SECRET') || process.env.RESET_PASSWORD_SECRET || 'portfolio-admin-reset-salt-key-2026';
 
 function signToken(payload) {
   const data = JSON.stringify(payload);
@@ -93,14 +121,16 @@ export default async function handler(req, res) {
     };
     const signedToken = signToken(tokenPayload);
 
-    const gmailUser = (process.env.GMAIL_USER || '').trim();
-    const gmailPass = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
+    const gmailUser = (getEnvVar('GMAIL_USER') || process.env.GMAIL_USER || targetEmail || 'akhoiri052@gmail.com').trim();
+    const gmailPass = (getEnvVar('GMAIL_APP_PASSWORD') || process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
 
     // Check if Gmail SMTP is configured
     if (gmailUser && gmailPass) {
       try {
         const transporter = nodemailer.createTransport({
-          service: 'gmail',
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
           auth: {
             user: gmailUser,
             pass: gmailPass
@@ -177,20 +207,26 @@ export default async function handler(req, res) {
         console.log(`[ResetPassword] Real email successfully sent to: ${targetEmail}`);
         return res.status(200).json({
           success: true,
-          message: `Kode verifikasi 6-digit telah berhasil dikirim ke alamat Gmail: ${targetEmail}`,
+          simulated: false,
+          message: `Kode verifikasi 6 digit telah dikirim ke alamat Gmail: ${targetEmail}. Silakan periksa kotak masuk (Inbox) atau folder Spam Anda.`,
           token: signedToken,
           email: targetEmail
         });
       } catch (mailErr) {
         console.error('[ResetPassword] Transporter error:', mailErr);
+        const errMsg = mailErr.message || '';
+        let userFriendlyMsg = `Gagal mengirim email: ${errMsg}`;
+        if (errMsg.includes('535') || errMsg.includes('BadCredentials') || errMsg.includes('Username and Password not accepted')) {
+          userFriendlyMsg = 'Google menolak otentikasi login (Error 535). Pastikan Anda menggunakan Sandi Aplikasi (App Password 16 karakter), BUKAN password akun Google biasa. Dapatkan di: myaccount.google.com/apppasswords';
+        }
         return res.status(500).json({
           success: false,
-          message: `Gagal mengirim email: ${mailErr.message || 'Periksa konfigurasi GMAIL_APP_PASSWORD.'}`
+          message: userFriendlyMsg
         });
       }
     } else {
       // Development / Fallback mode when GMAIL_USER & GMAIL_APP_PASSWORD are not yet in .env
-      console.warn('[ResetPassword] GMAIL_USER or GMAIL_APP_PASSWORD not set in environment.');
+      console.warn('[ResetPassword] GMAIL_USER or GMAIL_APP_PASSWORD not set in environment or .env file.');
       console.warn(`[ResetPassword] Simulation OTP Code for ${targetEmail}: ${generatedCode}`);
 
       return res.status(200).json({
@@ -199,7 +235,7 @@ export default async function handler(req, res) {
         token: signedToken,
         email: targetEmail,
         devCode: generatedCode,
-        message: `Kode verifikasi berhasil dibuat (${generatedCode}). Konfigurasikan GMAIL_USER & GMAIL_APP_PASSWORD di .env untuk pengiriman email langsung ke inbox Gmail.`
+        message: `PERHATIAN: Email belum terkirim ke Gmail karena GMAIL_USER & GMAIL_APP_PASSWORD belum diisi di file .env. Untuk testing saat ini, gunakan kode OTP: ${generatedCode}. Isi .env untuk pengiriman nyata ke inbox Gmail.`
       });
     }
   }

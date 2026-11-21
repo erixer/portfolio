@@ -23,6 +23,8 @@ export default function AdminLogin({ onBackToPortfolio }) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [isSimulated, setIsSimulated] = useState(false);
+  const [devOtpCode, setDevOtpCode] = useState('');
 
   // Countdown timer for resend OTP
   useEffect(() => {
@@ -70,6 +72,8 @@ export default function AdminLogin({ onBackToPortfolio }) {
 
       if (data.success) {
         setResetToken(data.token);
+        setIsSimulated(Boolean(data.simulated));
+        setDevOtpCode(data.devCode || '');
         setSuccessMsg(data.message || `Kode verifikasi telah dikirim ke ${email}.`);
         setView('verify-otp');
         setResendCooldown(60); // 60s cooldown
@@ -350,12 +354,38 @@ export default function AdminLogin({ onBackToPortfolio }) {
             </div>
 
             {/* Success/Info Notice */}
-            {successMsg && (
-              <div className="mb-4 p-3 rounded-xl bg-sky-950/40 border border-sky-500/30 flex items-start gap-2.5 text-sky-300 text-xs">
-                <i className="fas fa-info-circle text-sky-400 mt-0.5 shrink-0" />
-                <span>{successMsg}</span>
+            {isSimulated && devOtpCode ? (
+              <div className="mb-4 p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs space-y-2">
+                <div className="flex items-center gap-2 font-bold text-amber-300">
+                  <i className="fas fa-triangle-exclamation" />
+                  <span>Mode Simulasi (Belum Mengirim ke Gmail)</span>
+                </div>
+                <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                  Kredensial <code>GMAIL_USER</code> & <code>GMAIL_APP_PASSWORD</code> belum diset di file <code>.env</code>.
+                </p>
+                <div className="p-2 bg-black/40 rounded-lg flex items-center justify-between border border-amber-500/20">
+                  <span className="text-[11px] font-mono">Kode OTP Test:</span>
+                  <span className="font-mono font-bold text-base text-white tracking-widest">{devOtpCode}</span>
+                  <button
+                    type="button"
+                    onClick={() => setOtpCode(devOtpCode)}
+                    className="px-2.5 py-1 rounded bg-amber-500 text-black font-bold text-[10px] hover:bg-amber-400 cursor-pointer"
+                  >
+                    Gunakan Kode
+                  </button>
+                </div>
               </div>
-            )}
+            ) : !isSimulated && successMsg ? (
+              <div className="mb-4 p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-start gap-2.5 text-emerald-300 text-xs">
+                <i className="fas fa-paper-plane text-emerald-400 mt-0.5 shrink-0" />
+                <div>
+                  <span className="font-bold block">Email Terkirim ke Inbox Gmail!</span>
+                  <span className="text-[11px] text-emerald-300/80">
+                    Kode verifikasi 6 digit telah dikirim ke <b>{email}</b>. Periksa kotak masuk atau folder Spam.
+                  </span>
+                </div>
+              </div>
+            ) : null}
 
             {/* Error Alert */}
             {error && (
