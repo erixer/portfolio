@@ -146,7 +146,8 @@ export function ContentProvider({ children }) {
     }
     return {
       username: 'achmad30',
-      password: '@Ahmad305'
+      password: '@Ahmad305',
+      email: 'akhoiri052@gmail.com'
     };
   });
 
@@ -191,8 +192,17 @@ export function ContentProvider({ children }) {
   const updateCredentials = (newUsername, newPassword) => {
     setAuthConfig({
       username: newUsername.trim(),
-      password: newPassword
+      password: newPassword,
+      email: authConfig.email || 'akhoiri052@gmail.com'
     });
+  };
+
+  const resetPassword = (newPassword) => {
+    setAuthConfig((prev) => ({
+      ...prev,
+      password: newPassword
+    }));
+    return { success: true, message: 'Password berhasil diperbarui!' };
   };
 
   // Projects Management
@@ -323,9 +333,11 @@ export function ContentProvider({ children }) {
         // Auth
         isAuthenticated,
         adminUser: authConfig.username,
+        adminEmail: authConfig.email || 'akhoiri052@gmail.com',
         login,
         logout,
         updateCredentials,
+        resetPassword,
         // Projects CRUD
         addProject,
         updateProject,

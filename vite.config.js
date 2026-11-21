@@ -15,7 +15,35 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey)
     },
-    plugins: [react()],
+    plugins: [
+      react(),
+      {
+        name: 'vite-plugin-reset-password-api',
+        configureServer(server) {
+          server.middlewares.use('/api/reset-password', async (req, res) => {
+            // Helper methods for Express/Vercel Serverless compatibility
+            res.status = function(code) {
+              res.statusCode = code;
+              return res;
+            };
+            res.json = function(data) {
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(data));
+              return res;
+            };
+            try {
+              const { default: resetPasswordHandler } = await import('./api/reset-password.js');
+              await resetPasswordHandler(req, res);
+            } catch (err) {
+              console.error('[Vite Dev] Reset password API error:', err);
+              if (!res.writableEnded) {
+                res.status(500).json({ success: false, message: err.message });
+              }
+            }
+          });
+        }
+      }
+    ],
     test: {
       globals: true,
       environment: 'jsdom',
