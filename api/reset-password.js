@@ -225,17 +225,10 @@ export default async function handler(req, res) {
         });
       }
     } else {
-      // Development / Fallback mode when GMAIL_USER & GMAIL_APP_PASSWORD are not yet in .env
       console.warn('[ResetPassword] GMAIL_USER or GMAIL_APP_PASSWORD not set in environment or .env file.');
-      console.warn(`[ResetPassword] Simulation OTP Code for ${targetEmail}: ${generatedCode}`);
-
-      return res.status(200).json({
-        success: true,
-        simulated: true,
-        token: signedToken,
-        email: targetEmail,
-        devCode: generatedCode,
-        message: `PERHATIAN: Email belum terkirim ke Gmail karena GMAIL_USER & GMAIL_APP_PASSWORD belum diisi di file .env. Untuk testing saat ini, gunakan kode OTP: ${generatedCode}. Isi .env untuk pengiriman nyata ke inbox Gmail.`
+      return res.status(500).json({
+        success: false,
+        message: 'Layanan email belum dikonfigurasi. Pastikan GMAIL_USER dan GMAIL_APP_PASSWORD sudah diatur di environment.'
       });
     }
   }
