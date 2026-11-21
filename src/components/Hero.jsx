@@ -195,10 +195,10 @@ export default function Hero() {
           {/* Quick socials */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-4 text-zinc-400">
             <span className="text-xs uppercase tracking-widest font-bold text-zinc-600">{t('heroContactLabel')}</span>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-linkedin" /></a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandCreative transition-colors text-lg"><i className="fab fa-github" /></a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-instagram" /></a>
-            <a href="mailto:achmadkhoiri@gmail.com" className="hover:text-brandAccent transition-colors text-lg"><i className="far fa-envelope" /></a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-linkedin" /></a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:text-brandCreative transition-colors text-lg"><i className="fab fa-github" /></a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-brandAccent transition-colors text-lg"><i className="fab fa-instagram" /></a>
+            <a href="mailto:achmadkhoiri@gmail.com" aria-label="Email" className="hover:text-brandAccent transition-colors text-lg"><i className="far fa-envelope" /></a>
           </div>
         </div>
       </div>

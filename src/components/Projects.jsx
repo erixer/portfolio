@@ -355,11 +355,14 @@ export default function Projects({ onSelectProject }) {
               </div>
 
               {/* Action buttons: Detail Modal + Preview Project (Direct Link Open New Tab) */}
-              <div className="px-6 pb-6 pt-2 border-t border-white/5 flex items-center justify-between gap-3">
+              <div className="px-6 pb-6 pt-2 border-t border-white/5 flex items-center justify-between gap-3 relative z-10">
                 <button
                   type="button"
-                  onClick={() => onSelectProject(project)}
-                  className="text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 py-2 px-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectProject(project);
+                  }}
+                  className="cursor-pointer text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 py-2.5 px-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all active:scale-95 min-h-[42px]"
                 >
                   <i className="fas fa-circle-info text-sky-400 text-xs"></i>
                   <span>{t('projectDetailBtn')}</span>
@@ -371,7 +374,7 @@ export default function Projects({ onSelectProject }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="text-xs font-semibold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white shadow-lg shadow-sky-500/20 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 group/btn"
+                    className="cursor-pointer text-xs font-semibold py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white shadow-lg shadow-sky-500/20 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 group/btn min-h-[42px]"
                     title={project.link}
                   >
                     <span>{t('projectPreviewBtn')}</span>

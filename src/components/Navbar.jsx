@@ -99,7 +99,7 @@ export default function Navbar() {
         {/* Mobile Hamburger Button */}
         <button
           onClick={toggleMobileMenu}
-          className="md:hidden w-10 h-10 flex flex-col justify-center items-center gap-1.5 focus:outline-none z-50"
+          className="md:hidden w-11 h-11 flex flex-col justify-center items-center gap-1.5 focus:outline-none z-50 cursor-pointer p-2 rounded-xl hover:bg-white/5 active:scale-95 transition-all"
           aria-label="Toggle Mobile Menu"
         >
           <span
@@ -116,7 +116,7 @@ export default function Navbar() {
       {/* Mobile Menu Drawer Overlay */}
       <div
         id="mobile-nav-menu"
-        className={`fixed inset-0 bg-brandDark/95 backdrop-blur-xl z-30 flex flex-col justify-center items-center gap-6 transition-transform duration-500 ease-in-out md:hidden ${isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed inset-0 bg-brandDark/95 backdrop-blur-xl z-30 flex flex-col justify-center items-center gap-6 transition-all duration-500 ease-in-out md:hidden ${isMobileMenuOpen ? 'translate-y-0 opacity-100 pointer-events-auto visible' : '-translate-y-full opacity-0 pointer-events-none invisible'
           }`}
       >
         <a href="#home" onClick={closeMobileMenu} className="mobile-nav-link text-3xl font-syne font-bold hover:text-brandAccent transition-colors">

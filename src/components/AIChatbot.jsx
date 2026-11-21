@@ -261,11 +261,11 @@ export default function AIChatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
       {/* AI Chat Window Panel */}
       <div
         id="ai-chat-window"
-        className={`w-[90vw] sm:w-[380px] h-[500px] rounded-3xl glass-card border border-white/10 flex flex-col shadow-2xl mb-4 overflow-hidden transform transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-95 opacity-0 pointer-events-none'
+        className={`w-[90vw] sm:w-[380px] h-[500px] rounded-3xl glass-card border border-white/10 flex flex-col shadow-2xl mb-4 overflow-hidden transform transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-95 opacity-0 pointer-events-none invisible h-0 mb-0'
           }`}
       >
         {/* Panel Header */}
@@ -428,7 +428,7 @@ export default function AIChatbot() {
       {/* Sticky floating trigger button */}
       <button
         onClick={toggleChat}
-        className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-blue-600 via-sky-500 to-sky-400 p-[2px] shadow-2xl transition-all duration-300 active:scale-95 group z-50"
+        className="pointer-events-auto cursor-pointer relative w-14 h-14 rounded-full bg-gradient-to-tr from-blue-600 via-sky-500 to-sky-400 p-[2px] shadow-2xl transition-all duration-300 active:scale-95 group z-50 min-w-[48px] min-h-[48px]"
         aria-label="Toggle AI Assistant Chat"
       >
         <span className="absolute inset-0 rounded-full bg-sky-500/30 animate-ping -z-10 group-hover:opacity-100 opacity-60" />

@@ -6,14 +6,26 @@
   body {
     background-color: #050814;
     color: #f3f4f6;
-    cursor: none; /* Hide default cursor to use custom cursor */
     overflow-x: hidden;
   }
 
-  @media (max-width: 1024px) {
+  /* Desktop custom cursor styling */
+  @media (min-width: 1025px) and (pointer: fine) {
     body {
-      cursor: auto;
+      cursor: none;
     }
+  }
+
+  @media (max-width: 1024px), (pointer: coarse) {
+    body {
+      cursor: auto !important;
+    }
+  }
+
+  button, a, [role="button"] {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 }
 

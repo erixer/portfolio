@@ -16,6 +16,11 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey)
     },
     plugins: [react()],
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: './src/test/setup.js',
+    },
     server: {
       proxy: {
         '/api/gemini': {

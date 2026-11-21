@@ -77,7 +77,7 @@ export default function ProjectModal({ project, onClose }) {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-semibold text-xs transition-all shadow-md shadow-sky-500/20 group"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-semibold text-xs transition-all shadow-md shadow-sky-500/20 group active:scale-95 min-h-[36px]"
               >
                 <span>{t('projectPreviewBtn')}</span>
                 <i className="fas fa-arrow-up-right-from-square text-[10px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -85,7 +85,7 @@ export default function ProjectModal({ project, onClose }) {
             )}
             <button
               onClick={onClose}
-              className="w-9 h-9 rounded-full bg-zinc-900 border border-white/10 hover:bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-all focus:outline-none"
+              className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 hover:bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-all focus:outline-none cursor-pointer active:scale-95"
               aria-label="Close Modal"
             >
               <i className="fas fa-times text-sm" />
