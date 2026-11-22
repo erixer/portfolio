@@ -13,7 +13,7 @@ describe('Contact & FAQ Feature Buttons (Accordion & Form Submit)', () => {
 
     // Click to expand
     fireEvent.click(firstFaqBtn);
-    expect(screen.getByText(/Associate Software Engineer/i)).toBeInTheDocument();
+    expect(screen.getByText(/Full Stack Web Development/i)).toBeInTheDocument();
 
     // Click again to collapse
     fireEvent.click(firstFaqBtn);

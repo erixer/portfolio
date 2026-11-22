@@ -76,7 +76,7 @@ export default function Hero() {
                 Achmad Khoiri
               </h2>
               <p className="text-zinc-400 text-sm font-semibold tracking-wider mt-1.5">
-                Frontend Developer & UI/UX Specialist
+                Full Stack Web Developer
               </p>
             </div>
 
@@ -169,10 +169,11 @@ export default function Hero() {
 
           {/* Key tags */}
           <div className="flex flex-wrap justify-center lg:justify-start gap-2 mt-2">
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Web Development</span>
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">UI/UX Design</span>
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Branding</span>
-            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Interactive Animations</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Full Stack Web Dev</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Backend & REST APIs</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Modern Frontend</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">Database Architecture</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors">UI/UX & Interactive Design</span>
           </div>
 
           {/* Action buttons */}

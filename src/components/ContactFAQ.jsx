@@ -8,8 +8,8 @@ const faqsData = [
       en: 'What is your current job role?'
     },
     answer: {
-      id: 'Saat ini saya bekerja sebagai Associate Software Engineer di OneShield Software, berfokus pada pengembangan arsitektur frontend web responsif. Saya juga mengelola komunitas Design & Code.',
-      en: 'Currently, I work as an Associate Software Engineer at OneShield Software, focusing on responsive web frontend architecture development. I also manage the Design & Code community.'
+      id: 'Saat ini saya berfokus pada rekayasa Full Stack Web Development, arsitektur RESTful APIs, dan pengembangan antarmuka web responsif berkinerja tinggi. Saya juga aktif mengelola komunitas Design & Code.',
+      en: 'Currently, I focus on Full Stack Web Development, scalable RESTful API architecture, and high-performance responsive web frontend engineering. I also actively manage the Design & Code community.'
     }
   },
   {
