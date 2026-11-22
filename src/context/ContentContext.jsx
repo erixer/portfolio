@@ -202,6 +202,19 @@ export function ContentProvider({ children }) {
 
         if (remoteData && Object.keys(remoteData).length > 0) {
           setSupabaseStatus('connected');
+          // Sync Auth credentials from Supabase if present
+          if (remoteData.auth && remoteData.auth.username && remoteData.auth.password) {
+            setAuthConfig(remoteData.auth);
+            try {
+              localStorage.setItem(AUTH_KEY, JSON.stringify(remoteData.auth));
+            } catch (err) {
+              console.warn('Failed to cache Supabase auth to localStorage:', err);
+            }
+          } else {
+            // Seed auth to Supabase if not yet present
+            saveSectionToSupabase('auth', authConfig);
+          }
+
           setContent((prev) => {
             const updated = {
               hero: remoteData.hero ? { ...defaultHero, ...remoteData.hero } : prev.hero,
@@ -222,6 +235,7 @@ export function ContentProvider({ children }) {
         } else if (remoteData && Object.keys(remoteData).length === 0) {
           // Table exists but is empty -> initial seed with current content
           setSupabaseStatus('connected');
+          saveSectionToSupabase('auth', authConfig);
           saveSectionToSupabase('hero', content.hero);
           saveSectionToSupabase('about', content.about);
           saveSectionToSupabase('experiences', content.experiences);
@@ -276,18 +290,24 @@ export function ContentProvider({ children }) {
   };
 
   const updateCredentials = (newUsername, newPassword) => {
-    setAuthConfig({
+    const updated = {
       username: newUsername.trim(),
       password: newPassword,
       email: authConfig.email || 'akhoiri052@gmail.com'
-    });
+    };
+    setAuthConfig(updated);
+    saveSectionToSupabase('auth', updated);
   };
 
   const resetPassword = (newPassword) => {
-    setAuthConfig((prev) => ({
-      ...prev,
-      password: newPassword
-    }));
+    setAuthConfig((prev) => {
+      const updated = {
+        ...prev,
+        password: newPassword
+      };
+      saveSectionToSupabase('auth', updated);
+      return updated;
+    });
     return { success: true, message: 'Password berhasil diperbarui!' };
   };
 

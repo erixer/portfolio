@@ -244,7 +244,14 @@ const defaultCertificates = [
   }
 ];
 
+const defaultAuth = {
+  username: "achmad30",
+  password: "@Ahmad305",
+  email: "akhoiri052@gmail.com"
+};
+
 const seedPayload = [
+  { key: 'auth', value: defaultAuth },
   { key: 'hero', value: defaultHero },
   { key: 'about', value: defaultAbout },
   { key: 'experiences', value: defaultExperiences },
