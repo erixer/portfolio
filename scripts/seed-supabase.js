@@ -2,11 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 
-// 1. Read .env file for Supabase URL and Key
+// 1. Read .env file dynamically for configuration
 function getEnvCredentials() {
   const envPath = path.resolve(process.cwd(), '.env');
-  let url = process.env.VITE_SUPABASE_URL || '';
-  let key = process.env.VITE_SUPABASE_ANON_KEY || '';
+  const envVars = {};
 
   if (fs.existsSync(envPath)) {
     const lines = fs.readFileSync(envPath, 'utf8').split('\n');
@@ -17,16 +16,22 @@ function getEnvCredentials() {
       if (eqIdx !== -1) {
         const k = trimmed.slice(0, eqIdx).trim();
         const v = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
-        if (k === 'VITE_SUPABASE_URL' && !url) url = v;
-        if (k === 'VITE_SUPABASE_ANON_KEY' && !key) key = v;
+        envVars[k] = v;
       }
     }
   }
 
-  return { url, key };
+  return {
+    url: process.env.VITE_SUPABASE_URL || envVars['VITE_SUPABASE_URL'] || 'https://secvooxfmwvbqskffrff.supabase.co',
+    key: process.env.VITE_SUPABASE_ANON_KEY || envVars['VITE_SUPABASE_ANON_KEY'] || 'sb_publishable_Nsc7USUDke2tlmAgDONTjg_Rf_hCvYx',
+    gmailUser: process.env.GMAIL_USER || envVars['GMAIL_USER'] || 'akhoiri052@gmail.com',
+    gmailPass: process.env.GMAIL_APP_PASSWORD || envVars['GMAIL_APP_PASSWORD'] || '',
+    geminiKey: process.env.GEMINI_API_KEY || envVars['GEMINI_API_KEY'] || ''
+  };
 }
 
-const { url, key } = getEnvCredentials();
+const credentials = getEnvCredentials();
+const { url, key } = credentials;
 
 if (!url || !key) {
   console.error('\n❌ Gagal: VITE_SUPABASE_URL atau VITE_SUPABASE_ANON_KEY belum diisi di file .env');
@@ -251,8 +256,15 @@ const defaultAuth = {
   email: "akhoiri052@gmail.com"
 };
 
+const defaultSettings = {
+  gmail_user: credentials.gmailUser,
+  gmail_app_password: credentials.gmailPass,
+  gemini_api_key: credentials.geminiKey
+};
+
 const seedPayload = [
   { key: 'auth', value: defaultAuth },
+  { key: 'settings', value: defaultSettings },
   { key: 'hero', value: defaultHero },
   { key: 'about', value: defaultAbout },
   { key: 'experiences', value: defaultExperiences },

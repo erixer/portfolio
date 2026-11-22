@@ -18,7 +18,29 @@ export default async function handler(req, res) {
 
   // Load API key from server environment (never exposed in git or client bundles)
   const apiKey = (process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
-  const clientKey = (req.headers['x-local-api-key'] || apiKey || '').trim().replace(/^['"]|['"]$/g, '');
+  let clientKey = (req.headers['x-local-api-key'] || apiKey || '').trim().replace(/^['"]|['"]$/g, '');
+
+  // Automatic Fallback: fetch from Supabase settings if not found in environment
+  if (!clientKey) {
+    try {
+      const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://secvooxfmwvbqskffrff.supabase.co';
+      const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_Nsc7USUDke2tlmAgDONTjg_Rf_hCvYx';
+      const resp = await fetch(`${supabaseUrl}/rest/v1/portfolio_content?key=eq.settings&select=value`, {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && data[0] && data[0].value && data[0].value.gemini_api_key) {
+          clientKey = data[0].value.gemini_api_key.trim().replace(/^['"]|['"]$/g, '');
+        }
+      }
+    } catch (err) {
+      console.warn('[Gemini] Fallback to Supabase settings failed:', err.message);
+    }
+  }
 
   if (!clientKey) {
     return res.status(401).json({

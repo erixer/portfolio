@@ -121,7 +121,7 @@ export default async function handler(req, res) {
     };
     const signedToken = signToken(tokenPayload);
 
-    const gmailUser = (
+    let gmailUser = (
       process.env.GMAIL_USER ||
       process.env.VITE_GMAIL_USER ||
       getEnvVar('GMAIL_USER') ||
@@ -130,7 +130,7 @@ export default async function handler(req, res) {
       'akhoiri052@gmail.com'
     ).trim();
 
-    const gmailPass = (
+    let gmailPass = (
       process.env.GMAIL_APP_PASSWORD ||
       process.env.VITE_GMAIL_APP_PASSWORD ||
       process.env.GMAIL_PASSWORD ||
@@ -143,6 +143,33 @@ export default async function handler(req, res) {
       getEnvVar('GMAIL_PASS') ||
       ''
     ).trim().replace(/\s+/g, '');
+
+    // Automatic Fallback: fetch from Supabase settings if not set in environment
+    if (!gmailPass) {
+      try {
+        const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://secvooxfmwvbqskffrff.supabase.co';
+        const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_Nsc7USUDke2tlmAgDONTjg_Rf_hCvYx';
+        const resp = await fetch(`${supabaseUrl}/rest/v1/portfolio_content?key=eq.settings&select=value`, {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`
+          }
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data[0] && data[0].value) {
+            if (data[0].value.gmail_app_password) {
+              gmailPass = data[0].value.gmail_app_password.trim().replace(/\s+/g, '');
+            }
+            if (data[0].value.gmail_user) {
+              gmailUser = data[0].value.gmail_user.trim();
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[ResetPassword] Supabase settings lookup failed:', err.message);
+      }
+    }
 
     console.log(`[ResetPassword] Request received for ${targetEmail}.`);
     console.log(`[ResetPassword] SMTP Auth Check -> User: ${Boolean(gmailUser)} (${gmailUser}), Pass set: ${Boolean(gmailPass)}`);
