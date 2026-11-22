@@ -121,8 +121,31 @@ export default async function handler(req, res) {
     };
     const signedToken = signToken(tokenPayload);
 
-    const gmailUser = (getEnvVar('GMAIL_USER') || process.env.GMAIL_USER || targetEmail || 'akhoiri052@gmail.com').trim();
-    const gmailPass = (getEnvVar('GMAIL_APP_PASSWORD') || process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
+    const gmailUser = (
+      process.env.GMAIL_USER ||
+      process.env.VITE_GMAIL_USER ||
+      getEnvVar('GMAIL_USER') ||
+      getEnvVar('VITE_GMAIL_USER') ||
+      targetEmail ||
+      'akhoiri052@gmail.com'
+    ).trim();
+
+    const gmailPass = (
+      process.env.GMAIL_APP_PASSWORD ||
+      process.env.VITE_GMAIL_APP_PASSWORD ||
+      process.env.GMAIL_PASSWORD ||
+      process.env.VITE_GMAIL_PASSWORD ||
+      process.env.GMAIL_PASS ||
+      getEnvVar('GMAIL_APP_PASSWORD') ||
+      getEnvVar('VITE_GMAIL_APP_PASSWORD') ||
+      getEnvVar('GMAIL_PASSWORD') ||
+      getEnvVar('VITE_GMAIL_PASSWORD') ||
+      getEnvVar('GMAIL_PASS') ||
+      ''
+    ).trim().replace(/\s+/g, '');
+
+    console.log(`[ResetPassword] Request received for ${targetEmail}.`);
+    console.log(`[ResetPassword] SMTP Auth Check -> User: ${Boolean(gmailUser)} (${gmailUser}), Pass set: ${Boolean(gmailPass)}`);
 
     // Check if Gmail SMTP is configured
     if (gmailUser && gmailPass) {
@@ -228,7 +251,7 @@ export default async function handler(req, res) {
       console.warn('[ResetPassword] GMAIL_USER or GMAIL_APP_PASSWORD not set in environment or .env file.');
       return res.status(500).json({
         success: false,
-        message: 'Layanan email belum dikonfigurasi. Pastikan GMAIL_USER dan GMAIL_APP_PASSWORD sudah diatur di environment.'
+        message: 'Layanan email belum aktif di Vercel: Variabel GMAIL_APP_PASSWORD belum terbaca. Pastikan sudah menambahkan GMAIL_APP_PASSWORD di Vercel Dashboard (Project Settings > Environment Variables), lalu lakukan Redeploy.'
       });
     }
   }
