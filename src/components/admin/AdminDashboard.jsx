@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useContent } from '../../context/ContentContext.jsx';
+import profileDefaultImg from '../../assets/AchmadKhoiri.png';
 
 export default function AdminDashboard({ onBackToPortfolio }) {
   const {
@@ -15,6 +16,11 @@ export default function AdminDashboard({ onBackToPortfolio }) {
     addExperience,
     updateExperience,
     deleteExperience,
+    hero,
+    updateHero,
+    about,
+    updateAbout,
+    supabaseStatus,
     getAiKey,
     saveAiKey,
     adminUser,
@@ -24,6 +30,59 @@ export default function AdminDashboard({ onBackToPortfolio }) {
   } = useContent();
 
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Header & Profile State
+  const [headerForm, setHeaderForm] = useState({
+    name: hero?.name || 'Achmad Khoiri',
+    role: hero?.role || 'Full Stack Web Developer',
+    intro: hero?.intro || '',
+    titlePart1: hero?.titlePart1 || 'Membangun',
+    titlePart2: hero?.titlePart2 || 'Solusi Digital Berkelanjutan',
+    titlePart3: hero?.titlePart3 || 'Dengan Sentuhan Arsitektur Modern.',
+    availability: hero?.availability || 'Tersedia untuk Pekerjaan Baru',
+    photo: hero?.photo || '',
+  });
+
+  // About State
+  const [aboutForm, setAboutForm] = useState({
+    subTitle: about?.subTitle || 'Tentang Saya',
+    title: about?.title || 'Membangun Jembatan Antara Desain & Rekayasa Kode.',
+    desc: about?.desc || '',
+    education: about?.education || '',
+    community: about?.community || '',
+    historyTitle: about?.historyTitle || 'Pengalaman Kerja',
+    methodTitle: about?.methodTitle || 'Sertifikasi & Lisensi',
+  });
+
+  // Sync state when hero or about updates (e.g. after Supabase fetch completes)
+  useEffect(() => {
+    if (hero) {
+      setHeaderForm({
+        name: hero.name || 'Achmad Khoiri',
+        role: hero.role || 'Full Stack Web Developer',
+        intro: hero.intro || '',
+        titlePart1: hero.titlePart1 || 'Membangun',
+        titlePart2: hero.titlePart2 || 'Solusi Digital Berkelanjutan',
+        titlePart3: hero.titlePart3 || 'Dengan Sentuhan Arsitektur Modern.',
+        availability: hero.availability || 'Tersedia untuk Pekerjaan Baru',
+        photo: hero.photo || '',
+      });
+    }
+  }, [hero]);
+
+  useEffect(() => {
+    if (about) {
+      setAboutForm({
+        subTitle: about.subTitle || 'Tentang Saya',
+        title: about.title || 'Membangun Jembatan Antara Desain & Rekayasa Kode.',
+        desc: about.desc || '',
+        education: about.education || '',
+        community: about.community || '',
+        historyTitle: about.historyTitle || 'Pengalaman Kerja',
+        methodTitle: about.methodTitle || 'Sertifikasi & Lisensi',
+      });
+    }
+  }, [about]);
 
   // AI Key state
   const [currentAiKey, setCurrentAiKey] = useState(getAiKey());
@@ -47,6 +106,20 @@ export default function AdminDashboard({ onBackToPortfolio }) {
   const showNotification = (msg) => {
     setNotification(msg);
     setTimeout(() => setNotification(''), 3000);
+  };
+
+  // Handle Save Header & Profile
+  const handleSaveHeader = (e) => {
+    e.preventDefault();
+    updateHero(headerForm);
+    showNotification('Header & Profil berhasil diperbarui dan disinkronkan!');
+  };
+
+  // Handle Save About
+  const handleSaveAbout = (e) => {
+    e.preventDefault();
+    updateAbout(aboutForm);
+    showNotification('Informasi About berhasil diperbarui dan disinkronkan!');
   };
 
   // Handle Save AI Key
@@ -172,9 +245,11 @@ export default function AdminDashboard({ onBackToPortfolio }) {
         <nav className="p-4 space-y-1.5 flex-1">
           {[
             { id: 'overview', label: 'Ringkasan', icon: 'fa-chart-pie' },
+            { id: 'header', label: 'Header & Profil', icon: 'fa-id-card' },
+            { id: 'about', label: 'Tentang Saya', icon: 'fa-address-card' },
+            { id: 'experiences', label: 'Pengalaman Kerja', icon: 'fa-briefcase', count: experiences.length },
             { id: 'projects', label: 'Kelola Project', icon: 'fa-laptop-code', count: projects.length },
             { id: 'certificates', label: 'Sertifikat', icon: 'fa-certificate', count: certificates.length },
-            { id: 'experiences', label: 'Pengalaman Kerja', icon: 'fa-briefcase', count: experiences.length },
             { id: 'ai', label: 'Gemini AI Key', icon: 'fa-robot' },
             { id: 'account', label: 'Pengaturan Akun', icon: 'fa-user-gear' }
           ].map((item) => (
@@ -229,9 +304,11 @@ export default function AdminDashboard({ onBackToPortfolio }) {
           <div>
             <h1 className="font-syne font-bold text-lg text-white capitalize">
               {activeTab === 'overview' && 'Ringkasan Portofolio'}
+              {activeTab === 'header' && 'Header & Profil Portofolio'}
+              {activeTab === 'about' && 'Tentang Saya (Bio & Informasi)'}
+              {activeTab === 'experiences' && 'Pengalaman Kerja'}
               {activeTab === 'projects' && 'Manajemen Proyek'}
               {activeTab === 'certificates' && 'Manajemen Sertifikat'}
-              {activeTab === 'experiences' && 'Pengalaman Kerja'}
               {activeTab === 'ai' && 'Konfigurasi Gemini AI'}
               {activeTab === 'account' && 'Pengaturan Akun'}
             </h1>
@@ -257,13 +334,78 @@ export default function AdminDashboard({ onBackToPortfolio }) {
           {/* TAB 1: OVERVIEW */}
           {activeTab === 'overview' && (
             <div className="space-y-8 animate-fade-in">
+              {/* Database Sync Status Banner (Supabase / Local) */}
+              <div className={`p-5 rounded-3xl border transition-all ${
+                supabaseStatus === 'connected'
+                  ? 'bg-emerald-950/20 border-emerald-500/30'
+                  : supabaseStatus === 'error'
+                  ? 'bg-red-950/20 border-red-500/30'
+                  : 'bg-amber-950/20 border-amber-500/30'
+              }`}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-start sm:items-center gap-3.5">
+                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
+                      supabaseStatus === 'connected'
+                        ? 'bg-emerald-500/20 text-emerald-400'
+                        : supabaseStatus === 'error'
+                        ? 'bg-red-500/20 text-red-400'
+                        : 'bg-amber-500/20 text-amber-400'
+                    }`}>
+                      <i className={`fas ${
+                        supabaseStatus === 'connected'
+                          ? 'fa-database'
+                          : supabaseStatus === 'error'
+                          ? 'fa-triangle-exclamation'
+                          : 'fa-hard-drive'
+                      } text-base`} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-syne font-bold text-sm text-white">
+                          {supabaseStatus === 'connected' && 'Database Supabase (PostgreSQL) Aktif'}
+                          {supabaseStatus === 'local_only' && 'Penyimpanan Mode Lokal (LocalStorage Browser)'}
+                          {supabaseStatus === 'error' && 'Koneksi Supabase Memerlukan Pemeriksaan'}
+                        </h4>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold ${
+                          supabaseStatus === 'connected'
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                            : supabaseStatus === 'error'
+                            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                            : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        }`}>
+                          {supabaseStatus === 'connected' ? 'Cloud Synced' : supabaseStatus === 'error' ? 'Sync Error' : 'Local Only'}
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                        {supabaseStatus === 'connected' &&
+                          'Semua perubahan Riwayat Kerja, Proyek, Sertifikat, Header, dan About tersimpan di Supabase cloud dan dibaca real-time oleh Chatbot AI.'}
+                        {supabaseStatus === 'local_only' &&
+                          'Data saat ini tersimpan di browser Anda. Untuk menyimpan permanen ke cloud PostgreSQL Supabase dan dibaca oleh Chatbot AI di Vercel, atur VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY.'}
+                        {supabaseStatus === 'error' &&
+                          'Gagal membaca tabel portfolio_content dari Supabase. Pastikan skrip supabase_schema.sql sudah dijalankan di Supabase SQL Editor.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {supabaseStatus !== 'connected' && (
+                    <div className="shrink-0">
+                      <span className="text-[11px] font-mono text-zinc-400 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl block text-center">
+                        Lihat supabase_schema.sql
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Stat Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {[
+                  { title: 'Header & Profil', count: headerForm.name || 'Achmad Khoiri', icon: 'fa-id-card', color: 'text-purple-400', tab: 'header' },
+                  { title: 'Tentang Saya (Bio)', count: 'Siap Edit', icon: 'fa-address-card', color: 'text-amber-400', tab: 'about' },
+                  { title: 'Pengalaman Kerja', count: experiences.length, icon: 'fa-briefcase', color: 'text-indigo-400', tab: 'experiences' },
                   { title: 'Total Project', count: projects.length, icon: 'fa-laptop-code', color: 'text-blue-400', tab: 'projects' },
                   { title: 'Sertifikat', count: certificates.length, icon: 'fa-certificate', color: 'text-sky-400', tab: 'certificates' },
-                  { title: 'Pengalaman', count: experiences.length, icon: 'fa-briefcase', color: 'text-indigo-400', tab: 'experiences' },
-                  { title: 'AI Assistant', count: getAiKey() ? 'Terhubung' : 'Belum Ada Key', icon: 'fa-robot', color: getAiKey() ? 'text-emerald-400' : 'text-amber-400', tab: 'ai' }
+                  { title: 'AI Assistant', count: getAiKey() ? 'Terhubung' : 'Standar', icon: 'fa-robot', color: getAiKey() ? 'text-emerald-400' : 'text-sky-400', tab: 'ai' }
                 ].map((stat, idx) => (
                   <div
                     key={idx}
@@ -277,7 +419,7 @@ export default function AdminDashboard({ onBackToPortfolio }) {
                       </div>
                     </div>
                     <div className="mt-3">
-                      <span className="font-syne font-bold text-2xl text-white">{stat.count}</span>
+                      <span className="font-syne font-bold text-xl text-white truncate block">{stat.count}</span>
                     </div>
                   </div>
                 ))}
@@ -286,36 +428,30 @@ export default function AdminDashboard({ onBackToPortfolio }) {
               {/* Quick Actions */}
               <div className="p-6 rounded-3xl bg-zinc-950/60 border border-white/5 space-y-4">
                 <h3 className="font-syne font-bold text-sm text-white">Aksi Cepat</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <button
-                    onClick={() => {
-                      setActiveTab('projects');
-                      setProjectModal({ open: true, isEdit: false, data: null });
-                    }}
-                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-3"
+                    onClick={() => setActiveTab('header')}
+                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-3 cursor-pointer"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
-                      <i className="fas fa-plus" />
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
+                      <i className="fas fa-id-card" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold text-white">Tambah Project</h4>
-                      <p className="text-[10px] text-zinc-500">Tampilkan karya terbaru</p>
+                      <h4 className="text-xs font-semibold text-white">Header & Foto</h4>
+                      <p className="text-[10px] text-zinc-500">Ubah bio & foto profil</p>
                     </div>
                   </button>
 
                   <button
-                    onClick={() => {
-                      setActiveTab('certificates');
-                      setCertModal({ open: true, isEdit: false, data: null });
-                    }}
-                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-3"
+                    onClick={() => setActiveTab('about')}
+                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-3 cursor-pointer"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0">
-                      <i className="fas fa-award" />
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+                      <i className="fas fa-address-card" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold text-white">Tambah Sertifikat</h4>
-                      <p className="text-[10px] text-zinc-500">Upload sertifikat baru</p>
+                      <h4 className="text-xs font-semibold text-white">Edit About</h4>
+                      <p className="text-[10px] text-zinc-500">Bio, edukasi & komunitas</p>
                     </div>
                   </button>
 
@@ -324,17 +460,316 @@ export default function AdminDashboard({ onBackToPortfolio }) {
                       setActiveTab('experiences');
                       setExpModal({ open: true, isEdit: false, data: null });
                     }}
-                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-3"
+                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-3 cursor-pointer"
                   >
                     <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
-                      <i className="fas fa-building" />
+                      <i className="fas fa-briefcase" />
                     </div>
                     <div>
                       <h4 className="text-xs font-semibold text-white">Tambah Pengalaman</h4>
-                      <p className="text-[10px] text-zinc-500">Update riwayat karir</p>
+                      <p className="text-[10px] text-zinc-500">Update riwayat kerja</p>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveTab('projects');
+                      setProjectModal({ open: true, isEdit: false, data: null });
+                    }}
+                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-3 cursor-pointer"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
+                      <i className="fas fa-laptop-code" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-semibold text-white">Tambah Project</h4>
+                      <p className="text-[10px] text-zinc-500">Tampilkan karya baru</p>
                     </div>
                   </button>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: HEADER & PROFIL */}
+          {activeTab === 'header' && (
+            <div className="max-w-4xl space-y-6 animate-fade-in">
+              <div className="p-6 sm:p-8 rounded-3xl bg-zinc-950/60 border border-white/5 space-y-6">
+                <div>
+                  <h3 className="font-syne font-bold text-lg text-white">Edit Header & Profil Hero</h3>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Sesuaikan nama, profesi/bio, foto profil, status ketersediaan, dan teks headline hero.
+                  </p>
+                </div>
+
+                <form onSubmit={handleSaveHeader} className="space-y-6">
+                  {/* Foto Profil */}
+                  <div className="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-4">
+                    <h4 className="font-semibold text-xs text-white uppercase tracking-wider">Foto Profil</h4>
+                    <div className="flex flex-col sm:flex-row items-center gap-6">
+                      <div className="w-28 h-36 rounded-2xl overflow-hidden border-2 border-sky-500/30 bg-zinc-900 shrink-0 relative group">
+                        <img
+                          src={headerForm.photo || profileDefaultImg}
+                          alt="Preview Foto"
+                          className="w-full h-full object-cover object-top"
+                        />
+                        {headerForm.photo && (
+                          <div className="absolute top-1 right-1 bg-sky-500 text-black text-[9px] font-bold px-1.5 py-0.5 rounded">
+                            Custom
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-3 flex-1 w-full">
+                        <div>
+                          <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                            Unggah Foto Baru (Otomatis dikonversi ke gambar aman)
+                          </label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              handleImageFile(e, (base64) => {
+                                setHeaderForm((prev) => ({ ...prev, photo: base64 }));
+                                showNotification('Foto profil berhasil diunggah.');
+                              });
+                            }}
+                            className="w-full text-xs text-zinc-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-500 file:text-black hover:file:bg-sky-400 file:cursor-pointer cursor-pointer"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                            Atau Masukkan URL Link Foto
+                          </label>
+                          <input
+                            type="text"
+                            value={headerForm.photo.startsWith('data:') ? '' : headerForm.photo}
+                            onChange={(e) => setHeaderForm((prev) => ({ ...prev, photo: e.target.value }))}
+                            placeholder="https://example.com/foto-anda.jpg"
+                            className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                          />
+                        </div>
+
+                        {headerForm.photo && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setHeaderForm((prev) => ({ ...prev, photo: '' }));
+                              showNotification('Foto dikembalikan ke foto bawaan.');
+                            }}
+                            className="text-xs text-amber-400 hover:underline cursor-pointer flex items-center gap-1"
+                          >
+                            <i className="fas fa-rotate-left text-[10px]" />
+                            <span>Gunakan Foto Asli Bawaan</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Biodata & Role */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Nama Lengkap</label>
+                      <input
+                        type="text"
+                        value={headerForm.name}
+                        onChange={(e) => setHeaderForm((prev) => ({ ...prev, name: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Profesi / Peran (Bio)</label>
+                      <input
+                        type="text"
+                        value={headerForm.role}
+                        onChange={(e) => setHeaderForm((prev) => ({ ...prev, role: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Status Availability */}
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Status Ketersediaan (Badge Hijau)</label>
+                    <input
+                      type="text"
+                      value={headerForm.availability}
+                      onChange={(e) => setHeaderForm((prev) => ({ ...prev, availability: e.target.value }))}
+                      placeholder="Tersedia untuk Pekerjaan Baru"
+                      className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                    />
+                  </div>
+
+                  {/* Intro Description */}
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Deskripsi Ringkas (Hero Intro)</label>
+                    <textarea
+                      rows={3}
+                      value={headerForm.intro}
+                      onChange={(e) => setHeaderForm((prev) => ({ ...prev, intro: e.target.value }))}
+                      placeholder="seorang Full Stack Web Developer yang bersemangat dalam..."
+                      className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Headline Parts */}
+                  <div className="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-4">
+                    <h4 className="font-semibold text-xs text-white uppercase tracking-wider">Teks Headline Besar (Hero Title)</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-[11px] text-zinc-400 mb-1">Baris 1</label>
+                        <input
+                          type="text"
+                          value={headerForm.titlePart1}
+                          onChange={(e) => setHeaderForm((prev) => ({ ...prev, titlePart1: e.target.value }))}
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] text-sky-400 mb-1">Baris 2 (Gradien Accent)</label>
+                        <input
+                          type="text"
+                          value={headerForm.titlePart2}
+                          onChange={(e) => setHeaderForm((prev) => ({ ...prev, titlePart2: e.target.value }))}
+                          className="w-full px-3 py-2 bg-zinc-900 border border-sky-500/50 rounded-xl text-xs text-white focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] text-zinc-400 mb-1">Baris 3</label>
+                        <input
+                          type="text"
+                          value={headerForm.titlePart3}
+                          onChange={(e) => setHeaderForm((prev) => ({ ...prev, titlePart3: e.target.value }))}
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-syne font-bold text-xs shadow-lg shadow-sky-500/20 hover:opacity-95 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <i className="fas fa-floppy-disk" />
+                    <span>Simpan Perubahan Header & Profil</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: ABOUT ME */}
+          {activeTab === 'about' && (
+            <div className="max-w-4xl space-y-6 animate-fade-in">
+              <div className="p-6 sm:p-8 rounded-3xl bg-zinc-950/60 border border-white/5 space-y-6">
+                <div>
+                  <h3 className="font-syne font-bold text-lg text-white">Edit Bagian Tentang Saya (About)</h3>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Sesuaikan bio lengkap, latar belakang pendidikan, aktivitas komunitas, dan judul seksi.
+                  </p>
+                </div>
+
+                <form onSubmit={handleSaveAbout} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Sub-judul (Kategori)</label>
+                      <input
+                        type="text"
+                        value={aboutForm.subTitle}
+                        onChange={(e) => setAboutForm((prev) => ({ ...prev, subTitle: e.target.value }))}
+                        placeholder="Tentang Saya"
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Judul Utama About</label>
+                      <input
+                        type="text"
+                        value={aboutForm.title}
+                        onChange={(e) => setAboutForm((prev) => ({ ...prev, title: e.target.value }))}
+                        placeholder="Membangun Jembatan Antara Desain & Rekayasa Kode."
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                      Deskripsi Lengkap Bio About (Juga dibaca oleh Chatbot AI)
+                    </label>
+                    <textarea
+                      rows={5}
+                      value={aboutForm.desc}
+                      onChange={(e) => setAboutForm((prev) => ({ ...prev, desc: e.target.value }))}
+                      className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none leading-relaxed"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                        <i className="fas fa-university text-sky-400 mr-1.5" />
+                        Pendidikan
+                      </label>
+                      <input
+                        type="text"
+                        value={aboutForm.education}
+                        onChange={(e) => setAboutForm((prev) => ({ ...prev, education: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                        <i className="fas fa-users text-blue-400 mr-1.5" />
+                        Komunitas / Organisasi
+                      </label>
+                      <input
+                        type="text"
+                        value={aboutForm.community}
+                        onChange={(e) => setAboutForm((prev) => ({ ...prev, community: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Judul Seksi Pengalaman Kerja</label>
+                      <input
+                        type="text"
+                        value={aboutForm.historyTitle}
+                        onChange={(e) => setAboutForm((prev) => ({ ...prev, historyTitle: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Judul Seksi Sertifikasi</label>
+                      <input
+                        type="text"
+                        value={aboutForm.methodTitle}
+                        onChange={(e) => setAboutForm((prev) => ({ ...prev, methodTitle: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-sky-500 rounded-xl text-xs text-white focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-syne font-bold text-xs shadow-lg shadow-sky-500/20 hover:opacity-95 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <i className="fas fa-floppy-disk" />
+                    <span>Simpan Perubahan About</span>
+                  </button>
+                </form>
               </div>
             </div>
           )}

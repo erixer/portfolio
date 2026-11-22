@@ -1,14 +1,16 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { projectsData as defaultProjectsData } from '../components/Projects.jsx';
 import certPentest from '../assets/certificate_pentest.jpg';
 import certIbm from '../assets/certificate_ibm.jpg';
 import certPython from '../assets/certificate_python.png';
 import certBwa from '../assets/certificate_bwa.png';
 import certBwaUiUx from '../assets/certificate_bwaUiUx.png';
+import { fetchPortfolioFromSupabase, saveSectionToSupabase, isSupabaseConfigured } from '../lib/supabase.js';
 
 const ContentContext = createContext(null);
 
-const STORAGE_KEY = 'portfolio_cms_data_v1';
+const STORAGE_KEY = 'portfolio_cms_data_v2';
+const LEGACY_STORAGE_KEY = 'portfolio_cms_data_v1';
 const AUTH_KEY = 'portfolio_cms_auth_v1';
 
 // Map legacy or broken certificate image paths to valid imported assets
@@ -22,8 +24,30 @@ export const mapCertImage = (img) => {
   return img;
 };
 
+export const defaultHero = {
+  greeting: "Halo, Saya",
+  name: "Achmad Khoiri",
+  role: "Full Stack Web Developer",
+  intro: "seorang Full Stack Web Developer yang bersemangat dalam merancang dan mengembangkan sistem web end-to-end yang tangguh, scalable, dan berpusat pada pengalaman pengguna.",
+  titlePart1: "Membangun",
+  titlePart2: "Solusi Digital Berkelanjutan",
+  titlePart3: "Dengan Sentuhan Arsitektur Modern.",
+  photo: "", // Empty string indicates default asset photo
+  availability: "Tersedia untuk Pekerjaan Baru"
+};
+
+export const defaultAbout = {
+  subTitle: "Tentang Saya",
+  title: "Membangun Jembatan Antara Desain & Rekayasa Kode.",
+  desc: "Saya adalah seorang Full Stack Web Developer dengan dedikasi tinggi dalam menciptakan aplikasi web yang terukur, responsif, dan kaya fitur. Memadukan keahlian backend yang kokoh serta antarmuka pengguna yang dinamis dan berestetika tinggi, saya selalu memastikan setiap baris kode memberikan nilai nyata bagi bisnis dan pengguna.",
+  education: "Lulusan Teknik Informatika, Universitas Budi Luhur",
+  community: "Pendiri Komunitas \"Design & Code\"",
+  historyTitle: "Pengalaman Kerja",
+  methodTitle: "Sertifikasi & Lisensi"
+};
+
 // Default initial certificates
-const defaultCertificates = [
+export const defaultCertificates = [
   {
     id: 1,
     image: certPentest,
@@ -72,7 +96,7 @@ const defaultCertificates = [
 ];
 
 // Default initial work experiences
-const defaultExperiences = [
+export const defaultExperiences = [
   {
     id: 1,
     role: "Front End Developer",
@@ -97,10 +121,15 @@ const defaultExperiences = [
 ];
 
 export function ContentProvider({ children }) {
+  // Supabase connection status: 'loading' | 'connected' | 'local_only' | 'error'
+  const [supabaseStatus, setSupabaseStatus] = useState(() => {
+    return isSupabaseConfigured() ? 'loading' : 'local_only';
+  });
+
   // Load content from localStorage or fallback to defaults
   const [content, setContent] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         const loadedCerts = (parsed.certificates?.length ? parsed.certificates : defaultCertificates).map((c) => ({
@@ -108,7 +137,6 @@ export function ContentProvider({ children }) {
           image: mapCertImage(c.image)
         }));
         const loadedProjects = (parsed.projects?.length ? parsed.projects : defaultProjectsData).map((p) => {
-          // If default project exists in defaultProjectsData, preserve default images and link if missing in saved
           const defaultMatch = defaultProjectsData.find((dp) => dp.id === p.id);
           const images = Array.isArray(p.images) && p.images.length > 0
             ? p.images
@@ -121,15 +149,19 @@ export function ContentProvider({ children }) {
           };
         });
         return {
+          hero: { ...defaultHero, ...(parsed.hero || {}) },
+          about: { ...defaultAbout, ...(parsed.about || {}) },
           projects: loadedProjects,
           certificates: loadedCerts,
           experiences: parsed.experiences?.length ? parsed.experiences : defaultExperiences,
         };
       }
     } catch (e) {
-      console.error('Failed to parse CMS data:', e);
+      console.error('Failed to parse CMS data from localStorage:', e);
     }
     return {
+      hero: defaultHero,
+      about: defaultAbout,
       projects: defaultProjectsData,
       certificates: defaultCertificates,
       experiences: defaultExperiences,
@@ -155,6 +187,60 @@ export function ContentProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('admin_authenticated') === 'true';
   });
+
+  // Fetch initial data from Supabase on mount
+  useEffect(() => {
+    let isMounted = true;
+    async function loadFromSupabase() {
+      if (!isSupabaseConfigured()) {
+        if (isMounted) setSupabaseStatus('local_only');
+        return;
+      }
+      try {
+        const remoteData = await fetchPortfolioFromSupabase();
+        if (!isMounted) return;
+
+        if (remoteData && Object.keys(remoteData).length > 0) {
+          setSupabaseStatus('connected');
+          setContent((prev) => {
+            const updated = {
+              hero: remoteData.hero ? { ...defaultHero, ...remoteData.hero } : prev.hero,
+              about: remoteData.about ? { ...defaultAbout, ...remoteData.about } : prev.about,
+              experiences: remoteData.experiences && remoteData.experiences.length > 0 ? remoteData.experiences : prev.experiences,
+              projects: remoteData.projects && remoteData.projects.length > 0 ? remoteData.projects : prev.projects,
+              certificates: remoteData.certificates && remoteData.certificates.length > 0
+                ? remoteData.certificates.map((c) => ({ ...c, image: mapCertImage(c.image) }))
+                : prev.certificates,
+            };
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+            } catch (err) {
+              console.warn('Failed to cache Supabase data to localStorage:', err);
+            }
+            return updated;
+          });
+        } else if (remoteData && Object.keys(remoteData).length === 0) {
+          // Table exists but is empty -> initial seed with current content
+          setSupabaseStatus('connected');
+          saveSectionToSupabase('hero', content.hero);
+          saveSectionToSupabase('about', content.about);
+          saveSectionToSupabase('experiences', content.experiences);
+          saveSectionToSupabase('projects', content.projects);
+          saveSectionToSupabase('certificates', content.certificates);
+        } else {
+          setSupabaseStatus('error');
+        }
+      } catch (err) {
+        console.warn('Supabase fetch failed:', err);
+        if (isMounted) setSupabaseStatus('error');
+      }
+    }
+
+    loadFromSupabase();
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Run once on mount
 
   // Save content changes to localStorage
   useEffect(() => {
@@ -205,8 +291,32 @@ export function ContentProvider({ children }) {
     return { success: true, message: 'Password berhasil diperbarui!' };
   };
 
-  // Projects Management
-  const addProject = (project) => {
+  // --- Hero Section Management ---
+  const updateHero = useCallback((heroData) => {
+    setContent((prev) => {
+      const updated = {
+        ...prev,
+        hero: { ...prev.hero, ...heroData }
+      };
+      saveSectionToSupabase('hero', updated.hero);
+      return updated;
+    });
+  }, []);
+
+  // --- About Section Management ---
+  const updateAbout = useCallback((aboutData) => {
+    setContent((prev) => {
+      const updated = {
+        ...prev,
+        about: { ...prev.about, ...aboutData }
+      };
+      saveSectionToSupabase('about', updated.about);
+      return updated;
+    });
+  }, []);
+
+  // --- Projects Management ---
+  const addProject = useCallback((project) => {
     const newProj = {
       ...project,
       id: project.id || 'project-' + Date.now(),
@@ -214,16 +324,19 @@ export function ContentProvider({ children }) {
       link: (project.link || '').trim(),
       images: Array.isArray(project.images) ? project.images : (project.image ? [project.image] : []),
     };
-    setContent((prev) => ({
-      ...prev,
-      projects: [newProj, ...prev.projects]
-    }));
-  };
+    setContent((prev) => {
+      const updatedList = [newProj, ...prev.projects];
+      saveSectionToSupabase('projects', updatedList);
+      return {
+        ...prev,
+        projects: updatedList
+      };
+    });
+  }, []);
 
-  const updateProject = (id, updatedFields) => {
-    setContent((prev) => ({
-      ...prev,
-      projects: prev.projects.map((p) => {
+  const updateProject = useCallback((id, updatedFields) => {
+    setContent((prev) => {
+      const updatedList = prev.projects.map((p) => {
         if (p.id !== id) return p;
         const merged = { ...p, ...updatedFields };
         if (updatedFields.images !== undefined) {
@@ -233,19 +346,28 @@ export function ContentProvider({ children }) {
           merged.link = (updatedFields.link || '').trim();
         }
         return merged;
-      })
-    }));
-  };
+      });
+      saveSectionToSupabase('projects', updatedList);
+      return {
+        ...prev,
+        projects: updatedList
+      };
+    });
+  }, []);
 
-  const deleteProject = (id) => {
-    setContent((prev) => ({
-      ...prev,
-      projects: prev.projects.filter((p) => p.id !== id)
-    }));
-  };
+  const deleteProject = useCallback((id) => {
+    setContent((prev) => {
+      const updatedList = prev.projects.filter((p) => p.id !== id);
+      saveSectionToSupabase('projects', updatedList);
+      return {
+        ...prev,
+        projects: updatedList
+      };
+    });
+  }, []);
 
-  // Certificates Management
-  const addCertificate = (cert) => {
+  // --- Certificates Management ---
+  const addCertificate = useCallback((cert) => {
     const newCert = {
       ...cert,
       id: cert.id || Date.now(),
@@ -253,51 +375,75 @@ export function ContentProvider({ children }) {
       textColor: cert.textColor || 'text-sky-400',
       hoverBorder: cert.hoverBorder || 'hover:border-sky-500/30'
     };
-    setContent((prev) => ({
-      ...prev,
-      certificates: [newCert, ...prev.certificates]
-    }));
-  };
+    setContent((prev) => {
+      const updatedList = [newCert, ...prev.certificates];
+      saveSectionToSupabase('certificates', updatedList);
+      return {
+        ...prev,
+        certificates: updatedList
+      };
+    });
+  }, []);
 
-  const updateCertificate = (id, updatedFields) => {
-    setContent((prev) => ({
-      ...prev,
-      certificates: prev.certificates.map((c) => (c.id === id ? { ...c, ...updatedFields } : c))
-    }));
-  };
+  const updateCertificate = useCallback((id, updatedFields) => {
+    setContent((prev) => {
+      const updatedList = prev.certificates.map((c) => (c.id === id ? { ...c, ...updatedFields } : c));
+      saveSectionToSupabase('certificates', updatedList);
+      return {
+        ...prev,
+        certificates: updatedList
+      };
+    });
+  }, []);
 
-  const deleteCertificate = (id) => {
-    setContent((prev) => ({
-      ...prev,
-      certificates: prev.certificates.filter((c) => c.id !== id)
-    }));
-  };
+  const deleteCertificate = useCallback((id) => {
+    setContent((prev) => {
+      const updatedList = prev.certificates.filter((c) => c.id !== id);
+      saveSectionToSupabase('certificates', updatedList);
+      return {
+        ...prev,
+        certificates: updatedList
+      };
+    });
+  }, []);
 
-  // Experiences Management
-  const addExperience = (exp) => {
+  // --- Experiences Management ---
+  const addExperience = useCallback((exp) => {
     const newExp = {
       ...exp,
       id: exp.id || Date.now(),
     };
-    setContent((prev) => ({
-      ...prev,
-      experiences: [newExp, ...prev.experiences]
-    }));
-  };
+    setContent((prev) => {
+      const updatedList = [newExp, ...prev.experiences];
+      saveSectionToSupabase('experiences', updatedList);
+      return {
+        ...prev,
+        experiences: updatedList
+      };
+    });
+  }, []);
 
-  const updateExperience = (id, updatedFields) => {
-    setContent((prev) => ({
-      ...prev,
-      experiences: prev.experiences.map((e) => (e.id === id ? { ...e, ...updatedFields } : e))
-    }));
-  };
+  const updateExperience = useCallback((id, updatedFields) => {
+    setContent((prev) => {
+      const updatedList = prev.experiences.map((e) => (e.id === id ? { ...e, ...updatedFields } : e));
+      saveSectionToSupabase('experiences', updatedList);
+      return {
+        ...prev,
+        experiences: updatedList
+      };
+    });
+  }, []);
 
-  const deleteExperience = (id) => {
-    setContent((prev) => ({
-      ...prev,
-      experiences: prev.experiences.filter((e) => e.id !== id)
-    }));
-  };
+  const deleteExperience = useCallback((id) => {
+    setContent((prev) => {
+      const updatedList = prev.experiences.filter((e) => e.id !== id);
+      saveSectionToSupabase('experiences', updatedList);
+      return {
+        ...prev,
+        experiences: updatedList
+      };
+    });
+  }, []);
 
   // AI Key Management
   const getAiKey = () => {
@@ -316,20 +462,29 @@ export function ContentProvider({ children }) {
   // Reset to original data
   const resetToDefaults = () => {
     setContent({
+      hero: defaultHero,
+      about: defaultAbout,
       projects: defaultProjectsData,
       certificates: defaultCertificates,
       experiences: defaultExperiences,
     });
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
   };
 
   return (
     <ContentContext.Provider
       value={{
         // Data
-        projects: content.projects,
-        certificates: content.certificates,
-        experiences: content.experiences,
+        hero: content.hero || defaultHero,
+        about: content.about || defaultAbout,
+        projects: content.projects || defaultProjectsData,
+        certificates: content.certificates || defaultCertificates,
+        experiences: content.experiences || defaultExperiences,
+        supabaseStatus,
+        // Hero & About CRUD
+        updateHero,
+        updateAbout,
         // Auth
         isAuthenticated,
         adminUser: authConfig.username,

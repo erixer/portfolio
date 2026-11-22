@@ -5,11 +5,19 @@ import CertificateModal from './CertificateModal.jsx';
 
 export default function About() {
   const { t } = useLanguage();
-  const { certificates: dynamicCerts, experiences: dynamicExps } = useContent();
+  const { certificates: dynamicCerts, experiences: dynamicExps, about } = useContent();
   const [selectedCert, setSelectedCert] = useState(null);
 
   const certificates = dynamicCerts || [];
   const experiences = dynamicExps || [];
+
+  const subTitle = about?.subTitle || t('aboutSub');
+  const title = about?.title || t('aboutTitle');
+  const desc = about?.desc || t('aboutDesc');
+  const education = about?.education || t('aboutEdu');
+  const community = about?.community || t('aboutComm');
+  const historyTitle = about?.historyTitle || t('aboutHistory');
+  const methodTitle = about?.methodTitle || t('aboutMethod');
 
   return (
     <section id="about" className="py-24 bg-brandGray border-y border-white/5 px-6 md:px-12 relative">
@@ -17,19 +25,19 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Sticky Summary */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 flex flex-col gap-6">
-            <span className="text-sky-400 font-semibold tracking-wider uppercase text-sm">{t('aboutSub')}</span>
-            <h2 className="font-syne font-extrabold text-4xl sm:text-5xl text-white leading-tight">{t('aboutTitle')}</h2>
+            <span className="text-sky-400 font-semibold tracking-wider uppercase text-sm">{subTitle}</span>
+            <h2 className="font-syne font-extrabold text-4xl sm:text-5xl text-white leading-tight">{title}</h2>
             <p className="text-zinc-400 text-base leading-relaxed font-light">
-              {t('aboutDesc')}
+              {desc}
             </p>
             <div className="p-5 rounded-2xl glass-card flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <i className="fas fa-university text-sky-400 w-5"></i>
-                <span className="text-sm text-zinc-300">{t('aboutEdu')}</span>
+                <span className="text-sm text-zinc-300">{education}</span>
               </div>
               <div className="flex items-center gap-3">
                 <i className="fas fa-users text-blue-400 w-5"></i>
-                <span className="text-sm text-zinc-300">{t('aboutComm')}</span>
+                <span className="text-sm text-zinc-300">{community}</span>
               </div>
             </div>
           </div>
@@ -38,7 +46,7 @@ export default function About() {
           <div className="lg:col-span-7 flex flex-col gap-12">
             {/* Subsection: Work Experience */}
             <div>
-              <h3 className="font-syne font-bold text-2xl text-white mb-6">{t('aboutHistory')}</h3>
+              <h3 className="font-syne font-bold text-2xl text-white mb-6">{historyTitle}</h3>
               <div className="border-l border-zinc-800 ml-3 space-y-8">
                 {experiences.map((exp) => (
                   <div key={exp.id} className="relative pl-8 group">
@@ -60,7 +68,7 @@ export default function About() {
 
             {/* Subsection: Certificate */}
             <div>
-              <h3 className="font-syne font-bold text-2xl text-white mb-6">{t('aboutMethod')}</h3>
+              <h3 className="font-syne font-bold text-2xl text-white mb-6">{methodTitle}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {certificates.map((cert) => (
                   <div

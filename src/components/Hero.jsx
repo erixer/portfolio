@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import profileImg from '../assets/AchmadKhoiri.png';
 import { useLanguage } from '../context/LanguageContext.jsx';
+import { useContent } from '../context/ContentContext.jsx';
 import DecryptedText from './DecryptedText.jsx';
 import SplitText from './SplitText.jsx';
 
@@ -8,8 +9,22 @@ export default function Hero() {
   const cardRef = useRef(null);
   const glowRef = useRef(null);
   const { t } = useLanguage();
-  const introText = `${t('heroGreeting')} Achmad Khoiri, ${t('heroIntro')}`;
-  const headingText = `${t('heroTitlePart1')} ${t('heroTitlePart2')} ${t('heroTitlePart3')}`;
+  const { hero } = useContent();
+
+  const name = hero?.name || 'Achmad Khoiri';
+  const role = hero?.role || 'Full Stack Web Developer';
+  const currentPhoto = hero?.photo || profileImg;
+  const availability = hero?.availability || t('heroAvailability');
+
+  const introText = hero?.intro
+    ? `${t('heroGreeting')} ${name}, ${hero.intro}`
+    : `${t('heroGreeting')} Achmad Khoiri, ${t('heroIntro')}`;
+
+  const headingText = (hero?.titlePart1 && hero?.titlePart2 && hero?.titlePart3)
+    ? `${hero.titlePart1} ${hero.titlePart2} ${hero.titlePart3}`
+    : `${t('heroTitlePart1')} ${t('heroTitlePart2')} ${t('heroTitlePart3')}`;
+
+  const highlightPart = hero?.titlePart2 || t('heroTitlePart2');
 
   const handleMouseMove = (e) => {
     const card = cardRef.current;
@@ -73,22 +88,23 @@ export default function Hero() {
             {/* Top Identity Section */}
             <div className="profile-card-inner pt-9 px-8 flex flex-col items-center text-center relative z-20 pointer-events-none">
               <h2 className="font-syne font-extrabold text-2xl text-white tracking-wide group-hover:text-brandAccent transition-colors duration-300">
-                Achmad Khoiri
+                {name}
               </h2>
               <p className="text-zinc-400 text-sm font-semibold tracking-wider mt-1.5">
-                Full Stack Web Developer
+                {role}
               </p>
             </div>
 
             {/* Full Photo Container */}
             <div className="absolute inset-0 z-10 w-full h-full flex items-end justify-center overflow-hidden pointer-events-none">
               <img
-                src={profileImg}
-                alt="Achmad Khoiri"
+                src={currentPhoto}
+                alt={name}
                 className="w-full h-[86%] object-cover object-top transition-all duration-700 ease-in-out grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.03]"
                 onError={(e) => {
                   e.target.style.display = 'none';
-                  document.getElementById('avatar-fallback').classList.remove('hidden');
+                  const fallback = document.getElementById('avatar-fallback');
+                  if (fallback) fallback.classList.remove('hidden');
                 }}
               />
               {/* Fallback image */}
@@ -105,7 +121,7 @@ export default function Hero() {
                 {/* User info */}
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full overflow-hidden border border-white/20">
-                    <img src={profileImg} alt="Avatar" className="w-full h-full object-cover" />
+                    <img src={currentPhoto} alt="Avatar" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex flex-col text-left">
                     <span className="text-white text-xs font-semibold tracking-wide">akhoiri052@gmail.com</span>
@@ -129,12 +145,11 @@ export default function Hero() {
         </div>
 
         {/* Right Column: Interactive Profile Card */}
-
         <div className="lg:col-span-7 flex flex-col gap-6 text-center lg:text-left items-center lg:items-start">
           {/* Status badge */}
           <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-4 py-1.5 rounded-full w-fit">
             <span className="w-2.5 h-2.5 rounded-full bg-brandAccent animate-pulse" />
-            <span className="text-xs font-semibold tracking-wider text-zinc-300 uppercase">{t('heroAvailability')}</span>
+            <span className="text-xs font-semibold tracking-wider text-zinc-300 uppercase">{availability}</span>
           </div>
 
           {/* Heading */}
@@ -142,7 +157,7 @@ export default function Hero() {
             text={headingText}
             tag="h2"
             className="font-syne font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[4.5rem] leading-[1.1] text-white"
-            highlightText={t('heroTitlePart2')}
+            highlightText={highlightPart}
             highlightClassName="text-transparent bg-clip-text bg-gradient-to-r from-brandCreative via-sky-400 to-brandAccent"
             delay={30}
             duration={0.8}
@@ -161,7 +176,7 @@ export default function Hero() {
               revealDirection="start"
               speed={40}
               maxIterations={15}
-              highlightText="Achmad Khoiri"
+              highlightText={name}
               highlightClassName="text-white font-semibold"
               style={{ display: 'inline' }}
             />
