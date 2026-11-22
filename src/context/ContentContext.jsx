@@ -6,12 +6,16 @@ import certPython from '../assets/certificate_python.png';
 import certBwa from '../assets/certificate_bwa.png';
 import certBwaUiUx from '../assets/certificate_bwaUiUx.png';
 import { fetchPortfolioFromSupabase, saveSectionToSupabase, isSupabaseConfigured } from '../lib/supabase.js';
+import { hashPassword, verifyPassword } from '../lib/auth-crypto.js';
 
 const ContentContext = createContext(null);
 
 const STORAGE_KEY = 'portfolio_cms_data_v2';
 const LEGACY_STORAGE_KEY = 'portfolio_cms_data_v1';
 const AUTH_KEY = 'portfolio_cms_auth_v1';
+
+// SHA-256 Hash of default password "@Ahmad305"
+const DEFAULT_HASHED_PASSWORD = 'b09c4d8b7517d0c5d80fc501ab3325f9716e5000ee1ac4323fc3cd79922e325d';
 
 // Map legacy or broken certificate image paths to valid imported assets
 export const mapCertImage = (img) => {
@@ -178,7 +182,7 @@ export function ContentProvider({ children }) {
     }
     return {
       username: 'achmad30',
-      password: '@Ahmad305',
+      password: DEFAULT_HASHED_PASSWORD,
       email: 'akhoiri052@gmail.com'
     };
   });
@@ -274,11 +278,21 @@ export function ContentProvider({ children }) {
     }
   }, [authConfig]);
 
-  // Auth Functions
-  const login = (username, password) => {
-    if (username === authConfig.username && password === authConfig.password) {
+  // Auth Functions (Cryptographic Hashing Enabled)
+  const login = async (username, password) => {
+    const isPasswordValid = await verifyPassword(password, authConfig.password);
+    if (username === authConfig.username && isPasswordValid) {
       setIsAuthenticated(true);
       sessionStorage.setItem('admin_authenticated', 'true');
+
+      // Auto-upgrade plain-text password to SHA-256 hash if legacy
+      if (!/^[a-f0-9]{64}$/i.test(authConfig.password)) {
+        const hashed = await hashPassword(password);
+        const upgraded = { ...authConfig, password: hashed };
+        setAuthConfig(upgraded);
+        saveSectionToSupabase('auth', upgraded);
+      }
+
       return { success: true };
     }
     return { success: false, message: 'Username atau password salah!' };
@@ -289,21 +303,24 @@ export function ContentProvider({ children }) {
     sessionStorage.removeItem('admin_authenticated');
   };
 
-  const updateCredentials = (newUsername, newPassword) => {
+  const updateCredentials = async (newUsername, newPassword) => {
+    const hashedPassword = await hashPassword(newPassword);
     const updated = {
       username: newUsername.trim(),
-      password: newPassword,
+      password: hashedPassword,
       email: authConfig.email || 'akhoiri052@gmail.com'
     };
     setAuthConfig(updated);
     saveSectionToSupabase('auth', updated);
+    return { success: true };
   };
 
-  const resetPassword = (newPassword) => {
+  const resetPassword = async (newPassword) => {
+    const hashedPassword = await hashPassword(newPassword);
     setAuthConfig((prev) => {
       const updated = {
         ...prev,
-        password: newPassword
+        password: hashedPassword
       };
       saveSectionToSupabase('auth', updated);
       return updated;

@@ -42,18 +42,19 @@ with check (true);
 -- 5. MIGRASI & SEED DATA OTOMATIS KE SUPABASE
 -- ==============================================================================
 
--- A. Data Autentikasi / Kredensial Login Admin Dashboard
+-- A. Data Autentikasi / Kredensial Login Admin Dashboard (Hashed SHA-256)
 insert into public.portfolio_content (key, value, updated_at)
 values (
   'auth',
   '{
     "username": "achmad30",
-    "password": "@Ahmad305",
+    "password": "b09c4d8b7517d0c5d80fc501ab3325f9716e5000ee1ac4323fc3cd79922e325d",
     "email": "akhoiri052@gmail.com"
   }'::jsonb,
   now()
 )
-on conflict (key) do nothing;
+on conflict (key) do update
+set value = excluded.value, updated_at = now();
 
 -- B. Data Header & Profil Hero
 insert into public.portfolio_content (key, value, updated_at)

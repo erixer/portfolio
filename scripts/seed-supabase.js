@@ -246,7 +246,8 @@ const defaultCertificates = [
 
 const defaultAuth = {
   username: "achmad30",
-  password: "@Ahmad305",
+  // Cryptographic SHA-256 Hash of "@Ahmad305" with static salt
+  password: "b09c4d8b7517d0c5d80fc501ab3325f9716e5000ee1ac4323fc3cd79922e325d",
   email: "akhoiri052@gmail.com"
 };
 

@@ -33,19 +33,22 @@ export default function AdminLogin({ onBackToPortfolio }) {
   }, [resendCooldown]);
 
   // Handle Standard Login
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccessMsg('');
     setIsLoading(true);
 
-    setTimeout(() => {
-      const result = login(username, password);
+    try {
+      const result = await login(username, password);
       setIsLoading(false);
       if (!result.success) {
         setError(result.message);
       }
-    }, 400);
+    } catch {
+      setIsLoading(false);
+      setError('Terjadi kendala saat memeriksa kredensial.');
+    }
   };
 
   // STEP 1: Request OTP Code to Gmail
@@ -115,8 +118,8 @@ export default function AdminLogin({ onBackToPortfolio }) {
       const data = await res.json();
 
       if (data.success) {
-        // Update password in ContentContext / localStorage
-        resetPassword(newPassword);
+        // Update password in ContentContext / localStorage / Supabase (hashed)
+        await resetPassword(newPassword);
         setIsLoading(false);
         setView('success');
       } else {

@@ -186,14 +186,14 @@ export default function AdminDashboard({ onBackToPortfolio }) {
   };
 
   // Handle Account Update
-  const handleSaveAccount = (e) => {
+  const handleSaveAccount = async (e) => {
     e.preventDefault();
     if (!newUsername.trim() || !newPassword.trim()) {
       setAccountMsg({ type: 'error', text: 'Username dan Password baru tidak boleh kosong!' });
       return;
     }
-    updateCredentials(newUsername, newPassword);
-    setAccountMsg({ type: 'success', text: 'Akun login berhasil diperbarui!' });
+    await updateCredentials(newUsername, newPassword);
+    setAccountMsg({ type: 'success', text: 'Akun login berhasil diperbarui dan di-hash secara aman!' });
     setNewPassword('');
     setTimeout(() => setAccountMsg(null), 3000);
   };
