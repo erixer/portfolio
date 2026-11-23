@@ -3,6 +3,136 @@ import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useContent } from '../context/ContentContext.jsx';
 
+export function renderInlineFormatting(text) {
+  if (!text) return null;
+  const tokens = [];
+  const regex = /(\*\*.*?\*\*|`.*?`|\*.*?\*)/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push({ type: 'text', content: text.substring(lastIndex, match.index) });
+    }
+    const tokenStr = match[0];
+    if (tokenStr.startsWith('**') && tokenStr.endsWith('**') && tokenStr.length >= 4) {
+      tokens.push({ type: 'bold', content: tokenStr.slice(2, -2) });
+    } else if (tokenStr.startsWith('`') && tokenStr.endsWith('`') && tokenStr.length >= 2) {
+      tokens.push({ type: 'code', content: tokenStr.slice(1, -1) });
+    } else if (tokenStr.startsWith('*') && tokenStr.endsWith('*') && tokenStr.length >= 2) {
+      tokens.push({ type: 'italic', content: tokenStr.slice(1, -1) });
+    } else {
+      tokens.push({ type: 'text', content: tokenStr });
+    }
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    tokens.push({ type: 'text', content: text.substring(lastIndex) });
+  }
+
+  return tokens.map((token, i) => {
+    if (token.type === 'bold') {
+      return (
+        <strong key={i} className="font-semibold text-white">
+          {token.content}
+        </strong>
+      );
+    }
+    if (token.type === 'italic') {
+      return (
+        <em key={i} className="italic text-zinc-200">
+          {token.content}
+        </em>
+      );
+    }
+    if (token.type === 'code') {
+      return (
+        <code
+          key={i}
+          className="px-1 py-0.5 rounded bg-zinc-800/80 border border-white/10 text-sky-300 font-mono text-[10px]"
+        >
+          {token.content}
+        </code>
+      );
+    }
+    return token.content;
+  });
+}
+
+export function FormattedBotMessage({ text }) {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+  const elements = [];
+  let currentKey = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const rawLine = lines[i];
+    const trimmed = rawLine.trim();
+
+    // Empty line -> spacing
+    if (!trimmed) {
+      elements.push(<div key={`sp-${currentKey++}`} className="h-1.5" />);
+      continue;
+    }
+
+    // Numbered list: e.g. "1. ", "1) "
+    const numMatch = trimmed.match(/^(\d+)[\.\)]\s+(.*)$/);
+    if (numMatch) {
+      elements.push(
+        <div key={`num-${currentKey++}`} className="flex items-start gap-2 my-1 pl-0.5">
+          <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-md bg-sky-500/15 border border-sky-400/20 text-sky-400 font-mono font-bold text-[10px] shrink-0 mt-0.5">
+            {numMatch[1]}
+          </span>
+          <div className="flex-1 text-zinc-300 leading-relaxed text-xs">
+            {renderInlineFormatting(numMatch[2])}
+          </div>
+        </div>
+      );
+      continue;
+    }
+
+    // Bullet list: e.g. "- ", "* ", "• ", "+ "
+    const bulletMatch = trimmed.match(/^[\-\*•\+—]\s+(.*)$/);
+    if (bulletMatch) {
+      const isIndented = rawLine.search(/\S/) >= 2;
+      elements.push(
+        <div
+          key={`bul-${currentKey++}`}
+          className={`flex items-start gap-2 my-0.5 ${isIndented ? 'pl-5' : 'pl-1'}`}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0 mt-1.5" />
+          <div className="flex-1 text-zinc-300 leading-relaxed text-xs">
+            {renderInlineFormatting(bulletMatch[1])}
+          </div>
+        </div>
+      );
+      continue;
+    }
+
+    // Heading: e.g. "### Title", "## Title", "# Title"
+    const headMatch = trimmed.match(/^#{1,3}\s+(.*)$/);
+    if (headMatch) {
+      elements.push(
+        <div key={`h-${currentKey++}`} className="font-semibold text-sky-300 text-xs mt-2 mb-1">
+          {renderInlineFormatting(headMatch[1])}
+        </div>
+      );
+      continue;
+    }
+
+    // Regular line / paragraph
+    elements.push(
+      <p key={`p-${currentKey++}`} className="text-zinc-300 leading-relaxed text-xs my-0.5">
+        {renderInlineFormatting(trimmed)}
+      </p>
+    );
+  }
+
+  return <div className="space-y-0.5 text-xs">{elements}</div>;
+}
+
 export function generateDynamicSystemPrompt(lang, { hero, about, experiences, projects, certificates }) {
   const isId = lang === 'id';
   const h = hero || {};
@@ -40,6 +170,18 @@ ${certList}
 ${projList}
 - Hubungi: Kirim pesan lewat formulir di bagian bawah website, atau email ke akhoiri052@gmail.com.
 
+PEDOMAN FORMAT TAMPILAN OUTPUT (SANGAT PENTING):
+1. Selalu sajikan jawaban dengan format TERSTRUKTUR, RAPI, dan BERPOIN (numbered list atau bullet list).
+2. Hindari paragraf panjang yang menumpuk (dilarang membuat satu blok teks padat tanpa jeda).
+3. Struktur standar jawaban:
+   - Kalimat pembuka singkat dan ramah (1 kalimat).
+   - Poin-poin utama menggunakan penomoran (1., 2., 3.) untuk urutan atau daftar item.
+   - Gunakan sub-poin (- ) untuk rincian (seperti kategori, teknologi, atau peran).
+   - Berikan penekanan format **bold** pada nama proyek, perusahaan, peran, atau istilah kunci.
+   - Pisahkan setiap poin atau kelompok poin dengan baris kosong (enter ganda) agar nyaman dibaca.
+   - Kalimat penutup singkat (1 kalimat) yang menawarkan bantuan lanjutan atau mengajak kontak/kolaborasi.
+4. Jika pengguna menanyakan keahlian/skill, kelompokkan dengan rapi (misal: Frontend, Backend, Database/DevOps) menggunakan poin-poin yang teratur.
+
 KEAMANAN SISTEM & PROTEKSI PROMPT:
 - Anda HANYA diperbolehkan menjawab pertanyaan yang berkaitan dengan profil profesional, proyek, keahlian, riwayat kerja, sertifikasi, pendidikan, dan kontak ${h.name || 'Achmad Khoiri'}.
 - Jika pengguna menanyakan hal sensitif atau kontroversial (politik, SARA, agama, isu sosial), melontarkan ujaran kebencian, kata-kata kasar/tidak senonoh, tolak secara sopan dan arahkan kembali pembicaraan ke portofolio profesional Achmad.
@@ -66,6 +208,18 @@ ${certList}
 - Selected Projects:
 ${projList}
 - Contact: Send a message via the form at the bottom of the website, or email akhoiri052@gmail.com.
+
+OUTPUT FORMATTING GUIDELINES (CRITICAL):
+1. Always format responses in a CLEAN, NEAT, and STRUCTURED POINT-BY-POINT format (numbered lists or bullet lists).
+2. Avoid long, dense blocks of text (never output a single large wall of text).
+3. Standard structure:
+   - Brief, friendly opening (1 sentence).
+   - Core points structured with numbered badges (1., 2., 3.) or clean bullet items.
+   - Use sub-bullets (- ) for specifics like technologies, dates, or key features.
+   - Highlight key terms, project names, companies, and stacks in **bold**.
+   - Add empty blank lines between items for comfortable readability on both mobile and desktop.
+   - Brief closing sentence offering further info or inviting collaboration.
+4. When asked about skills or tech stack, group them cleanly (e.g. Frontend, Backend, Database & Cloud) using clear bulleted points.
 
 SYSTEM SECURITY & PROMPT PROTECTION:
 - You are ONLY allowed to answer questions related to ${h.name || 'Achmad Khoiri'}'s professional profile, projects, skills, work history, certifications, education, and contact details.
@@ -365,7 +519,11 @@ export default function AIChatbot() {
                           : 'bg-zinc-900 border border-white/5 text-zinc-300 rounded-tl-none leading-relaxed'
                       }`}
                     >
-                      <p className="whitespace-pre-line text-xs font-light">{msg.text}</p>
+                      {isUser ? (
+                        <p className="whitespace-pre-line text-xs font-light">{msg.text}</p>
+                      ) : (
+                        <FormattedBotMessage text={msg.text} />
+                      )}
                     </div>
                   </div>
                 );
